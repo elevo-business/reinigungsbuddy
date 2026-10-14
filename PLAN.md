@@ -1,6 +1,6 @@
 # PLAN.md – Website Reinigungsbuddy
 
-Stand: 14.10.2026 · Status: **wartet auf Freigabe**
+Stand: 14.10.2026 (Rev. 2: keine Bezirksseiten) · Status: **wartet auf Freigabe**
 
 Dieses Dokument legt Sitemap, Keyword-Mapping, Designsystem, Komponenten und Architektur fest. Gebaut wird erst nach deinem OK. Am Ende stehen die Punkte, zu denen ich eine Entscheidung oder Daten von dir brauche.
 
@@ -21,10 +21,6 @@ Dieses Dokument legt Sitemap, Keyword-Mapping, Designsystem, Komponenten und Arc
 │   ├── /praxisreinigung-berlin/
 │   ├── /treppenhausreinigung-berlin/
 │   └── /umzugsreinigung-buero-berlin/
-├── /bezirke/                       Hub mit Bezirkskarte (statisches SVG, kein Google Maps)
-│   └── /bezirke/{mitte, friedrichshain-kreuzberg, pankow, charlottenburg-wilmersdorf,
-│                 spandau, steglitz-zehlendorf, tempelhof-schoeneberg, neukoelln,
-│                 treptow-koepenick, marzahn-hellersdorf, lichtenberg, reinickendorf}/
 ├── /ratgeber/                      Übersicht
 │   ├── /ratgeber/kosten-bueroreinigung-faktoren/
 │   ├── /ratgeber/leistungsverzeichnis-bueroreinigung/
@@ -45,7 +41,7 @@ Dieses Dokument legt Sitemap, Keyword-Mapping, Designsystem, Komponenten und Arc
     └── /en/contact/                 (Formular EN, Danke-Seite /en/contact/thanks/ noindex)
 ```
 
-**Umfang:** 10 Leistungsseiten + 2 Hubs, 12 Bezirksseiten, 6 Ratgeber, 4 EN-Seiten, 6 Vertrauens-/Pflichtseiten → ca. 42 indexierbare URLs.
+**Umfang:** 10 Leistungsseiten + Hub, 6 Ratgeber, 4 EN-Seiten, 6 Vertrauens-/Pflichtseiten → ca. 28 indexierbare URLs. **Keine eigenen Bezirksseiten** (siehe 2.1).
 
 **URL-Konvention:** Kleinschreibung, Umlaute transkribiert (`oe`, `ue`), immer mit Trailing Slash (`trailingSlash: 'always'` in Astro + Redirect-Regeln im Hosting).
 
@@ -69,19 +65,6 @@ Regel: ein Haupt-Keyword pro URL. Wo sich im Briefing zwei Seiten ein Keyword te
 | `/praxisreinigung-berlin/` | Praxisreinigung Berlin | Arztpraxis Reinigung, Kanzleireinigung Berlin, Zahnarztpraxis Reinigung | transaktional |
 | `/treppenhausreinigung-berlin/` | Treppenhausreinigung Berlin | Hausreinigung Berlin, Hausverwaltung Reinigung, Eingangsbereich | transaktional |
 | `/umzugsreinigung-buero-berlin/` | Endreinigung Büro Berlin | Büroumzug Reinigung, Übergabereinigung Gewerbe, Endreinigung Gewerbe | transaktional |
-| `/bezirke/` | Reinigungsfirma Berlin Bezirke | Gebäudereinigung in meiner Nähe Berlin | Navigation |
-| `/bezirke/mitte/` | Gebäudereinigung Berlin-Mitte | Büroreinigung Mitte, Reinigungsfirma Moabit/Wedding | lokal |
-| `/bezirke/friedrichshain-kreuzberg/` | Gebäudereinigung Friedrichshain-Kreuzberg | Büroreinigung Kreuzberg, Reinigungsfirma Friedrichshain | lokal |
-| `/bezirke/pankow/` | Gebäudereinigung Berlin-Pankow | Büroreinigung Prenzlauer Berg, Reinigungsfirma Weißensee | lokal |
-| `/bezirke/charlottenburg-wilmersdorf/` | Gebäudereinigung Charlottenburg | Büroreinigung Wilmersdorf, Praxisreinigung Kurfürstendamm | lokal |
-| `/bezirke/spandau/` | Gebäudereinigung Berlin-Spandau | Reinigungsfirma Spandau, Büroreinigung Siemensstadt | lokal |
-| `/bezirke/steglitz-zehlendorf/` | Gebäudereinigung Steglitz-Zehlendorf | Praxisreinigung Steglitz, Büroreinigung Zehlendorf | lokal |
-| `/bezirke/tempelhof-schoeneberg/` | Gebäudereinigung Tempelhof-Schöneberg | Büroreinigung Schöneberg, Reinigungsfirma Tempelhof | lokal |
-| `/bezirke/neukoelln/` | Gebäudereinigung Berlin-Neukölln | Büroreinigung Neukölln, Reinigungsfirma Britz | lokal |
-| `/bezirke/treptow-koepenick/` | Gebäudereinigung Treptow-Köpenick | Büroreinigung Adlershof, Reinigungsfirma Köpenick | lokal |
-| `/bezirke/marzahn-hellersdorf/` | Gebäudereinigung Marzahn-Hellersdorf | Reinigungsfirma Marzahn, Gewerbereinigung Hellersdorf | lokal |
-| `/bezirke/lichtenberg/` | Gebäudereinigung Berlin-Lichtenberg | Büroreinigung Lichtenberg, Reinigungsfirma Hohenschönhausen | lokal |
-| `/bezirke/reinickendorf/` | Gebäudereinigung Berlin-Reinickendorf | Reinigungsfirma Tegel, Büroreinigung Reinickendorf | lokal |
 | `/ratgeber/kosten-bueroreinigung-faktoren/` | Büroreinigung Kosten | Was kostet Büroreinigung, Kosten Büroreinigung Berlin, Reinigungskosten Faktoren | informativ |
 | `/ratgeber/leistungsverzeichnis-bueroreinigung/` | Leistungsverzeichnis Büroreinigung | Reinigungsplan Büro Vorlage, Checkliste Büroreinigung | informativ + Lead |
 | `/ratgeber/unterhaltsreinigung-vs-grundreinigung/` | Unterhaltsreinigung oder Grundreinigung | Unterschied Unterhaltsreinigung Grundreinigung | informativ |
@@ -100,9 +83,18 @@ Regel: ein Haupt-Keyword pro URL. Wo sich im Briefing zwei Seiten ein Keyword te
 1. **„Büroreinigung Kosten Berlin"** stand als Nebenkeyword auf `/bueroreinigung-berlin/`. Ohne Preise kann die Leistungsseite diesen Intent nicht bedienen → das Keyword gehört dem Ratgeber-Artikel „Kosten-Faktoren". Die Leistungsseite verlinkt mit genau diesem Ankertext dorthin.
 2. **„Endreinigung Gewerbe"** stand bei Grundreinigung *und* Umzugsreinigung → nur noch bei `/umzugsreinigung-buero-berlin/`. Grundreinigung bekommt stattdessen „Intensivreinigung".
 3. **„Kanzleireinigung"** bleibt Nebenkeyword von `/praxisreinigung-berlin/` (gleicher Intent: kleine Praxis/Kanzlei mit Publikumsverkehr). Eigene Seite erst, wenn die Search Console Nachfrage zeigt.
-4. **Bezirksseiten vs. Leistungsseiten:** Bezirksseiten zielen auf „Gebäudereinigung + Bezirk", nie auf „Büroreinigung Berlin". Ortsteil-Keywords (Kreuzberg, Prenzlauer Berg …) werden im Text bedient, bekommen aber keine eigenen URLs.
 
-**Bezirke – Substanz-Check:** Alle 12 Bezirke tragen 500+ eindeutige Wörter. Jeder hat genug eigene Gewerbestruktur (z. B. Adlershof in Treptow-Köpenick, CleanTech Business Park in Marzahn, Flughafengelände Tegel/Urban Tech Republic und Borsigwalde in Reinickendorf, Siemensstadt in Spandau, Praxisdichte in Steglitz-Zehlendorf). Ich muss keinen Bezirk zusammenlegen. Lokale Fakten (Gewerbegebiete, Gebäudetypen, Verkehrsanbindung) prüfe ich beim Schreiben und erfinde keine Kunden oder Referenzobjekte.
+### 2.1 Bezirke ohne eigene Seiten
+
+Ziel ist das Ranking für **„Gebäudereinigung Berlin"** (plus „Büroreinigung Berlin" usw.), nicht für jeden Bezirk einzeln. Die Bezirke tauchen deshalb als Einsatzgebiet auf, nicht als eigene URLs:
+
+- **Home, Sektion „Einsatzgebiet":** alle 12 Bezirke mit typischen Ortsteilen und Gewerbelagen in einem kompakten Block, z. B. „Mitte (Moabit, Wedding, Tiergarten) · Friedrichshain-Kreuzberg · …", dazu eine schlichte SVG-Karte von Berlin ohne Klickziele und ohne Google Maps.
+- **Footer:** Zeile „Einsatzgebiet: ganz Berlin" mit allen 12 Bezirksnamen als Text.
+- **Leistungsseiten:** ein Satz zum Einsatzgebiet in der Direktantwort und eine FAQ „Reinigen Sie auch in [Spandau/Marzahn/…]?".
+- **Schema:** `areaServed` = Berlin + alle 12 Bezirke als `Place` (im `LocalBusiness` und in jedem `Service`).
+- **Google-Unternehmensprofil:** Einzugsgebiet = die 12 Bezirke. Für das Local Pack ist das wichtiger als Unterseiten.
+
+Spätere Option: Zeigt die Search Console nach einigen Monaten echte Suchanfragen für einen Bezirk (z. B. „Büroreinigung Mitte"), bauen wir gezielt *eine* Seite dafür. Die Inhaltsstruktur bleibt dafür vorbereitet, Seiten entstehen aber erst bei Bedarf.
 
 ---
 
@@ -187,7 +179,7 @@ Der „Bogen" wird zum wiederkehrenden Marken-Element: als Unterstreichung, die 
 | `BaseLayout.astro` | statisch | Head, SEO, Fonts, Consent, Sticky-Bars |
 | `Header.astro` | statisch + kleines Script | Sprachumschalter, Desktop-Sticky-CTA ab Scrolltiefe |
 | `MobileMenu` | Island (Vanilla, ~1 KB) | Fokus-Falle, Esc schließt |
-| `Footer.astro` | statisch | NAP aus `site.ts`, Bezirks- und Leistungslinks |
+| `Footer.astro` | statisch | NAP aus `site.ts`, Leistungslinks, Einsatzgebiet (12 Bezirke als Text) |
 | `StickyMobileBar.astro` | statisch | Anrufen · WhatsApp · Angebot |
 | `Breadcrumbs.astro` | statisch | sichtbar + `BreadcrumbList`-Schema |
 | `LanguageSwitch.astro` | statisch | verlinkt das hreflang-Pendant |
@@ -213,7 +205,7 @@ Der „Bogen" wird zum wiederkehrenden Marken-Element: als Unterstreichung, die 
 Ziel: höchstens ca. 25 KB JS gz auf der schwersten Seite (Home mit Konfigurator + Formular). Budget sind 50 KB.
 
 **Inhalts-Komponenten**
-| `Testimonials.astro` (rendert nur, wenn `src/content/stimmen/` Einträge hat) · `ProjectCard.astro` · `DistrictMap.astro` (eigenes SVG der 12 Bezirke, verlinkt) · `ArticleCTA.astro` (kontextbezogen je Artikel) · `Picture.astro` (Wrapper um `astro:assets` mit STOCK-Kommentar) · `Icon.astro` · `Logo.astro` |
+| `Testimonials.astro` (rendert nur, wenn `src/content/stimmen/` Einträge hat) · `ProjectCard.astro` · `ServiceArea.astro` (Bezirksliste + schlichte SVG-Karte, keine Links) · `ArticleCTA.astro` (kontextbezogen je Artikel) · `Picture.astro` (Wrapper um `astro:assets` mit STOCK-Kommentar) · `Icon.astro` · `Logo.astro` |
 
 ---
 
@@ -226,7 +218,6 @@ src/
   config/i18n.ts          UI-Strings DE/EN, hreflang-Paare
   content.config.ts       Zod-Schemas aller Collections
   content/leistungen/*.mdx   (de + en-Unterordner)
-  content/bezirke/*.mdx
   content/ratgeber/*.mdx
   content/projekte/*.md      Vorher-Nachher
   content/stimmen/*.md       echte Kundenstimmen (leer)
@@ -268,12 +259,11 @@ Würde die statische Seite direkt an `FORM_WEBHOOK_URL` posten, stünde die Webh
 3. Kern-Komponenten + Home
 4. Leistungs-Template + 10 Leistungsseiten + Hub
 5. Konfigurator, Formular, `/api/lead`, Danke-Seiten, Tracking, Consent
-6. 12 Bezirksseiten + Hub + SVG-Karte
-7. 6 Ratgeber-Artikel + PDF
-8. Garantie, Über uns, Pflichtseiten, 404
-9. EN-Version
-10. Doku: README, SEO-CHECKLISTE, CREDITS, FOTO-ANLEITUNG
-11. QA: Build, Lighthouse, Schema-Validierung, Link-/H1-/Titel-/Preis-/Duplikat-Checks → `QA.md`
+6. 6 Ratgeber-Artikel + PDF
+7. Garantie, Über uns, Pflichtseiten, 404
+8. EN-Version
+9. Doku: README, SEO-CHECKLISTE, CREDITS, FOTO-ANLEITUNG
+10. QA: Build, Lighthouse, Schema-Validierung, Link-/H1-/Titel-/Preis-Checks → `QA.md`
 
 Ich committe nach jeder Phase auf `claude/reinigungsbuddy-website-ln1zqa`.
 
