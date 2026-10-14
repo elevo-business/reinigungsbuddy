@@ -129,7 +129,7 @@ export const offer = {
   /** Schalter */
   switches: {
     /** Vorher-Nachher-Galerie anzeigen (Inhalte aus src/content/projekte/) */
-    showGallery: true,
+    showGallery: false,
     /** Exit-Intent-Hinweis auf das Leistungsverzeichnis (nur Desktop, 1× pro Sitzung) */
     exitIntent: false,
     /** Cal.com-Link für Termin für die Objektbegehunge (Klick-zum-Laden). null = ausgeblendet. */

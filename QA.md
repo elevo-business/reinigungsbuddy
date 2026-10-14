@@ -55,7 +55,7 @@ Kein `Review`- oder `AggregateRating`-Markup (keine echten Bewertungen vorhanden
 ## Bekannte Einschränkungen des Entwurfs
 
 1. **Formular per mailto:** Ohne eingerichtetes E-Mail-Programm muss die Anfrage kopiert werden (Button vorhanden). `lead_form_submit` zählt das Öffnen des E-Mail-Programms, nicht das Absenden. Empfehlung vor Livegang: `PUBLIC_FORM_ENDPOINT` setzen (README, Abschnitt 5).
-2. **Vorher-Nachher-Galerie** zeigt frei lizenzierte Beispielbilder (sichtbar gekennzeichnet). Sie zeigen nicht denselben Raum vor und nach einer Reinigung.
+2. **Vorher-Nachher-Galerie** ist derzeit ausgeblendet (`showGallery: false` in `offer.ts`). Wieder einschalten, sobald eigene Fotos vorliegen (FOTO-ANLEITUNG.md).
 3. **Kein Telefon und kein WhatsApp** hinterlegt: Die Sticky-Leiste zeigt nur „Festpreis anfragen". Telefon- und WhatsApp-Buttons erscheinen automatisch, sobald die Nummern in `site.ts` stehen.
 4. **Silbentrennung:** Lange Komposita in Headlines bekommen automatisch weiche Trennstellen (`shy()` in `src/lib/text.ts`). Neue lange Wörter ggf. dort ergänzen.
 
