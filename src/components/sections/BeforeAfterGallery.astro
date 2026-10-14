@@ -4,7 +4,7 @@ import SectionHeader from './SectionHeader.astro';
 import BeforeAfterSlider from '../islands/BeforeAfterSlider.astro';
 import { offer } from '~/config/offer';
 interface Props { num: number; lang?: 'de' | 'en'; limit?: number }
-const { num, lang = 'de', limit = 2 } = Astro.props;
+const { num, lang = 'de', limit = 3 } = Astro.props;
 const items = (await getCollection('projekte')).sort((a, b) => a.data.order - b.data.order).slice(0, limit);
 const show = offer.switches.showGallery && items.length > 0;
 const anyExample = items.some((i) => i.data.example);
@@ -15,9 +15,9 @@ const anyExample = items.some((i) => i.data.example);
       num={num}
       label={lang === 'en' ? 'Before / after' : 'Vorher / Nachher'}
       title={lang === 'en' ? 'Drag the line and see the difference.' : 'Ziehen Sie die Linie und sehen Sie den Unterschied.'}
-      intro={anyExample ? (lang === 'en' ? 'Draft: these are licence-free example images, not our own work. They will be replaced by photos from real jobs.' : 'Entwurf: Das sind frei lizenzierte Beispielbilder, keine eigenen Arbeiten. Sie werden durch Fotos aus echten Einsätzen ersetzt.') : undefined}
+      intro={anyExample ? (lang === 'en' ? 'Example images of real offices and practices (licence-free, not our own work). They will be replaced by photos from our own jobs.' : 'Beispielbilder aus echten Büros und Praxen (frei lizenziert, keine eigenen Arbeiten). Sie werden durch Fotos aus unseren eigenen Einsätzen ersetzt.') : undefined}
       id={`s${num}`} />
-    <div class="mt-12 grid gap-10 lg:grid-cols-2">
+    <div class="mt-12 grid gap-10 md:grid-cols-2 xl:grid-cols-3">
       {items.map((p) => (
         <BeforeAfterSlider before={p.data.before} after={p.data.after} beforeAlt={p.data.beforeAlt} afterAlt={p.data.afterAlt} caption={`${p.data.title} · ${p.data.objectType}, ${p.data.district}`} example={p.data.example} lang={lang} />
       ))}

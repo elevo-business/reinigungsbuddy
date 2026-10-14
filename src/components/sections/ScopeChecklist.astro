@@ -4,8 +4,8 @@ import Icon from '../ui/Icon.astro';
 interface Props { num: number; title: string; included: { group: string; items: string[] }[]; excluded: string[]; lang?: 'de' | 'en' }
 const { num, title, included, excluded, lang = 'de' } = Astro.props;
 const t = lang === 'en'
-  ? { label: 'Scope', intro: 'This is the basis of your service schedule. We fix intervals and extras together at the viewing.', inc: 'Included', exc: 'Not included (available on request)' }
-  : { label: 'Leistungsumfang', intro: 'Das ist die Grundlage Ihres Leistungsverzeichnisses. Intervalle und Extras legen wir bei der Besichtigung gemeinsam fest.', inc: 'Enthalten', exc: 'Nicht enthalten (auf Wunsch zubuchbar)' };
+  ? { label: 'Scope', intro: 'This is the basis of your service schedule. We fix intervals and extras together at the site visit.', inc: 'Included', exc: 'Not included (available on request)' }
+  : { label: 'Leistungsumfang', intro: 'Das ist die Grundlage Ihres Leistungsverzeichnisses. Intervalle und Extras legen wir bei der Objektbegehung gemeinsam fest.', inc: 'Enthalten', exc: 'Nicht enthalten (auf Wunsch zubuchbar)' };
 ---
 <section class="wrap py-20 lg:py-28" aria-labelledby={`s${num}`}>
   <SectionHeader num={num} label={t.label} title={title} intro={t.intro} id={`s${num}`} />

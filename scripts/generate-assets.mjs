@@ -17,10 +17,10 @@ const exe = process.env.CHROMIUM_PATH || (fs.existsSync('/opt/pw-browsers/chromi
 const font = (f) => 'data:font/woff2;base64,' + fs.readFileSync(path.join(root, 'public/fonts', f)).toString('base64');
 
 const og = [
-  { file: 'home', kicker: 'Gebäudereinigung Berlin', title: 'Festpreis in 24 h. Foto-Protokoll. Garantie.' },
+  { file: 'home', kicker: 'Gebäudereinigung Berlin', title: 'Festpreis in 24 h. Reinigungs&shy;protokoll. Garantie.' },
   { file: 'leistung', kicker: 'Büroreinigung Berlin', title: 'Ein Ansprechpartner für alles, was sauber sein muss.' },
   { file: 'ratgeber', kicker: 'Ratgeber Büroreinigung', title: 'Wissen, bevor Sie Angebote vergleichen.' },
-  { file: 'en', kicker: 'Office cleaning Berlin', title: 'Fixed quote in 24 h. Photo report. Guarantee.' },
+  { file: 'en', kicker: 'Office cleaning Berlin', title: 'Fixed quote in 24 h. Cleaning report. Guarantee.' },
 ];
 
 const signet = '<svg viewBox="200 270 700 540" xmlns="http://www.w3.org/2000/svg"><path d="M268 628C335 705 403 742 470 742C568 742 664 663 758 510" fill="none" stroke="#4FC79C" stroke-width="106" stroke-linecap="round"/><circle cx="805" cy="348" r="58" fill="#4FC79C"/></svg>';

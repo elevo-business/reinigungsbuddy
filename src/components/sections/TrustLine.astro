@@ -4,8 +4,8 @@ import { site } from '~/config/site';
 interface Props { lang?: 'de' | 'en'; class?: string }
 const { lang = 'de', class: cls = '' } = Astro.props;
 const items = lang === 'en'
-  ? [['shield', '24-hour re-clean guarantee'], ['calendar', 'Cancel monthly'], ['camera', 'Photo report after every visit'], ['person', 'One fixed contact person']]
-  : [['shield', '24-h-Nachbesserungsgarantie'], ['calendar', 'Monatlich kündbar'], ['camera', 'Foto-Protokoll nach jedem Einsatz'], ['person', 'Ein fester Ansprechpartner']];
+  ? [['tag', 'Fixed quote 24 h after site visit'], ['shield', '24-hour re-clean guarantee'], ['document', 'Cleaning report after every visit'], ['person', 'One fixed contact person']]
+  : [['tag', 'Festpreis 24 h nach Objektbegehung'], ['shield', '24-h-Nachbesserungsgarantie'], ['document', 'Reinigungsprotokoll nach jedem Einsatz'], ['person', 'Ein fester Ansprechpartner']];
 if (site.insurance) items.push(['document', lang === 'en' ? 'Fully insured' : 'Betriebshaftpflicht versichert']);
 ---
 <ul class:list={['flex flex-wrap gap-x-6 gap-y-2 text-[0.95rem]', cls]}>

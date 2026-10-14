@@ -9,8 +9,8 @@ import map from '~/data/berlin-bezirke.json';
 interface Props { num: number; lang?: 'de' | 'en' }
 const { num, lang = 'de' } = Astro.props;
 const t = lang === 'en'
-  ? { label: 'Service area', title: 'All 12 Berlin districts.', intro: 'From Spandau to Marzahn-Hellersdorf, from Reinickendorf to Treptow-Köpenick. Viewings are free everywhere in Berlin.', map: 'Map of Berlin with its 12 districts – all served by Reinigungsbuddy', src: 'Map data: Amt für Statistik Berlin-Brandenburg, CC BY' }
-  : { label: 'Einsatzgebiet', title: 'Alle 12 Berliner Bezirke.', intro: 'Von Spandau bis Marzahn-Hellersdorf, von Reinickendorf bis Treptow-Köpenick. Die Besichtigung ist überall in Berlin kostenlos.', map: 'Karte von Berlin mit den 12 Bezirken – alle gehören zum Einsatzgebiet von Reinigungsbuddy', src: 'Kartengrundlage: Amt für Statistik Berlin-Brandenburg, CC BY' };
+  ? { label: 'Service area', title: 'All 12 Berlin districts.', intro: 'From Spandau to Marzahn-Hellersdorf, from Reinickendorf to Treptow-Köpenick. Site visits are free everywhere in Berlin.', map: 'Map of Berlin with its 12 districts – all served by Reinigungsbuddy', src: 'Map data: Amt für Statistik Berlin-Brandenburg, CC BY' }
+  : { label: 'Einsatzgebiet', title: 'Alle 12 Berliner Bezirke.', intro: 'Von Spandau bis Marzahn-Hellersdorf, von Reinickendorf bis Treptow-Köpenick. Die Objektbegehung ist überall in Berlin kostenlos.', map: 'Karte von Berlin mit den 12 Bezirken – alle gehören zum Einsatzgebiet von Reinigungsbuddy', src: 'Kartengrundlage: Amt für Statistik Berlin-Brandenburg, CC BY' };
 const short: Record<string, string> = {
   'friedrichshain-kreuzberg': 'Friedrichshain-\nKreuzberg', 'charlottenburg-wilmersdorf': 'Charlottenburg-\nWilmersdorf', 'steglitz-zehlendorf': 'Steglitz-\nZehlendorf',
   'tempelhof-schoeneberg': 'Tempelhof-\nSchöneberg', 'treptow-koepenick': 'Treptow-\nKöpenick', 'marzahn-hellersdorf': 'Marzahn-\nHellersdorf',

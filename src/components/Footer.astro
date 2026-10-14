@@ -14,8 +14,8 @@ const tel = phoneLink();
 const wa = whatsappLink(lang === 'en' ? 'Hello, I have a question about office cleaning.' : 'Hallo, ich habe eine Frage zur Reinigung.');
 const year = new Date().getFullYear();
 const t = lang === 'en'
-  ? { services: 'Services', company: 'Company', legal: 'Legal', area: 'Service area: all of Berlin', claim: 'Office and commercial cleaning in Berlin. Fixed quote within 24 hours, cancel monthly, photo report after every visit.', cta: 'Get a fixed quote' }
-  : { services: 'Leistungen', company: 'Reinigungsbuddy', legal: 'Rechtliches', area: 'Einsatzgebiet: ganz Berlin', claim: 'Gebäude- und Büroreinigung in Berlin. Festpreis in 24 Stunden, monatlich kündbar, Foto-Protokoll nach jedem Einsatz.', cta: 'Festpreis anfragen' };
+  ? { services: 'Services', company: 'Company', legal: 'Legal', area: 'Service area: all of Berlin', claim: 'Office and commercial cleaning in Berlin. Fixed quote within 24 hours after a site visit, cleaning report after every visit.', cta: 'Get a fixed quote' }
+  : { services: 'Leistungen', company: 'Reinigungsbuddy', legal: 'Rechtliches', area: 'Einsatzgebiet: ganz Berlin', claim: 'Gebäude- und Büroreinigung in Berlin. Festpreis innerhalb von 24 Stunden nach der Objektbegehung, Reinigungsprotokoll nach jedem Einsatz.', cta: 'Festpreis anfragen' };
 ---
 <footer class="on-dark relative overflow-hidden pb-28 lg:pb-10">
   <Signet class="pointer-events-none absolute -bottom-24 -right-20 h-[22rem] w-auto opacity-[0.05]" color="#F4F3EF" />
@@ -93,7 +93,7 @@ const t = lang === 'en'
 
     <div class="flex flex-col gap-3 py-6 text-sm text-fog sm:flex-row sm:items-center sm:justify-between">
       <p>© {year} {site.name}</p>
-      <p>{lang === 'en' ? 'No hidden surcharges. No minimum term.' : 'Keine versteckten Zuschläge. Keine Mindestlaufzeit.'}</p>
+      <p>{lang === 'en' ? 'No hidden surcharges.' : 'Keine versteckten Zuschläge.'}</p>
     </div>
   </div>
 </footer>

@@ -2,7 +2,7 @@
 
 Website für Reinigungsbuddy, Gebäudereinigung in Berlin. Statische Seite mit **Astro 7** und **Tailwind CSS 4**: schnell, ohne Cookies, Inhalte in einfachen Textdateien.
 
-> **Status: Entwurf.** Kontaktdaten, Rechtstexte, Inhaberfoto und Vorher-Nachher-Fotos sind noch Platzhalter. Die vollständige Liste steht in [QA.md](QA.md#offene-platzhalter).
+> **Status: Entwurf.** Kontaktdaten, Rechtstexte und eigene Vorher-Nachher-Fotos sind noch Platzhalter. Die vollständige Liste steht in [QA.md](QA.md#offene-platzhalter).
 
 ---
 
@@ -60,7 +60,7 @@ address: { street: 'Musterstraße 1', postalCode: '10115', city: 'Berlin', lat: 
 Mit einer WhatsApp-Nummer erscheinen auf jeder Leistungsseite WhatsApp-Buttons mit vorformulierter Nachricht (Text im Feld `whatsappText` der jeweiligen .mdx-Datei).
 
 ### Angebot, Garantie, Schalter
-In **`src/config/offer.ts`**: Texte der sechs Zusagen, Garantie-Bedingungen, Ablauf, Vergleichstabelle, allgemeine FAQ und Rückmeldezeit (`response.promise`, `response.cutoff`).
+In **`src/config/offer.ts`**: Texte der vier Zusagen, Garantie-Bedingungen, Ablauf, Vergleichstabelle, allgemeine FAQ und Rückmeldezeit (`response.promise`, `response.cutoff`).
 
 Schalter unter `switches`:
 
@@ -95,7 +95,7 @@ Eine bestehende Datei in `src/content/ratgeber/` kopieren, umbenennen (Dateiname
 
 Alle Stockbilder sind im HTML mit `<!-- STOCK: später durch eigenes Foto ersetzen -->` markiert.
 
-**Inhaberfoto:** Datei nach `src/assets/images/` legen und in `site.ts` bei `owner.photo` den Dateinamen eintragen.
+**Inhaber-Block** („Ich bin …“): derzeit ausgeblendet. Die Komponente `src/components/sections/OwnerBlock.astro` existiert weiter. Zum Wiedereinblenden auf den Seiten einbinden und in `site.ts` bei `owner.photo` ein Foto hinterlegen.
 
 **Vorher-Nachher:** siehe [FOTO-ANLEITUNG.md](FOTO-ANLEITUNG.md).
 
@@ -145,7 +145,7 @@ Conversion-Events (an Plausible immer, an Pixel/GA4 nur nach Einwilligung):
 | `phone_click` | Klick auf Telefonnummer | Contact |
 | `whatsapp_click` | Klick auf WhatsApp-Link | Contact |
 | `configurator_complete` | Konfigurator bis zur Zusammenfassung | (custom) |
-| `lead_magnet_optin` | Leistungsverzeichnis angefordert | CompleteRegistration |
+| `lead_magnet_optin` | Leistungsverzeichnis angefordert (Formular derzeit nicht eingebunden) | CompleteRegistration |
 
 **Debug:** `?debug=1` an eine URL hängen. Alle Events erscheinen dann in der Browser-Konsole (gilt für die ganze Sitzung).
 

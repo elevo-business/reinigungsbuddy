@@ -53,8 +53,8 @@ order: 1
 ---
 ```
 
-3. Die beiden Beispiel-Dateien `beispiel-schreibtisch.md` und `beispiel-grossraum.md` löschen, sobald zwei eigene Projekte vorhanden sind. Ebenso die Bilder `beispiel-*.jpg` in `src/assets/images/` und die Zeilen in `CREDITS.md`.
-4. `npm run build`. Die Galerie zeigt die ersten zwei Projekte nach `order`.
+3. Die Beispiel-Dateien `beispiel-einzelbuero.md`, `beispiel-grossraum.md` und `beispiel-praxis.md` löschen, sobald eigene Projekte vorhanden sind. Ebenso die Bilder `beispiel-*.jpg` in `src/assets/images/` und die Zeilen in `CREDITS.md`.
+4. `npm run build`. Die Galerie zeigt die ersten drei Projekte nach `order`.
 
 Galerie vorübergehend ausblenden: in `src/config/offer.ts` `showGallery: false`.
 

@@ -7,7 +7,7 @@ import { offer } from '~/config/offer';
 interface Props { num: number; title?: string; text?: string; whatsappText?: string; lang?: 'de' | 'en' }
 const { num, lang = 'de' } = Astro.props;
 const title = Astro.props.title ?? (lang === 'en' ? 'Your fixed quote, within 24 hours.' : 'Ihr Festpreis, in 24 Stunden.');
-const text = Astro.props.text ?? (lang === 'en' ? 'Tell us about your premises. We reply on the same working day and arrange a free viewing.' : `Erzählen Sie uns kurz von Ihren Räumen. Wir melden uns ${offer.response.promise} und vereinbaren eine kostenlose Besichtigung.`);
+const text = Astro.props.text ?? (lang === 'en' ? 'Tell us about your premises. We reply on the same working day and arrange a free site visit.' : `Erzählen Sie uns kurz von Ihren Räumen. Wir melden uns ${offer.response.promise} und vereinbaren eine kostenlose Objektbegehung.`);
 const wa = whatsappLink(Astro.props.whatsappText ?? 'Hallo, ich hätte gern ein Festpreis-Angebot.');
 ---
 <section class="on-dark py-20 lg:py-28" aria-labelledby={`s${num}`} id="anfrage-bereich">

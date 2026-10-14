@@ -18,6 +18,7 @@ Stand: 14.10.2026 · Build: Astro 7.3.8 · geprüft auf dem lokalen Produktions-
 | Alt-Texte | ✓ alle Bilder |
 | hreflang-Paare | ✓ 4 Paare DE ↔ EN, gegenseitig, mit x-default |
 | Preis-Check (€, Euro, EUR, pro m², /m², Stundensatz, priceRange) | ✓ 0 Treffer in Text, Meta und JSON-LD |
+| Sperrliste (kündbar, Mindestlaufzeit, Foto-Protokoll, Besichtigung, Video-Call, „Ich bin Mert", Leistungsverzeichnis gratis) | ✓ 0 Treffer, Prüfung läuft bei jedem Build |
 | Floskel-Check (Anti-Generik-Liste) | ✓ 0 Treffer |
 | Formular (mailto) | ✓ Validierung, Konfigurator-Vorbelegung, Honeypot/Zeitprüfung, Bestätigung, Event |
 | Formular (Webhook-Modus) | ✓ JSON-Payload vollständig, Weiterleitung auf `/angebot/danke/`, Event |
@@ -65,7 +66,6 @@ Auf der Website als gelb markierter Text `[Platzhalter: …]` sichtbar. Vollstä
 | Wo | Was fehlt |
 |---|---|
 | `src/config/site.ts` | Inhaber (Vor- und Nachname), Rechtsform, Anschrift (oder bewusst `null` für Service-Area-Business), Telefon, WhatsApp, öffentliche E-Mail, Servicezeiten, Profile (`sameAs`), USt-IdNr., Handwerksrolle, Versicherung, Domain |
-| `site.ts` → `owner.photo` | Foto des Inhabers (Inhaber-Block auf fast allen Seiten) |
 | `offer.ts` → FAQ „Schaden" | Versicherer und Deckungssumme der Betriebshaftpflicht |
 | `/impressum/` | Name, Rechtsform, Anschrift, Telefon, USt-IdNr., Handwerksrolle, Berufshaftpflicht |
 | `/datenschutz/` | Verantwortlicher, Hoster inkl. Speicherdauer und Drittland. Gesamten Text prüfen lassen |
@@ -80,9 +80,10 @@ Auf der Website als gelb markierter Text `[Platzhalter: …]` sichtbar. Vollstä
 Diese Aussagen stehen auf der Website und müssen im Betrieb stimmen:
 
 - Rückmeldung **am selben Werktag**, Stichzeit **16 Uhr** (`offer.ts` → `response`)
-- Foto-Protokoll nach **jedem** Einsatz
+- Reinigungsprotokoll nach **jedem** Einsatz (per WhatsApp oder E-Mail)
+- Festpreis **innerhalb von 24 Stunden nach der Objektbegehung**
 - **Englischsprachige** Kommunikation (EN-Seiten, FAQ „Sprechen Sie Englisch?")
 - Eingesetzte Mittel: pH-neutrale Reiniger, **Farbsystem**, Flächendesinfektion aus der **VAH-Liste**
 - Bereitschaft, eine **Verschwiegenheitserklärung** zu unterschreiben (Praxis/Kanzlei)
 - Ausgefallene Termine werden nicht berechnet
-- Der Inhaber reinigt selbst mit (Inhaber-Block, Über uns)
+- Der Inhaber reinigt selbst mit (Über uns)

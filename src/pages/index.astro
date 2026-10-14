@@ -13,9 +13,7 @@ import BeforeAfterGallery from '~/components/sections/BeforeAfterGallery.astro';
 import ComparisonTable from '~/components/sections/ComparisonTable.astro';
 import GuaranteeBlock from '~/components/sections/GuaranteeBlock.astro';
 import ServiceArea from '~/components/sections/ServiceArea.astro';
-import OwnerBlock from '~/components/sections/OwnerBlock.astro';
 import Testimonials from '~/components/sections/Testimonials.astro';
-import LeadMagnetBlock from '~/components/sections/LeadMagnetBlock.astro';
 import FAQ from '~/components/sections/FAQ.astro';
 import FinalCTA from '~/components/sections/FinalCTA.astro';
 import { offer } from '~/config/offer';
@@ -29,8 +27,8 @@ const guides = (await getCollection('ratgeber')).sort((a, b) => a.data.order - b
 const showGallery = offer.switches.showGallery && (await getCollection('projekte')).length > 0;
 const wa = whatsappLink('Hallo, ich interessiere mich für eine Gebäudereinigung in Berlin.');
 const faqs = [
-  { q: 'Was kostet eine Gebäudereinigung in Berlin?', a: 'Das hängt von Fläche, Häufigkeit, Bodenbelägen, Anzahl der Sanitärräume und Zeitfenster ab. Deshalb nennen wir keine Pauschalen, sondern einen Festpreis für Ihr Objekt, innerhalb von 24 Stunden nach der kostenlosen Besichtigung. Die Faktoren erklärt unser Ratgeber zu den Kosten der Büroreinigung.' },
-  { q: 'In welchen Bezirken reinigen Sie?', a: 'In allen 12 Berliner Bezirken, von Spandau bis Marzahn-Hellersdorf und von Reinickendorf bis Treptow-Köpenick. Die Besichtigung ist überall kostenlos.' },
+  { q: 'Was kostet eine Gebäudereinigung in Berlin?', a: 'Das hängt von Fläche, Häufigkeit, Bodenbelägen, Anzahl der Sanitärräume und Zeitfenster ab. Deshalb nennen wir keine Pauschalen, sondern einen Festpreis für Ihr Objekt, innerhalb von 24 Stunden nach der kostenlosen Objektbegehung. Die Faktoren erklärt unser Ratgeber zu den Kosten der Büroreinigung.' },
+  { q: 'In welchen Bezirken reinigen Sie?', a: 'In allen 12 Berliner Bezirken, von Spandau bis Marzahn-Hellersdorf und von Reinickendorf bis Treptow-Köpenick. Die Objektbegehung ist überall kostenlos.' },
   ...offer.commonFaq.slice(0, 4),
   { q: 'Sprechen Sie Englisch?', a: 'Ja. Viele unserer Kunden sind internationale Teams. Angebot, Leistungsverzeichnis und Kommunikation gibt es auf Wunsch komplett auf Englisch.' },
 ];
@@ -40,7 +38,7 @@ const next = () => ++n;
 ---
 <BaseLayout
   title="Gebäudereinigung Berlin – Festpreis 24 h | Reinigungsbuddy"
-  description="Gebäudereinigung in Berlin mit Festpreis in 24 h, Foto-Protokoll und 24-h-Nachbesserungsgarantie. Monatlich kündbar, alle 12 Bezirke. Jetzt anfragen."
+  description="Gebäudereinigung in Berlin: Festpreis 24 h nach Objektbegehung, Reinigungsprotokoll und 24-h-Nachbesserungsgarantie. Alle 12 Bezirke. Jetzt anfragen."
   image="/og/home.png"
   schema={[faqPage(faqs, url)]}>
   <!-- 01 Hero -->
@@ -49,10 +47,10 @@ const next = () => ++n;
       <div class="col-span-4 lg:col-span-7">
         <p class="eyebrow text-moss"><span class="num">01</span> — Gebäudereinigung Berlin</p>
         <h1 class="mt-5 text-[clamp(2.35rem,4.6vw+0.6rem,4.9rem)] leading-[1]">
-          Gebäude&shy;reinigung in Berlin. Mit Festpreis, Foto-Protokoll und einer Garantie, die uns etwas kostet.
+          Gebäude&shy;reinigung in Berlin. Mit Festpreis, Reinigungsprotokoll und einer Garantie, die uns etwas kostet.
         </h1>
         <p class="mt-7 max-w-2xl text-lead">
-          Reinigungsbuddy reinigt Büros, Praxen und Gewerbeflächen in allen 12 Bezirken. Sie bekommen <strong class="font-medium">ein Festpreis-Angebot in 24 Stunden</strong>, ein <strong class="font-medium">Foto-Protokoll nach jedem Einsatz</strong> und können <strong class="font-medium">monatlich kündigen</strong>. Und wenn etwas nicht sauber ist, reinigen wir innerhalb von 24 Stunden kostenlos nach.
+          Reinigungsbuddy reinigt Büros, Praxen und Gewerbeflächen in allen 12 Bezirken. Sie bekommen <strong class="font-medium">ein Festpreis-Angebot innerhalb von 24 Stunden nach der Objektbegehung</strong> und ein <strong class="font-medium">Reinigungsprotokoll nach jedem Einsatz</strong>. Und wenn etwas nicht sauber ist, reinigen wir innerhalb von 24 Stunden kostenlos nach.
         </p>
         <div class="mt-8 flex flex-wrap gap-3">
           <a href="/angebot/" class="btn btn-primary">Festpreis in 24 h anfragen<Icon name="arrow" size={18} class="arrow" /></a>
@@ -73,12 +71,11 @@ const next = () => ++n;
   <figure class="relative">
     <Photo src={heroImg} alt="Heller Büroflur mit Glastüren, Holzboden und Tageslicht in einem modernen Bürogebäude" sizes="100vw" class="h-[60vh] max-h-[44rem] min-h-[20rem] w-full object-cover" />
     <div class="wrap relative -mt-16 sm:-mt-20">
-      <dl class="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-line bg-line lg:grid-cols-4">
+      <dl class="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-line bg-line lg:grid-cols-3">
         {[
-          ['24 h', 'bis zum Festpreis nach der Besichtigung'],
+          ['24 h', 'bis zum Festpreis nach der Objektbegehung'],
           ['12', 'Berliner Bezirke im Einsatzgebiet'],
           ['1', 'fester Ansprechpartner statt Hotline'],
-          ['0', 'Monate Mindestlaufzeit'],
         ].map(([v, l]) => (
           <div class="bg-paper p-5 sm:p-6">
             <dt class="sr-only">{l}</dt>
@@ -116,8 +113,6 @@ const next = () => ++n;
   <GuaranteeBlock num={next()} />
   <ServiceArea num={next()} />
   {hasStimmen && <Testimonials num={next()} />}
-  <OwnerBlock num={next()} />
-  <LeadMagnetBlock num={next()} />
 
   {guides.length > 0 && (
     <section class="wrap py-20 lg:py-28" aria-labelledby="s-rg">

@@ -13,8 +13,8 @@ const wa = whatsappLink('Hallo, ich habe gerade eine Anfrage über die Website g
     <ol class="mt-10 grid gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-3">
       {[
         ['Rückmeldung', `${offer.response.promise}, per Telefon oder E-Mail, wie Sie es angegeben haben`],
-        ['Besichtigung', 'kostenlos vor Ort oder per Video-Call, etwa 20–40 Minuten'],
-        ['Festpreis', 'innerhalb von 24 Stunden nach der Besichtigung, schriftlich mit Leistungsverzeichnis'],
+        ['Objektbegehung', 'kostenlos vor Ort, etwa 20–40 Minuten'],
+        ['Festpreis', 'innerhalb von 24 Stunden nach der Objektbegehung, schriftlich mit Leistungsverzeichnis'],
       ].map(([t, x], i) => (
         <li class="bg-paper p-6"><span class="num font-display text-5xl font-semibold">{String(i + 1).padStart(2, '0')}</span><h2 class="mt-6 text-xl">{t}</h2><p class="mt-2 text-stone">{x}</p></li>
       ))}

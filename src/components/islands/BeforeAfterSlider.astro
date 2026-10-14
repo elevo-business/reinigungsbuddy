@@ -16,7 +16,7 @@ interface Props {
 }
 const { before, after, beforeAlt, afterAlt, caption, example = false, lang = 'de' } = Astro.props;
 const L = lang === 'en' ? { b: 'Before', a: 'After', range: 'Move the divider between before and after', ex: 'Example image – not our own work' } : { b: 'Vorher', a: 'Nachher', range: 'Trennlinie zwischen Vorher und Nachher verschieben', ex: 'Beispielbild – keine eigene Arbeit' };
-const sizes = '(min-width: 64rem) 45vw, 100vw';
+const sizes = '(min-width: 80rem) 30vw, (min-width: 48rem) 45vw, 100vw';
 ---
 <figure class="ba">
   <div class="ba-frame relative aspect-[4/3] select-none overflow-hidden rounded-xl bg-paper-2" style="--pos:50%" data-ba>

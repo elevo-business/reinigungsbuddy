@@ -11,7 +11,6 @@ import ProcessSteps from '~/components/sections/ProcessSteps.astro';
 import ComparisonTable from '~/components/sections/ComparisonTable.astro';
 import GuaranteeBlock from '~/components/sections/GuaranteeBlock.astro';
 import ServiceArea from '~/components/sections/ServiceArea.astro';
-import OwnerBlock from '~/components/sections/OwnerBlock.astro';
 import FAQ from '~/components/sections/FAQ.astro';
 import FinalCTA from '~/components/sections/FinalCTA.astro';
 import { offerEn } from '~/config/offer.en';
@@ -22,7 +21,7 @@ const url = new URL('/en/', Astro.site).toString();
 ---
 <BaseLayout
   title="Cleaning Company Berlin – Fixed Quote | Reinigungsbuddy"
-  description="English-speaking cleaning company in Berlin for offices, startups and coworking. Fixed quote in 24 h, cancel monthly, photo report after every visit."
+  description="English-speaking cleaning company in Berlin for offices, startups and coworking. Fixed quote 24 h after a site visit, cleaning report after every visit."
   image="/og/en.png"
   whatsappText="Hello, I am interested in office cleaning in Berlin."
   schema={[faqPage([...offerEn.faq], url)]}>
@@ -32,7 +31,7 @@ const url = new URL('/en/', Astro.site).toString();
         <p class="eyebrow text-moss"><span class="num">01</span> — Cleaning company Berlin</p>
         <h1 class="mt-5 text-mega">A cleaning company in Berlin that answers in English and in writing.</h1>
         <p class="mt-7 max-w-2xl text-lead">
-          Reinigungsbuddy cleans offices, startups, coworking spaces and practices in all 12 Berlin districts. You get <strong class="font-medium">a fixed quote within 24 hours</strong>, a <strong class="font-medium">photo report after every visit</strong> and you can <strong class="font-medium">cancel monthly</strong>. If something isn’t clean, we re-clean within 24 hours, free.
+          Reinigungsbuddy cleans offices, startups, coworking spaces and practices in all 12 Berlin districts. You get <strong class="font-medium">a fixed quote within 24 hours after a site visit</strong> and a <strong class="font-medium">cleaning report after every visit</strong>. If something isn’t clean, we re-clean within 24 hours, free.
         </p>
         <div class="mt-8 flex flex-wrap gap-3">
           <a href="/en/contact/" class="btn btn-primary">Get a fixed quote in 24 h<Icon name="arrow" size={18} class="arrow" /></a>
@@ -50,8 +49,8 @@ const url = new URL('/en/', Astro.site).toString();
     <ul class="grid-12 mt-12 gap-y-8">
       {[
         ['globe', 'English from day one', 'Quote, cleaning specification, invoices and WhatsApp messages in English if you prefer.'],
-        ['calendar', 'Fits hybrid work', 'Cleaning on your office days, not five days a week by default. Adjust the rhythm monthly.'],
-        ['camera', 'Proof without checking', 'Photo report after every visit, so the office manager doesn’t have to do evening rounds.'],
+        ['calendar', 'Fits hybrid work', 'Cleaning on your office days, not five days a week by default. We adjust the rhythm with you.'],
+        ['camera', 'Proof without checking', 'Cleaning report after every visit, so the office manager doesn’t have to do evening rounds.'],
       ].map(([i, t, x]) => (
         <li class="reveal col-span-4 border-t border-ink pt-5"><Icon name={i} size={30} class="text-moss" /><h3 class="mt-4 text-2xl">{t}</h3><p class="mt-2 text-stone">{x}</p></li>
       ))}
@@ -78,7 +77,6 @@ const url = new URL('/en/', Astro.site).toString();
   <ComparisonTable num={7} lang="en" />
   <GuaranteeBlock num={8} lang="en" />
   <ServiceArea num={9} lang="en" />
-  <OwnerBlock num={10} lang="en" />
-  <FAQ num={11} items={[...offerEn.faq]} title="Questions" />
-  <FinalCTA num={12} lang="en" whatsappText="Hello, I would like a fixed quote for office cleaning." />
+  <FAQ num={10} items={[...offerEn.faq]} title="Questions" />
+  <FinalCTA num={11} lang="en" whatsappText="Hello, I would like a fixed quote for office cleaning." />
 </BaseLayout>

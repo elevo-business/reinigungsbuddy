@@ -18,15 +18,17 @@ Alle Stockbilder sind im Code mit `<!-- STOCK: später durch eigenes Foto ersetz
 | `treppenhaus-altbau-gelaender.jpg` | Leon Seibert | [Unsplash](https://unsplash.com/photos/a-staircase-with-a-wrought-iron-door-and-railing-YFKaNTcAxM0) | Treppenhausreinigung |
 | `leeres-buero-nach-auszug.jpg` | kate.sade | [Unsplash](https://unsplash.com/photos/9809oTun-G8) | Endreinigung beim Büroumzug |
 | `besprechungsraum-holztisch.jpg` | Benjamin Child | [Unsplash](https://unsplash.com/photos/rectangular-brown-wooden-table-with-chair-lot-inside-building-0sT9YhNgSEs) | Über uns, Ratgeber „Kosten" |
-| `beispiel-vorher-schreibtisch-papierstapel.jpg` | Wonderlane | [Unsplash](https://unsplash.com/photos/6jA6eVsRJ6Q) | Vorher-Nachher (Beispielbild, Vorher) |
-| `beispiel-nachher-schreibtisch-aufgeraeumt.jpg` | Andrew Neel | [Unsplash](https://unsplash.com/photos/cckf4TsHAuw) | Vorher-Nachher (Beispielbild, Nachher) |
 | `teekueche-buero-esstisch.jpg` | Petr | [Unsplash](https://unsplash.com/photos/black-and-brown-wooden-table-and-chairs-iIYGy97Fib8) | Ratgeber „Wie oft reinigen" |
-| `beispiel-vorher-arbeitsplaetze.jpg` | kate.sade | [Unsplash](https://unsplash.com/photos/1aLGXwx0JHo) | Vorher-Nachher (Beispielbild, Vorher) |
-| `beispiel-nachher-arbeitsplaetze.jpg` | kate.sade | [Unsplash](https://unsplash.com/photos/c_NsMp-Z1Xk) | Vorher-Nachher (Beispielbild, Nachher) |
+| `beispiel-vorher-einzelbuero-schreibtisch.jpg` | Liye | [Unsplash](https://unsplash.com/photos/a-desk-with-a-chair-and-a-laptop-on-it-CnyFrPvRoIw) | Vorher-Nachher Einzelbüro (Beispielbild, Vorher) |
+| `beispiel-nachher-einzelbuero-aufgeraeumt.jpg` | Brian Wangenheim | [Unsplash](https://unsplash.com/photos/an-empty-room-with-a-desk-and-a-book-shelf-ohLMHYT25Y0) | Vorher-Nachher Einzelbüro (Beispielbild, Nachher) |
+| `beispiel-vorher-grossraum-papierstapel.jpg` | Wonderlane | [Unsplash](https://unsplash.com/photos/6jA6eVsRJ6Q) | Vorher-Nachher Großraumbüro (Beispielbild, Vorher) |
+| `beispiel-nachher-grossraum-arbeitsplaetze.jpg` | The Yardcoworking | [Unsplash](https://unsplash.com/photos/modern-office-interior-with-white-desks-and-black-chairs-y-d0sHFxPX0) | Vorher-Nachher Großraumbüro (Beispielbild, Nachher) |
+| `beispiel-vorher-praxis-behandlungsraum.jpg` | fr0ggy5 | [Unsplash](https://unsplash.com/photos/717W1DqDka0) | Vorher-Nachher Praxis (Beispielbild, Vorher) |
+| `beispiel-nachher-praxis-behandlungsraum.jpg` | Benyamin Bohlouli | [Unsplash](https://unsplash.com/photos/modern-dental-office-with-chair-and-equipment-e7MJLM5VGjY) | Vorher-Nachher Praxis (Beispielbild, Nachher) |
 
 ## Vorher-Nachher-Beispielbilder
 
-Die vier Bilder mit Präfix `beispiel-` sind **frei lizenzierte Beispielbilder und keine eigenen Arbeiten**. Sie zeigen nicht denselben Raum vor und nach einer Reinigung durch Reinigungsbuddy und sind auf der Website sichtbar als „Beispielbild – keine eigene Arbeit" gekennzeichnet. Vor dem Livegang durch eigene Fotos ersetzen (siehe FOTO-ANLEITUNG.md) oder die Galerie in `src/config/offer.ts` mit `showGallery: false` ausblenden.
+Die sechs Bilder mit Präfix `beispiel-` zeigen echte Büros und Praxen, sind aber **frei lizenzierte Beispielbilder und keine eigenen Arbeiten**. Sie zeigen nicht denselben Raum vor und nach einer Reinigung durch Reinigungsbuddy und sind auf der Website sichtbar als „Beispielbild – keine eigene Arbeit" gekennzeichnet. Vor dem Livegang durch eigene Fotos ersetzen (siehe FOTO-ANLEITUNG.md) oder die Galerie in `src/config/offer.ts` mit `showGallery: false` ausblenden.
 
 ## Weitere Quellen
 

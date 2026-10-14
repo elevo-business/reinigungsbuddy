@@ -8,7 +8,7 @@ export const enServices = [
   { name: 'Washrooms & kitchen', text: 'Toilets, sinks, kitchenette and break rooms, colour-coded.', de: '/sanitaer-kuechenreinigung-berlin/' },
   { name: 'Disinfection cleaning', text: 'Targeted disinfection of touch points, washrooms and kitchens.', de: '/desinfektionsreinigung-berlin/' },
   { name: 'Medical practices & law firms', text: 'Following your hygiene plan, outside opening hours.', de: '/praxisreinigung-berlin/' },
-  { name: 'Stairwell & entrance', text: 'For property managers, with a photo report after every visit.', de: '/treppenhausreinigung-berlin/' },
+  { name: 'Stairwell & entrance', text: 'For property managers, with a cleaning report after every visit.', de: '/treppenhausreinigung-berlin/' },
   { name: 'Move-out cleaning', text: 'Handover-ready cleaning when you move offices.', de: '/umzugsreinigung-buero-berlin/' },
   { name: 'Supplies service', text: 'Soap, paper towels, toilet paper and bin bags, refilled on every visit.', de: '/leistungen/#verbrauchsmaterial' },
 ];

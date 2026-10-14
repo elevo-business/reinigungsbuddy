@@ -3,7 +3,6 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import Breadcrumbs from '~/components/Breadcrumbs.astro';
 import Photo from '~/components/ui/Photo.astro';
-import LeadMagnetBlock from '~/components/sections/LeadMagnetBlock.astro';
 import { breadcrumbs } from '~/lib/schema';
 import { shy } from '~/lib/text';
 const items = (await getCollection('ratgeber')).sort((a, b) => a.data.order - b.data.order);
@@ -51,5 +50,4 @@ const [first, ...rest] = items;
       ))}
     </ul>
   </section>
-  <LeadMagnetBlock num={2} />
 </BaseLayout>

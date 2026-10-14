@@ -6,14 +6,14 @@ import { offerEn } from '~/config/offer.en';
 interface Props { num: number; title?: string; intro?: string; lang?: 'de' | 'en' }
 const { num, lang = 'de' } = Astro.props;
 const en = lang === 'en';
-const title = Astro.props.title ?? (en ? 'Six promises, in writing.' : 'Sechs Zusagen, schriftlich.');
+const title = Astro.props.title ?? (en ? 'Four promises, in writing.' : 'Vier Zusagen, schriftlich.');
 const intro = Astro.props.intro ?? (en ? 'Not “reliable and thorough”, but promises you can hold us to.' : 'Kein „zuverlässig und gründlich", sondern Zusagen, an denen Sie uns messen können.');
 const pillars = en ? offerEn.pillars : offer.pillars;
 ---
 <section class="on-dark py-20 lg:py-28" aria-labelledby={`s${num}`}>
   <div class="wrap">
     <SectionHeader num={num} label={en ? 'The offer' : 'Das Angebot'} title={title} intro={intro} id={`s${num}`} />
-    <ul class="mt-14 grid gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
+    <ul class="mt-14 grid gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
       {pillars.map((p, i) => (
         <li class="reveal bg-ink p-6 lg:p-8">
           <div class="flex items-center justify-between">

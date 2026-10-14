@@ -14,7 +14,7 @@ export const offer = {
     cutoff: '16 Uhr',
   },
 
-  /** Festpreis-Angebot nach Besichtigung */
+  /** Festpreis-Angebot nach Objektbegehung */
   quoteHours: 24,
 
   /** Die Bausteine des Angebots – Reihenfolge = Reihenfolge auf der Seite. */
@@ -22,7 +22,7 @@ export const offer = {
     {
       key: 'festpreis',
       title: 'Festpreis in 24 Stunden',
-      text: 'Nach einer kostenlosen Besichtigung vor Ort oder per Video-Call bekommen Sie innerhalb von 24 Stunden ein schriftliches Festpreis-Angebot. Was drinsteht, kostet es. Keine Zuschläge, die erst auf der Rechnung auftauchen.',
+      text: 'Nach einer kostenlosen Objektbegehung vor Ort bekommen Sie innerhalb von 24 Stunden ein schriftliches Festpreis-Angebot. Was drinsteht, kostet es. Keine Zuschläge, die erst auf der Rechnung auftauchen.',
       icon: 'tag',
     },
     {
@@ -32,28 +32,16 @@ export const offer = {
       icon: 'shield',
     },
     {
-      key: 'kuendbar',
-      title: 'Monatlich kündbar',
-      text: 'Keine Mindestlaufzeit, keine Kündigungsfrist von drei Monaten. Wir halten Kunden mit Leistung, nicht mit Laufzeiten.',
-      icon: 'calendar',
-    },
-    {
       key: 'protokoll',
-      title: 'Foto-Protokoll nach jedem Einsatz',
-      text: 'Nach jeder Reinigung erhalten Sie ein kurzes Protokoll mit Fotos per WhatsApp oder E-Mail. Sie sehen, was gemacht wurde, ohne selbst nachkontrollieren zu müssen.',
-      icon: 'camera',
+      title: 'Reinigungsprotokoll nach jedem Einsatz',
+      text: 'Nach jeder Reinigung erhalten Sie ein kurzes Reinigungsprotokoll per WhatsApp oder E-Mail: was erledigt wurde und wann. Sie sehen, was gemacht wurde, ohne selbst nachkontrollieren zu müssen.',
+      icon: 'document',
     },
     {
       key: 'ansprechpartner',
       title: 'Ein fester Ansprechpartner',
       text: 'Sie sprechen direkt mit dem, der bei Ihnen reinigt und plant. Kein Callcenter, kein Ticket-System, keine wechselnden Objektleiter.',
       icon: 'person',
-    },
-    {
-      key: 'leistungsverzeichnis',
-      title: 'Leistungsverzeichnis gratis',
-      text: 'Sie bekommen ein Leistungsverzeichnis für Ihr Büro als PDF: welche Fläche, wie oft, was genau. Kostenlos, auch wenn Sie danach nicht bei uns buchen.',
-      icon: 'document',
     },
   ],
 
@@ -74,9 +62,9 @@ export const offer = {
   /** Ablauf in 4 Schritten */
   process: [
     { title: 'Anfrage', text: 'Formular ausfüllen. Das dauert etwa zwei Minuten. Sie bekommen am selben Werktag eine Rückmeldung.' },
-    { title: 'Besichtigung', text: 'Kostenlos vor Ort oder per Video-Call. Wir gehen gemeinsam durch die Räume und klären Zeiten, Zugang und Sonderwünsche.' },
-    { title: 'Festpreis in 24 h', text: 'Innerhalb von 24 Stunden nach der Besichtigung liegt Ihr Festpreis-Angebot mit Leistungsverzeichnis vor.' },
-    { title: 'Start', text: 'Schlüsselübergabe mit Protokoll, erster Einsatz zum Wunschtermin, danach Foto-Protokoll nach jeder Reinigung.' },
+    { title: 'Objektbegehung', text: 'Kostenlos vor Ort. Wir gehen gemeinsam durch die Räume und klären Zeiten, Zugang und Sonderwünsche.' },
+    { title: 'Festpreis in 24 h', text: 'Innerhalb von 24 Stunden nach der Objektbegehung liegt Ihr Festpreis-Angebot mit Leistungsverzeichnis vor.' },
+    { title: 'Start', text: 'Schlüsselübergabe mit Protokoll, erster Einsatz zum Wunschtermin, danach Reinigungsprotokoll nach jeder Reinigung.' },
   ],
 
   /** Warum Büros die Reinigungsfirma wechseln (Problem-Block) */
@@ -88,10 +76,9 @@ export const offer = {
 
   /** Vergleichstabelle (ohne Konkurrenten zu nennen) */
   comparison: [
-    { topic: 'Angebot', typical: 'Preis „auf Anfrage", oft erst nach Wochen', us: 'Festpreis in 24 Stunden nach Besichtigung' },
-    { topic: 'Vertragslaufzeit', typical: '12–24 Monate, 3 Monate Kündigungsfrist', us: 'Monatlich kündbar' },
+    { topic: 'Angebot', typical: 'Preis „auf Anfrage", oft erst nach Wochen', us: 'Festpreis in 24 Stunden nach Objektbegehung' },
     { topic: 'Ansprechpartner', typical: 'Hotline oder wechselnde Objektleitung', us: 'Ein fester Ansprechpartner, direkt erreichbar' },
-    { topic: 'Nachweis', typical: 'Keiner, Sie kontrollieren selbst', us: 'Foto-Protokoll nach jedem Einsatz' },
+    { topic: 'Nachweis', typical: 'Keiner, Sie kontrollieren selbst', us: 'Reinigungsprotokoll nach jedem Einsatz' },
     { topic: 'Reklamation', typical: '„Wir kümmern uns darum"', us: 'Nachbesserung in 24 h, sonst zahlen Sie den Einsatz nicht' },
     { topic: 'Leistungsumfang', typical: 'Pauschal „Büroreinigung"', us: 'Schriftliches Leistungsverzeichnis: was, wo, wie oft' },
   ],
@@ -100,7 +87,7 @@ export const offer = {
   commonFaq: [
     {
       q: 'Wie entsteht der Festpreis?',
-      a: 'Wir sehen uns die Räume an (vor Ort oder per Video-Call) und erfassen Fläche, Bodenbeläge, Anzahl der Sanitärräume, Glasflächen, gewünschte Häufigkeit und Zeitfenster. Daraus entsteht ein Leistungsverzeichnis und ein Festpreis, der genau diese Leistungen abdeckt. Ändert sich später etwas, etwa mehr Fläche oder ein zusätzlicher Reinigungstag, passen wir das Angebot schriftlich an, bevor sich etwas am Preis ändert.',
+      a: 'Wir sehen uns die Räume bei einer Objektbegehung vor Ort an und erfassen Fläche, Bodenbeläge, Anzahl der Sanitärräume, Glasflächen, gewünschte Häufigkeit und Zeitfenster. Daraus entsteht ein Leistungsverzeichnis und ein Festpreis, der genau diese Leistungen abdeckt. Ändert sich später etwas, etwa mehr Fläche oder ein zusätzlicher Reinigungstag, passen wir das Angebot schriftlich an, bevor sich etwas am Preis ändert.',
     },
     {
       q: 'Wie läuft die Schlüsselübergabe?',
@@ -111,16 +98,12 @@ export const offer = {
       a: 'Wir melden jeden Schaden sofort, auch kleine. Wir dokumentieren ihn mit Foto und regeln ihn über unsere Betriebshaftpflicht. [PLATZHALTER: Versicherer und Deckungssumme eintragen, sobald die Police vorliegt.]',
     },
     {
-      q: 'Wie kann ich kündigen?',
-      a: 'Monatlich, ohne Mindestlaufzeit. Eine kurze E-Mail reicht. Die genauen Fristen stehen in Ihrem Angebot, in der Regel zum Ende des Folgemonats.',
-    },
-    {
       q: 'Welche Reinigungsmittel verwenden Sie?',
       a: 'Für die Unterhaltsreinigung setzen wir materialschonende, pH-neutrale Reiniger und Mikrofasertücher mit Farbsystem ein (z. B. rot für WC, gelb für Waschbecken, blau für Büroflächen, grün für Küche), damit nichts verschleppt wird. Reinigungsmittel und Geräte bringen wir mit. Sicherheitsdatenblätter erhalten Sie auf Anfrage.',
     },
     {
       q: 'Zu welchen Zeiten wird gereinigt?',
-      a: 'Wann es für Sie passt: früh morgens vor Arbeitsbeginn, abends nach Feierabend oder tagsüber, wenn das Team ohnehin im Homeoffice ist. Das Zeitfenster legen wir bei der Besichtigung fest und halten es ein.',
+      a: 'Wann es für Sie passt: früh morgens vor Arbeitsbeginn, abends nach Feierabend oder tagsüber, wenn das Team ohnehin im Homeoffice ist. Das Zeitfenster legen wir bei der Objektbegehung fest und halten es ein.',
     },
   ],
 
@@ -149,7 +132,7 @@ export const offer = {
     showGallery: true,
     /** Exit-Intent-Hinweis auf das Leistungsverzeichnis (nur Desktop, 1× pro Sitzung) */
     exitIntent: false,
-    /** Cal.com-Link für Besichtigungstermine (Klick-zum-Laden). null = ausgeblendet. */
+    /** Cal.com-Link für Termin für die Objektbegehunge (Klick-zum-Laden). null = ausgeblendet. */
     calcomUrl: null as string | null,
     /** Link zu Ihren Google-Bewertungen. null = ausgeblendet. */
     googleReviewsUrl: null as string | null,

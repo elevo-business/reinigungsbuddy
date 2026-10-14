@@ -12,7 +12,7 @@ Die Website ist technisch vorbereitet. Für Top-Platzierungen bei „Gebäuderei
 - [ ] Impressum, Datenschutz und AGB rechtlich prüfen lassen
 - [ ] `SITE_URL` beim Hoster auf die endgültige Domain setzen
 - [ ] Formular auf Webhook umstellen (README, Abschnitt 5) oder mailto bewusst beibehalten
-- [ ] Inhaberfoto einsetzen, Beispielbilder ersetzen oder Galerie ausblenden
+- [ ] Beispielbilder ersetzen oder Galerie ausblenden
 - [ ] `npm run build`: alle QA-Checks grün
 
 ## 2. Google-Unternehmensprofil (wichtigster Hebel für das Local Pack)
@@ -23,7 +23,7 @@ Die Website ist technisch vorbereitet. Für Top-Platzierungen bei „Gebäuderei
 - [ ] **Ohne Ladenlokal:** Adresse ausblenden und als Service-Area-Business führen. Dann in `site.ts` `address: null` lassen.
 - [ ] **Einzugsgebiet:** alle 12 Bezirke einzeln eintragen (Mitte, Friedrichshain-Kreuzberg, Pankow, Charlottenburg-Wilmersdorf, Spandau, Steglitz-Zehlendorf, Tempelhof-Schöneberg, Neukölln, Treptow-Köpenick, Marzahn-Hellersdorf, Lichtenberg, Reinickendorf)
 - [ ] **Leistungen** anlegen, genau wie auf der Website (Büroreinigung, Unterhaltsreinigung, Grundreinigung, Fenster- & Glasreinigung …), jeweils mit kurzer Beschreibung, **ohne Preise**
-- [ ] Beschreibung (750 Zeichen): Festpreis in 24 h, monatlich kündbar, Foto-Protokoll, Garantie, inhabergeführt, Deutsch und Englisch
+- [ ] Beschreibung (750 Zeichen): Festpreis innerhalb von 24 h nach Objektbegehung, Reinigungsprotokoll nach jedem Einsatz, 24-h-Nachbesserungsgarantie, inhabergeführt, Deutsch und Englisch
 - [ ] Öffnungs- bzw. Servicezeiten identisch zu `site.ts` (`hours`)
 - [ ] Website-Link: Startseite. Terminlink: `/angebot/`
 - [ ] **Fotos:** Logo, Titelbild, Inhaber bei der Arbeit, Team, Fahrzeug, echte Einsätze (mit Einwilligung). Mindestens 10 zum Start, danach jeden Monat neue

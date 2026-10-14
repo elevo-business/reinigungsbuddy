@@ -3,7 +3,6 @@ import BaseLayout from '~/layouts/BaseLayout.astro';
 import Breadcrumbs from '~/components/Breadcrumbs.astro';
 import Photo from '~/components/ui/Photo.astro';
 import SectionHeader from '~/components/sections/SectionHeader.astro';
-import OwnerBlock from '~/components/sections/OwnerBlock.astro';
 import ServiceArea from '~/components/sections/ServiceArea.astro';
 import FinalCTA from '~/components/sections/FinalCTA.astro';
 import { site } from '~/config/site';
@@ -11,15 +10,15 @@ import { breadcrumbs } from '~/lib/schema';
 import img from '~/assets/images/besprechungsraum-holztisch.jpg';
 const crumbs = [{ name: 'Start', href: '/' }, { name: 'Über uns', href: '/ueber-uns/' }];
 const values = [
-  { t: 'Zahlen statt Adjektive', x: 'Wir schreiben nicht „schnell", sondern „Festpreis in 24 Stunden". Nicht „flexibel", sondern „monatlich kündbar". Daran können Sie uns messen.' },
+  { t: 'Zahlen statt Adjektive', x: 'Wir schreiben nicht „schnell", sondern „Festpreis in 24 Stunden". Nicht „gründlich", sondern „Reinigungsprotokoll nach jedem Einsatz". Daran können Sie uns messen.' },
   { t: 'Weniger versprechen, mehr halten', x: 'Kein 24/7-Notdienst, kein Heer von Ersatzkräften, keine Siegel, die wir nicht haben. Dafür Zusagen, die wir sicher einhalten.' },
-  { t: 'Sichtbar statt unsichtbar', x: 'Gute Reinigung fällt nicht auf. Deshalb das Foto-Protokoll: damit Sie sehen, was passiert ist, ohne kontrollieren zu müssen.' },
+  { t: 'Sichtbar statt unsichtbar', x: 'Gute Reinigung fällt nicht auf. Deshalb das Reinigungsprotokoll: damit Sie sehen, was passiert ist, ohne kontrollieren zu müssen.' },
   { t: 'Ein Gesicht, eine Nummer', x: 'Sie sprechen mit dem, der plant und reinigt. Keine Weiterleitung, kein Ticket, kein „Ich gebe das weiter".' },
 ];
 ---
 <BaseLayout
   title="Über uns – Gebäudereinigung Berlin | Reinigungsbuddy"
-  description={`Reinigungsbuddy ist eine junge, inhabergeführte Gebäudereinigung in Berlin. ${site.owner.firstName} plant und reinigt selbst. Festpreis in 24 h, monatlich kündbar.`}
+  description={`Reinigungsbuddy ist eine junge, inhabergeführte Gebäudereinigung in Berlin. ${site.owner.firstName} plant und reinigt selbst. Festpreis 24 h nach Objektbegehung.`}
   schema={[breadcrumbs(crumbs, Astro.site!), { '@context': 'https://schema.org', '@type': 'AboutPage', url: new URL('/ueber-uns/', Astro.site).toString(), about: { '@id': new URL('/#business', Astro.site).toString() } }]}>
   <section class="wrap pb-16 pt-8 lg:pt-12">
     <Breadcrumbs items={crumbs} />
@@ -30,16 +29,15 @@ const values = [
       </div>
       <div class="col-span-4 space-y-5 text-lead lg:col-span-7 lg:col-start-4">
         <p>Reinigungsbuddy ist eine junge Gebäudereinigung aus Berlin. Wir reinigen Büros, Praxen, Treppenhäuser und Gewerbeflächen in allen 12 Bezirken und machen dabei bewusst einiges anders als die großen Anbieter.</p>
-        <p>Die meisten Reinigungsfirmen verlieren Kunden nicht wegen des Preises, sondern weil niemand zuständig ist. Bei uns ist immer jemand zuständig: {site.owner.firstName}, Inhaber, der jede Besichtigung selbst macht, das Leistungsverzeichnis schreibt und selbst mit reinigt.</p>
+        <p>Die meisten Reinigungsfirmen verlieren Kunden nicht wegen des Preises, sondern weil niemand zuständig ist. Bei uns ist immer jemand zuständig: {site.owner.firstName}, Inhaber, der jede Objektbegehung selbst macht, das Leistungsverzeichnis schreibt und selbst mit reinigt.</p>
       </div>
     </div>
   </section>
   <figure><Photo src={img} alt="Aufgeräumter Besprechungsraum mit langem Holztisch, Stühlen und großer Fensterfront" sizes="100vw" class="h-[50vh] max-h-[36rem] min-h-[16rem] w-full object-cover" /></figure>
 
-  <OwnerBlock num={2} />
 
   <section class="wrap py-20 lg:py-28" aria-labelledby="werte">
-    <SectionHeader num={3} label="Wie wir arbeiten" title="Vier Regeln, an denen Sie uns messen können." id="werte" />
+    <SectionHeader num={2} label="Wie wir arbeiten" title="Vier Regeln, an denen Sie uns messen können." id="werte" />
     <ol class="grid-12 mt-12 gap-y-10">
       {values.map((v, i) => (
         <li class="reveal col-span-4 border-t border-ink pt-5 lg:col-span-6">
@@ -52,7 +50,7 @@ const values = [
   </section>
 
   <section class="wrap pb-10" aria-labelledby="facts">
-    <SectionHeader num={4} label="Fakten" title="Reinigungsbuddy in Kürze" id="facts" />
+    <SectionHeader num={3} label="Fakten" title="Reinigungsbuddy in Kürze" id="facts" />
     <dl class="mt-10 grid border-t border-line sm:grid-cols-2 lg:grid-cols-3">
       {[
         ['Gegründet', '[PLATZHALTER: Gründungsjahr]'],
@@ -60,7 +58,6 @@ const values = [
         ['Einsatzgebiet', 'Alle 12 Berliner Bezirke'],
         ['Sprachen', 'Deutsch, Englisch'],
         ['Kunden', 'Büros, Praxen, Kanzleien, Hausverwaltungen, Coworking'],
-        ['Vertrag', 'Monatlich kündbar, keine Mindestlaufzeit'],
       ].map(([k, v]) => (
         <div class="border-b border-line py-4 sm:pr-6">
           <dt class="text-sm text-stone">{k}</dt>
@@ -70,6 +67,6 @@ const values = [
     </dl>
   </section>
 
-  <ServiceArea num={5} />
-  <FinalCTA num={6} />
+  <ServiceArea num={4} />
+  <FinalCTA num={5} />
 </BaseLayout>

@@ -33,7 +33,7 @@ export function localBusiness(base: URL | string) {
     '@id': businessId(base),
     name: site.name,
     description:
-      'Gebäudereinigung und Büroreinigung in Berlin: Festpreis-Angebot in 24 Stunden, monatlich kündbar, Foto-Protokoll nach jedem Einsatz.',
+      'Gebäudereinigung und Büroreinigung in Berlin: Festpreis-Angebot innerhalb von 24 Stunden nach der Objektbegehung, Reinigungsprotokoll nach jedem Einsatz.',
     url: abs('/', base),
     logo: abs('/brand/reinigungsbuddy-signet.png', base),
     image: abs('/og/home.png', base),

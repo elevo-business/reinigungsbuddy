@@ -17,6 +17,7 @@ Dieses Dokument legt Sitemap, Keyword-Mapping, Designsystem, Komponenten und Arc
 | Vorher-Nachher | Für den Entwurf frei lizenzierte Beispielbilder (Unsplash), sichtbar als „Beispielbild" gekennzeichnet |
 | Palette / Schrift | Keine Rückmeldung, daher Empfehlung umgesetzt: Palette A „Waldtinte", General Sans + Switzer |
 | Formularversand | mailto statt Serverless-Funktion. Webhook per `PUBLIC_FORM_ENDPOINT` vorbereitet |
+| Angebot (Rev. 4) | Vier Zusagen: Festpreis innerhalb von 24 h nach Objektbegehung, 24-h-Nachbesserung, Reinigungsprotokoll nach jedem Einsatz, fester Ansprechpartner. **Keine** Aussagen zu Laufzeit/Kündbarkeit, kein Gratis-Leistungsverzeichnis, kein Inhaber-Block |
 
 ## 1. Sitemap
 

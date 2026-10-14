@@ -8,7 +8,7 @@
  *  5. Alle <img> haben ein alt-Attribut
  *  6. hreflang-Paare sind gegenseitig
  *  7. Preis-Check: kein €, Euro, EUR, pro m², /m², Stundensatz, priceRange
- *  8. Floskel-Check (Anti-Generik-Liste aus dem Briefing)
+ *  8. Floskel-Check (Anti-Generik-Liste) + Sperrliste nicht angebotener Leistungen
  *  9. JSON-LD ist gültiges JSON, ohne Review/AggregateRating/priceRange/offers
  * 10. Report: offene Platzhalter je Seite (kein Fehler, nur Liste)
  *
@@ -38,6 +38,8 @@ const text = (html) => html.replace(/<script[\s\S]*?<\/script>/g, ' ').replace(/
 const decode = (s) => s.replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>');
 
 const PRICE = [/€/, /\bEuro\b/i, /\bEUR\b/, /pro\s*m²/i, /\/\s*m²/, /Stundensatz/i, /priceRange/];
+// Aussagen, die Reinigungsbuddy (derzeit) nicht anbietet – dürfen nirgends stehen
+const NICHT_ANGEBOTEN = [/kündbar/i, /Mindestlaufzeit/i, /cancel monthly/i, /minimum term/i, /Foto-?Protokoll/i, /photo report/i, /Besichtigung/i, /Video-Call/i, /video call/i, /Ich bin Mert/i, /Leistungsverzeichnis gratis/i];
 const FLOSKELN = [/Willkommen bei/i, /zuverlässiger Partner/i, /maßgeschneidert/i, /höchste Qualität/i, /Wir sind stolz/i, /in der heutigen Zeit/i, /höchsten Hygienestandards/i];
 
 for (const file of files) {
@@ -99,7 +101,8 @@ for (const file of files) {
     if (re.test(visible) || re.test(ld.join(' ')) || re.test(metaAttrs)) errors.push(`${url}: Preisangabe gefunden (${re})`);
   }
 
-  // 8. Floskeln
+  // 8. Floskeln + nicht angebotene Leistungen
+  for (const re of NICHT_ANGEBOTEN) if (re.test(visible) || re.test(metaAttrs) || re.test(ld.join(' '))) errors.push(`${url}: nicht angebotene Aussage gefunden (${re})`);
   for (const re of FLOSKELN) if (re.test(visible)) errors.push(`${url}: Floskel gefunden (${re})`);
 
   // 9. JSON-LD

@@ -29,7 +29,7 @@ const ownerPhoto = site.owner.photo ? photos[`/src/assets/images/${site.owner.ph
       <blockquote class="mt-6 font-display text-2xl font-medium leading-snug tracking-tight sm:text-[1.9rem]">„{quote}“</blockquote>
       <p class="mt-6 text-stone">
         {site.owner.firstName}, {lang === 'en' ? 'owner of' : site.owner.role + ' von'} {site.name}.{' '}
-        {lang === 'en' ? 'Plans every job personally, does the viewings and is on site cleaning.' : 'Plant jeden Auftrag selbst, macht die Besichtigungen und reinigt selbst mit.'}
+        {lang === 'en' ? 'Plans every job personally, does the site visits and is on site cleaning.' : 'Plant jeden Auftrag selbst, macht die Objektbegehungen und reinigt selbst mit.'}
       </p>
       <a href={lang === 'en' ? '/en/contact/' : '/ueber-uns/'} class="link-moss mt-5 inline-block">{lang === 'en' ? 'Get in touch' : 'Mehr über Reinigungsbuddy'}</a>
     </div>

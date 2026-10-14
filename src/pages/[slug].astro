@@ -20,7 +20,6 @@ import ProcessSteps from '~/components/sections/ProcessSteps.astro';
 import AllInOneBlock from '~/components/sections/AllInOneBlock.astro';
 import ComparisonTable from '~/components/sections/ComparisonTable.astro';
 import GuaranteeBlock from '~/components/sections/GuaranteeBlock.astro';
-import OwnerBlock from '~/components/sections/OwnerBlock.astro';
 import FAQ from '~/components/sections/FAQ.astro';
 import FinalCTA from '~/components/sections/FinalCTA.astro';
 import Testimonials from '~/components/sections/Testimonials.astro';
@@ -120,7 +119,6 @@ const next = () => ++n;
   <ComparisonTable num={next()} />
   <GuaranteeBlock num={next()} />
   {hasStimmen && <Testimonials num={next()} />}
-  <OwnerBlock num={next()} />
   <FAQ num={next()} items={faqs} title={`Fragen zur ${d.name}`} />
   <FinalCTA num={next()} whatsappText={d.whatsappText} />
 </BaseLayout>
