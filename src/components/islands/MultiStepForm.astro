@@ -294,12 +294,20 @@ const freqs = de ? c.frequencies : freqEn;
       if (!el.required || el.type === 'radio') return;
       let valid = el.value.trim() !== '';
       if (valid && el.type === 'email') valid = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(el.value.trim());
-      if (el.value !== '' || el.getAttribute('aria-invalid') === 'true') setErr(el.name, !valid);
+      if (!valid && el.value !== '') setErr(el.name, true);
     });
-    form.addEventListener('change', (e) => {
+    // Fehler sofort beim Korrigieren ausblenden (nicht erst beim Verlassen des Feldes –
+    // sonst verschiebt sich das Layout zwischen mousedown und mouseup auf „Weiter")
+    const clearIfValid = (e: Event) => {
       const el = e.target as HTMLInputElement;
-      if (el.type === 'radio') setErr(el.name, false);
-    });
+      if (el.type === 'radio') return setErr(el.name, false);
+      if (!el.required || el.getAttribute('aria-invalid') !== 'true') return;
+      let valid = el.value.trim() !== '';
+      if (valid && el.type === 'email') valid = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(el.value.trim());
+      if (valid) setErr(el.name, false);
+    };
+    form.addEventListener('change', clearIfValid);
+    form.addEventListener('input', clearIfValid);
 
     next.addEventListener('click', () => { if (validateStep(current)) show(current + 1); });
     back.addEventListener('click', () => show(current - 1));

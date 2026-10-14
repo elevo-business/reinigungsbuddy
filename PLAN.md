@@ -1,10 +1,22 @@
 # PLAN.md – Website Reinigungsbuddy
 
-Stand: 14.10.2026 (Rev. 2: keine Bezirksseiten) · Status: **wartet auf Freigabe**
+Stand: 14.10.2026 (Rev. 3) · Status: **freigegeben, Entwurf umgesetzt** (siehe README.md und QA.md)
 
 Dieses Dokument legt Sitemap, Keyword-Mapping, Designsystem, Komponenten und Architektur fest. Gebaut wird erst nach deinem OK. Am Ende stehen die Punkte, zu denen ich eine Entscheidung oder Daten von dir brauche.
 
 ---
+
+## 0. Entscheidungen (14.10.2026)
+
+| Thema | Entscheidung |
+|---|---|
+| Bezirke | Keine eigenen Bezirksseiten. Alle 12 Bezirke als Einsatzgebiet auf Startseite, Footer, FAQ und im Schema |
+| Rückmeldung | Am selben Werktag (Stichzeit 16 Uhr, änderbar in `offer.ts`) |
+| Domain | Folgt später (`SITE_URL`) |
+| Kontaktdaten | Vorerst ausgeblendet. Anfragen per mailto an hey@elevo.solutions |
+| Vorher-Nachher | Für den Entwurf frei lizenzierte Beispielbilder (Unsplash), sichtbar als „Beispielbild" gekennzeichnet |
+| Palette / Schrift | Keine Rückmeldung, daher Empfehlung umgesetzt: Palette A „Waldtinte", General Sans + Switzer |
+| Formularversand | mailto statt Serverless-Funktion. Webhook per `PUBLIC_FORM_ENDPOINT` vorbereitet |
 
 ## 1. Sitemap
 

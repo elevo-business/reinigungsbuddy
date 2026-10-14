@@ -26,6 +26,7 @@ import FinalCTA from '~/components/sections/FinalCTA.astro';
 import Testimonials from '~/components/sections/Testimonials.astro';
 import { offer } from '~/config/offer';
 import { hasStimmen } from '~/lib/collections';
+import { shy } from '~/lib/text';
 import { whatsappLink } from '~/lib/contact';
 import { service, faqPage, breadcrumbs } from '~/lib/schema';
 
@@ -66,7 +67,7 @@ const next = () => ++n;
     <div class="grid-12 mt-8 gap-y-10">
       <div class="col-span-4 lg:col-span-7">
         <p class="eyebrow text-moss"><span class="num">{String(next()).padStart(2, '0')}</span> — {d.name} in Berlin</p>
-        <h1 class="mt-5 text-mega">{d.h1}</h1>
+        <h1 class="mt-5 text-mega">{shy(d.h1)}</h1>
         <p class="mt-7 max-w-2xl text-lead">{d.directAnswer}</p>
         <div class="mt-8 flex flex-wrap gap-3">
           <a href="#anfrage-bereich" class="btn btn-primary">Festpreis in 24 h anfragen<Icon name="arrow" size={18} class="arrow" /></a>

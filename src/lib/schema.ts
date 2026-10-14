@@ -86,7 +86,6 @@ export function service(opts: { name: string; serviceType: string; description: 
     serviceType: opts.serviceType,
     description: opts.description,
     url: opts.url,
-    inLanguage: opts.lang ?? 'de-DE',
     provider: { '@id': businessId(opts.base) },
     areaServed: areaServed(),
   };

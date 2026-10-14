@@ -2,6 +2,7 @@
 import Icon from '../ui/Icon.astro';
 import Signet from '../ui/Signet.astro';
 import { offer } from '~/config/offer';
+import { shy } from '~/lib/text';
 import { offerEn } from '~/config/offer.en';
 interface Props { num: number; full?: boolean; lang?: 'de' | 'en' }
 const { num, full = false, lang = 'de' } = Astro.props;
@@ -15,7 +16,7 @@ const conds = full ? g.conditions : g.conditions.slice(0, 4);
     <div class="grid-12 relative gap-y-8">
       <div class="col-span-4 lg:col-span-6">
         <p class="eyebrow"><span class="num">{String(num).padStart(2, '0')}</span> — {en ? 'Guarantee' : 'Garantie'}</p>
-        <h2 id={`s${num}`} class="mt-4 text-display">{g.name}</h2>
+        <h2 id={`s${num}`} class="mt-4 text-display">{shy(g.name)}</h2>
         <p class="mt-5 max-w-xl text-lead">{g.short}</p>
       </div>
       <div class="col-span-4 lg:col-span-6">

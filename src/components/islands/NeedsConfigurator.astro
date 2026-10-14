@@ -5,6 +5,7 @@
  */
 import Icon from '../ui/Icon.astro';
 import { offer } from '~/config/offer';
+import { shy } from '~/lib/text';
 
 interface Props {
   preset?: string[];
@@ -46,7 +47,7 @@ const freqs = lang === 'en' ? freqEn : c.frequencies;
         {c.services.map((s) => (
           <label class="tile max-sm:!pl-9 max-sm:text-[0.95rem] max-sm:before:!left-3">
             <input type="checkbox" name="leistung" value={s.key} checked={preset.includes(s.key)} data-label={label(s.key, s.label)} />
-            <span class="tile-title">{label(s.key, s.label)}</span>
+            <span class="tile-title [overflow-wrap:anywhere]">{shy(label(s.key, s.label))}</span>
             <span class="tile-hint max-sm:hidden">{hint(s.key, s.hint)}</span>
           </label>
         ))}

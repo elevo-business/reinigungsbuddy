@@ -9,6 +9,7 @@ import Signet from '~/components/ui/Signet.astro';
 import FAQ from '~/components/sections/FAQ.astro';
 import { site } from '~/config/site';
 import { article, breadcrumbs, faqPage } from '~/lib/schema';
+import { shy } from '~/lib/text';
 
 export async function getStaticPaths() {
   const items = await getCollection('ratgeber');
@@ -40,7 +41,7 @@ const schema = [
       <div class="grid-12 mt-8 gap-y-6">
         <div class="col-span-4 lg:col-span-10">
           <p class="eyebrow text-moss">Ratgeber · {d.readingMinutes} Min. Lesezeit</p>
-          <h1 class="mt-5 text-[clamp(2.3rem,4.6vw+0.6rem,4.75rem)] leading-[1.02]">{d.title}</h1>
+          <h1 class="mt-5 text-[clamp(2.3rem,4.6vw+0.6rem,4.75rem)] leading-[1.02]">{shy(d.title)}</h1>
           <p class="mt-6 max-w-3xl text-lead">{d.excerpt}</p>
           <p class="mt-6 flex items-center gap-3 text-sm text-stone">
             <span class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-ink"><Signet class="h-4 w-auto" /></span>

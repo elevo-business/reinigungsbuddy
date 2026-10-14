@@ -10,6 +10,7 @@ import ProcessSteps from '~/components/sections/ProcessSteps.astro';
 import FAQ from '~/components/sections/FAQ.astro';
 import FinalCTA from '~/components/sections/FinalCTA.astro';
 import { breadcrumbs, faqPage } from '~/lib/schema';
+import { shy } from '~/lib/text';
 
 const services = (await getCollection('leistungen')).sort((a, b) => a.data.order - b.data.order);
 const crumbs = [{ name: 'Start', href: '/' }, { name: 'Leistungen', href: '/leistungen/' }];
@@ -36,7 +37,7 @@ const faqs = [
     <div class="grid-12 mt-8 gap-y-8">
       <div class="col-span-4 lg:col-span-9">
         <p class="eyebrow text-moss"><span class="num">01</span> — Leistungen</p>
-        <h1 class="mt-5 text-mega">Büroreinigung: alle Leistungen aus einer Hand.</h1>
+        <h1 class="mt-5 text-mega">Büro&shy;reinigung: alle Leistungen aus einer Hand.</h1>
       </div>
       <p class="col-span-4 text-lead lg:col-span-6 lg:col-start-4">
         Von der täglichen Unterhaltsreinigung über Fenster, Teppich und Sanitär bis zur Endreinigung beim Büroumzug: Reinigungsbuddy deckt alles ab, was in Berliner Büros, Praxen und Gewerbeflächen sauber sein muss. Ein Ansprechpartner, ein Leistungsverzeichnis, ein Festpreis innerhalb von 24 Stunden nach der kostenlosen Besichtigung.
@@ -55,7 +56,7 @@ const faqs = [
             <div class="mt-4 flex items-baseline gap-3 border-t border-line pt-4">
               <span class="num text-sm text-stone">{String(i + 1).padStart(2, '0')}</span>
               <div>
-                <h2 class="text-2xl transition-colors group-hover:text-moss">{s.data.name}</h2>
+                <h2 class="text-2xl transition-colors group-hover:text-moss">{shy(s.data.name)}</h2>
                 <p class="mt-1.5 text-stone">{s.data.teaser}</p>
               </div>
             </div>
