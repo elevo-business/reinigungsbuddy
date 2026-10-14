@@ -157,6 +157,18 @@ Wichtig bei mailto: `lead_form_submit` wird beim Öffnen des E-Mail-Programms ge
 
 Die Domain wird über die Umgebungsvariable `SITE_URL` gesetzt (Canonicals, Sitemap, hreflang). Ohne Wert gilt `https://reinigungsbuddy.de`.
 
+### Coolify (empfohlen, eigener Server)
+Das Repo enthält ein `Dockerfile` (Node 22 → Build, nginx → Auslieferung) und `nginx.conf`.
+
+1. In Coolify die Anwendung auf **Build Pack: Dockerfile** stellen, Port **80**.
+2. Unter *Environment Variables* mit Haken **„Build Variable"**: `SITE_URL=https://ihre-domain.de`, optional `PUBLIC_FORM_ENDPOINT`.
+3. Unter *Domains* `https://ihre-domain.de,https://www.ihre-domain.de` eintragen, *Direction* auf „Redirect to non-www".
+4. Deploy. `npm run build` inkl. QA-Checks läuft im Container. Schlägt ein Check fehl, bricht das Deployment mit Hinweis im Log ab.
+
+Nixpacks funktioniert **nicht** zuverlässig: Es installiert Node 22.11, Astro 7 braucht ≥ 22.12.
+
+nginx liefert die eigene 404-Seite aus, leitet `/pfad` per 301 auf `/pfad/` um, cached `/_astro/` und `/fonts/` ein Jahr (Dateinamen enthalten Hashes) und setzt Basis-Sicherheitsheader.
+
 ### Cloudflare Pages
 1. Repository in Cloudflare Pages verbinden.
 2. Build command: `npm run build` · Output directory: `dist` · Umgebungsvariable `NODE_VERSION=22`, `SITE_URL=https://ihre-domain.de`, optional `PUBLIC_FORM_ENDPOINT`.
