@@ -5,7 +5,7 @@ import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
 // Domain wird später gesetzt (SITE_URL in .env bzw. beim Hoster).
-const SITE = process.env.SITE_URL || 'https://reinigungsbuddy.de';
+const SITE = process.env.SITE_URL || 'https://reinigungs-buddy.de';
 
 // Seiten, die nicht in die Sitemap gehören (noindex).
 const NOINDEX = ['/angebot/danke/', '/en/contact/thanks/', '/leistungsverzeichnis/vorlage/', '/404/'];

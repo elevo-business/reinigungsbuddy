@@ -103,7 +103,7 @@ Alle Stockbilder sind im HTML mit `<!-- STOCK: später durch eigenes Foto ersetz
 
 ## 5. Anfrageformular
 
-Standard: Beim Absenden öffnet sich das E-Mail-Programm der Besucherin oder des Besuchers mit einer fertig ausgefüllten Anfrage an **`site.leadEmail`** (derzeit `hey@elevo.solutions`). Ohne JavaScript funktioniert das Formular als einfaches mailto-Formular.
+Standard: Beim Absenden öffnet sich das E-Mail-Programm der Besucherin oder des Besuchers mit einer fertig ausgefüllten Anfrage an **`site.leadEmail`** (derzeit `mert@reinigungs-buddy.de`). Ohne JavaScript funktioniert das Formular als einfaches mailto-Formular.
 
 *Einschränkung von mailto:* Wer kein E-Mail-Programm eingerichtet hat (häufig am Firmen-PC mit Webmail), muss die Anfrage kopieren. Das Formular bietet dafür einen Button „Anfrage kopieren". Für den Livebetrieb empfehlen wir einen echten Versand:
 
@@ -155,7 +155,7 @@ Wichtig bei mailto: `lead_form_submit` wird beim Öffnen des E-Mail-Programms ge
 
 ## 7. Deployment
 
-Die Domain wird über die Umgebungsvariable `SITE_URL` gesetzt (Canonicals, Sitemap, hreflang). Ohne Wert gilt `https://reinigungsbuddy.de`.
+Die Domain wird über die Umgebungsvariable `SITE_URL` gesetzt (Canonicals, Sitemap, hreflang). Ohne Wert gilt `https://reinigungs-buddy.de`.
 
 ### Coolify (empfohlen, eigener Server)
 Das Repo enthält ein `Dockerfile` (Node 22 → Build, nginx → Auslieferung) und `nginx.conf`.

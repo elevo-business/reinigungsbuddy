@@ -4,7 +4,7 @@
 # ---- Build ----
 FROM node:22-bookworm-slim AS build
 WORKDIR /app
-ARG SITE_URL=https://reinigungsbuddy.de
+ARG SITE_URL=https://reinigungs-buddy.de
 ARG PUBLIC_FORM_ENDPOINT=
 ENV SITE_URL=$SITE_URL \
     PUBLIC_FORM_ENDPOINT=$PUBLIC_FORM_ENDPOINT \

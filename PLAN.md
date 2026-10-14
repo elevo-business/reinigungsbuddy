@@ -13,7 +13,7 @@ Dieses Dokument legt Sitemap, Keyword-Mapping, Designsystem, Komponenten und Arc
 | Bezirke | Keine eigenen Bezirksseiten. Alle 12 Bezirke als Einsatzgebiet auf Startseite, Footer, FAQ und im Schema |
 | Rückmeldung | Am selben Werktag (Stichzeit 16 Uhr, änderbar in `offer.ts`) |
 | Domain | Folgt später (`SITE_URL`) |
-| Kontaktdaten | Vorerst ausgeblendet. Anfragen per mailto an hey@elevo.solutions |
+| Kontaktdaten | Vorerst ausgeblendet. Anfragen per mailto an mert@reinigungs-buddy.de |
 | Vorher-Nachher | Für den Entwurf frei lizenzierte Beispielbilder (Unsplash), sichtbar als „Beispielbild" gekennzeichnet |
 | Palette / Schrift | Keine Rückmeldung, daher Empfehlung umgesetzt: Palette A „Waldtinte", General Sans + Switzer |
 | Formularversand | mailto statt Serverless-Funktion. Webhook per `PUBLIC_FORM_ENDPOINT` vorbereitet |

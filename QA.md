@@ -68,7 +68,7 @@ Auf der Website als gelb markierter Text `[Platzhalter: …]` sichtbar. Vollstä
 | `src/config/site.ts` | Inhaber (Vor- und Nachname), Rechtsform, Anschrift (oder bewusst `null` für Service-Area-Business), Telefon, WhatsApp, öffentliche E-Mail, Servicezeiten, Profile (`sameAs`), USt-IdNr., Handwerksrolle, Versicherung, Domain |
 | `offer.ts` → FAQ „Schaden" | Versicherer und Deckungssumme der Betriebshaftpflicht |
 | `/impressum/` | ✓ fertig (Daten von elevo.solutions übernommen) |
-| `/datenschutz/` | ✓ fertig (Hosting netcup, E-Mail Google Workspace, Aufsicht LDI NRW) |
+| `/datenschutz/` | ✓ fertig (Hosting netcup, E-Mail Microsoft 365, Aufsicht LDI NRW) |
 | `/agb/` | ✓ fertig. Standard-Kündigungsfrist ohne Angebotsregelung: 3 Monate zum Monatsende (§ 10), bitte prüfen |
 | `/ueber-uns/` | Gründungsjahr, vollständiger Name |
 | `src/content/projekte/` | Eigene Vorher-Nachher-Fotos (siehe FOTO-ANLEITUNG.md) |

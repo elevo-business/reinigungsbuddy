@@ -25,15 +25,15 @@ export const site = {
     postalCode: '52511',
     city: 'Geilenkirchen',
     country: 'Deutschland',
-    email: 'hallo@elevo.solutions',
+    email: 'mert@reinigungs-buddy.de',
   },
   tagline: 'Gebäudereinigung in Berlin',
 
   /** Wird beim Deployment über SITE_URL gesetzt; hier nur als Fallback. */
-  url: 'https://reinigungsbuddy.de',
+  url: 'https://reinigungs-buddy.de',
 
   /** Anfragen gehen per mailto an diese Adresse (solange PUBLIC_FORM_ENDPOINT leer ist). */
-  leadEmail: 'hey@elevo.solutions',
+  leadEmail: 'mert@reinigungs-buddy.de',
 
   /** Öffentlich angezeigte Kontaktdaten – vorerst ausgeblendet (null). */
   contact: {
