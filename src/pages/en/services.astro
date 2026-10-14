@@ -1,0 +1,43 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import Breadcrumbs from '~/components/Breadcrumbs.astro';
+import Icon from '~/components/ui/Icon.astro';
+import NeedsConfigurator from '~/components/islands/NeedsConfigurator.astro';
+import SectionHeader from '~/components/sections/SectionHeader.astro';
+import ProcessSteps from '~/components/sections/ProcessSteps.astro';
+import FinalCTA from '~/components/sections/FinalCTA.astro';
+import { offerEn } from '~/config/offer.en';
+import { enServices } from '~/data/services-en';
+import { breadcrumbs } from '~/lib/schema';
+const crumbs = [{ name: 'Home', href: '/en/' }, { name: 'Services', href: '/en/services/' }];
+---
+<BaseLayout
+  title="Commercial Cleaning Services Berlin | Reinigungsbuddy"
+  description="All commercial cleaning services in Berlin from one contact: office, deep, window, carpet, washroom and move-out cleaning. Fixed quote in 24 h."
+  image="/og/en.png"
+  schema={[breadcrumbs(crumbs, Astro.site!)]}>
+  <section class="wrap pb-16 pt-8 lg:pt-12">
+    <Breadcrumbs items={crumbs} />
+    <p class="eyebrow mt-8 text-moss"><span class="num">01</span> — Services</p>
+    <h1 class="mt-5 max-w-5xl text-mega">Commercial cleaning in Berlin, all from one contact.</h1>
+    <p class="mt-6 max-w-2xl text-lead">From daily office cleaning to windows, carpets, washrooms and the move-out clean: one contact, one cleaning specification, one invoice and a fixed quote within 24 hours after a free viewing.</p>
+  </section>
+  <section class="wrap pb-20" aria-label="All services">
+    <ul class="grid gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
+      {enServices.map((s, i) => (
+        <li class="bg-paper p-6">
+          <span class="num text-sm text-stone">{String(i + 1).padStart(2, '0')}</span>
+          <h2 class="mt-3 text-2xl">{s.name}</h2>
+          <p class="mt-2 text-stone">{s.text}</p>
+          {i === 0 ? <a href="/en/office-cleaning-berlin/" class="link-moss mt-4 inline-flex items-center gap-1.5">Office cleaning Berlin<Icon name="arrow" size={16} /></a> : <a href={s.de} class="mt-4 inline-block text-sm text-stone underline underline-offset-4" hreflang="de" lang="de">Details (Deutsch)</a>}
+        </li>
+      ))}
+    </ul>
+  </section>
+  <section class="wrap pb-20" aria-labelledby="cfg">
+    <SectionHeader num={2} label="Your package" title="Put together what you need." intro="No prices, no sign-up. Pick what needs to be clean – you get a fixed quote within 24 hours." id="cfg" />
+    <div class="mt-10 lg:max-w-4xl"><NeedsConfigurator lang="en" id="cfg-en-hub" /></div>
+  </section>
+  <ProcessSteps num={3} steps={[...offerEn.process]} label="Process" title="From enquiry to first clean" intro="Four steps. At every step you know what happens next, and when." />
+  <FinalCTA num={4} lang="en" />
+</BaseLayout>

@@ -1,0 +1,108 @@
+---
+/**
+ * Druckvorlage für das PDF „Leistungsverzeichnis Büroreinigung".
+ * Erzeugung: npm run assets (scripts/generate-assets.mjs) → public/downloads/…pdf
+ */
+import '~/styles/global.css';
+import Signet from '~/components/ui/Signet.astro';
+const groups = [
+  { name: 'Büro- und Arbeitsflächen', rows: [
+    ['Papierkörbe leeren, Beutel wechseln, Müll trennen', 'bei jedem Einsatz'],
+    ['Hartböden saugen und feucht wischen', '2× pro Woche'],
+    ['Teppichboden saugen', '2× pro Woche'],
+    ['Freie Tischflächen feucht abwischen', '1× pro Woche'],
+    ['Türklinken, Lichtschalter, Griffe', 'bei jedem Einsatz'],
+    ['Fensterbänke, Heizkörper abstauben', '1× pro Monat'],
+    ['Hochflächen auf Schränken', '1× pro Quartal'],
+  ]},
+  { name: 'Besprechung und Empfang', rows: [
+    ['Tisch, Stühle, Sideboards', 'nach Nutzung / 2× pro Woche'],
+    ['Whiteboards', 'nach Absprache'],
+    ['Empfangstresen, Glastüren fleckenfrei', 'bei jedem Einsatz'],
+    ['Eingangsbereich, Schmutzfangmatten', 'bei jedem Einsatz'],
+  ]},
+  { name: 'Sanitär', rows: [
+    ['WC, Urinal, Waschbecken reinigen und desinfizieren', 'bei jedem Einsatz'],
+    ['Spiegel, Armaturen, Spender', 'bei jedem Einsatz'],
+    ['Verbrauchsmaterial auffüllen', 'bei jedem Einsatz'],
+    ['Boden nass wischen', 'bei jedem Einsatz'],
+    ['Fliesen wandhoch', '1× pro Monat'],
+  ]},
+  { name: 'Teeküche und Sozialräume', rows: [
+    ['Arbeitsflächen, Spüle, Armaturen', 'bei jedem Einsatz'],
+    ['Fronten und Griffe', 'bei jedem Einsatz'],
+    ['Spülmaschine ein- und ausräumen', 'nach Absprache'],
+    ['Mikrowelle innen', '1× pro Woche'],
+    ['Kühlschrank innen', '1× pro Monat, nach Ankündigung'],
+  ]},
+  { name: 'Intervall-Leistungen', rows: [
+    ['Fenster innen und außen inkl. Rahmen', '2–4× pro Jahr'],
+    ['Teppich-Tiefenreinigung', '1–2× pro Jahr'],
+    ['Polster und Bürostühle', '1× pro Jahr'],
+    ['Grundreinigung Hartböden inkl. Pflege', '1× pro Jahr'],
+  ]},
+];
+---
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Leistungsverzeichnis Büroreinigung – Vorlage | Reinigungsbuddy</title>
+    <style>
+      @page { size: A4; margin: 16mm 16mm 18mm; }
+      body { background: #fff; font-size: 10.5pt; line-height: 1.45; }
+      table { width: 100%; border-collapse: collapse; }
+      td, th { border-bottom: 0.6pt solid rgb(15 46 35 / 0.2); padding: 5pt 6pt 5pt 0; text-align: left; vertical-align: top; }
+      td.box { width: 18pt; } td.box span { display: inline-block; width: 9pt; height: 9pt; border: 0.8pt solid #0F2E23; border-radius: 2pt; }
+      .grp { break-inside: avoid; margin-top: 14pt; }
+      .line { border-bottom: 0.6pt solid rgb(15 46 35 / 0.35); height: 18pt; }
+    </style>
+  </head>
+  <body>
+    <main class="mx-auto max-w-[180mm] p-6 print:p-0">
+      <header class="flex items-center justify-between border-b-2 border-ink pb-3">
+        <div class="flex items-center gap-2"><Signet class="h-6 w-auto" /><span class="font-display text-lg font-semibold tracking-tight">Reinigungsbuddy</span></div>
+        <span class="text-xs text-stone">Vorlage · Stand 10/2026</span>
+      </header>
+      <h1 class="mt-6 text-3xl">Leistungsverzeichnis Büroreinigung</h1>
+      <p class="mt-2 text-stone">Vorlage zum Ausfüllen. Intervalle sind Vorschläge für ein typisches Büro und sollten an Nutzung, Teamgröße und Kundenverkehr angepasst werden.</p>
+
+      <h2 class="mt-6 text-lg">1. Objektdaten</h2>
+      <table class="mt-2">
+        {['Firma / Objekt', 'Adresse, Etage', 'Zugang (Schlüssel, Transponder, Code)', 'Zu reinigende Fläche (m²)', 'Bodenbeläge je Raum', 'Anzahl WCs / Urinale / Waschbecken / Duschen', 'Küchenzeilen', 'Zeitfenster für die Reinigung', 'Ansprechpartner vor Ort'].map((l) => (
+          <tr><th class="w-[38%] font-medium">{l}</th><td class="line"></td></tr>
+        ))}
+      </table>
+
+      <h2 class="mt-8 text-lg">2. Tätigkeiten und Intervalle</h2>
+      {groups.map((g) => (
+        <div class="grp">
+          <h3 class="text-base">{g.name}</h3>
+          <table class="mt-1">
+            <tr><th></th><th class="font-medium">Tätigkeit</th><th class="w-[34%] font-medium">Intervall (Vorschlag)</th><th class="w-[18%] font-medium">Ihr Intervall</th></tr>
+            {g.rows.map(([a, b]) => <tr><td class="box"><span></span></td><td>{a}</td><td class="text-stone">{b}</td><td class="line"></td></tr>)}
+          </table>
+        </div>
+      ))}
+
+      <div class="grp">
+        <h2 class="mt-8 text-lg">3. Nicht enthalten</h2>
+        <p class="text-stone">Zum Beispiel: Aufräumen persönlicher Arbeitsplätze, IT-Geräte innen, Geschirr per Hand, Fenster (falls nicht als Intervall vereinbart).</p>
+        {[1, 2, 3].map(() => <div class="line"></div>)}
+      </div>
+      <div class="grp">
+        <h2 class="mt-8 text-lg">4. Qualität und Kommunikation</h2>
+        <table class="mt-2">
+          {['Mängel melden per', 'Nachbesserung innerhalb von', 'Nachweis nach dem Einsatz (z. B. Foto-Protokoll)', 'Fester Ansprechpartner Reinigung', 'Fester Ansprechpartner Kunde'].map((l) => (
+            <tr><th class="w-[38%] font-medium">{l}</th><td class="line"></td></tr>
+          ))}
+        </table>
+      </div>
+      <footer class="mt-10 border-t border-line pt-3 text-xs text-stone">
+        Individuelles Leistungsverzeichnis für Ihr Büro, kostenlos nach Besichtigung: reinigungsbuddy.de/angebot · Festpreis in 24 Stunden · monatlich kündbar
+      </footer>
+    </main>
+  </body>
+</html>

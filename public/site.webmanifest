@@ -1,0 +1,13 @@
+{
+  "name": "Reinigungsbuddy – Gebäudereinigung Berlin",
+  "short_name": "Reinigungsbuddy",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "theme_color": "#0F2E23",
+  "background_color": "#F4F3EF",
+  "display": "browser",
+  "start_url": "/"
+}

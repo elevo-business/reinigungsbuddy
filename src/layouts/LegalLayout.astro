@@ -1,0 +1,15 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs from '~/components/Breadcrumbs.astro';
+interface Props { title: string; metaTitle: string; description: string; noindex?: boolean; draftNote?: string }
+const { title, metaTitle, description, noindex = false, draftNote } = Astro.props;
+const crumbs = [{ name: 'Start', href: '/' }, { name: title, href: Astro.url.pathname }];
+---
+<BaseLayout title={metaTitle} description={description} noindex={noindex}>
+  <section class="wrap py-10 lg:py-14">
+    <Breadcrumbs items={crumbs} />
+    <h1 class="mt-8 text-display">{title}</h1>
+    {draftNote && <p class="mt-6 max-w-3xl rounded-lg border border-[#e0c84a] bg-[#fff8d6] px-4 py-3 text-[0.95rem] text-[#3d3200]"><strong class="font-medium">Entwurf:</strong> {draftNote}</p>}
+    <div class="prose-rb mt-10"><slot /></div>
+  </section>
+</BaseLayout>

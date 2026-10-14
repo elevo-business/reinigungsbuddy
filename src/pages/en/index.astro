@@ -1,0 +1,84 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import Photo from '~/components/ui/Photo.astro';
+import Icon from '~/components/ui/Icon.astro';
+import TrustLine from '~/components/sections/TrustLine.astro';
+import NeedsConfigurator from '~/components/islands/NeedsConfigurator.astro';
+import SectionHeader from '~/components/sections/SectionHeader.astro';
+import ProblemBlock from '~/components/sections/ProblemBlock.astro';
+import OfferStack from '~/components/sections/OfferStack.astro';
+import ProcessSteps from '~/components/sections/ProcessSteps.astro';
+import ComparisonTable from '~/components/sections/ComparisonTable.astro';
+import GuaranteeBlock from '~/components/sections/GuaranteeBlock.astro';
+import ServiceArea from '~/components/sections/ServiceArea.astro';
+import OwnerBlock from '~/components/sections/OwnerBlock.astro';
+import FAQ from '~/components/sections/FAQ.astro';
+import FinalCTA from '~/components/sections/FinalCTA.astro';
+import { offerEn } from '~/config/offer.en';
+import { faqPage } from '~/lib/schema';
+import { enServices } from '~/data/services-en';
+import heroImg from '~/assets/images/buero-flur-glastueren-tageslicht.jpg';
+const url = new URL('/en/', Astro.site).toString();
+---
+<BaseLayout
+  title="Cleaning Company Berlin – Fixed Quote | Reinigungsbuddy"
+  description="English-speaking cleaning company in Berlin for offices, startups and coworking. Fixed quote in 24 h, cancel monthly, photo report after every visit."
+  image="/og/en.png"
+  whatsappText="Hello, I am interested in office cleaning in Berlin."
+  schema={[faqPage([...offerEn.faq], url)]}>
+  <section class="wrap pb-12 pt-10 lg:pb-16 lg:pt-16">
+    <div class="grid-12 gap-y-10">
+      <div class="col-span-4 lg:col-span-7">
+        <p class="eyebrow text-moss"><span class="num">01</span> — Cleaning company Berlin</p>
+        <h1 class="mt-5 text-mega">A cleaning company in Berlin that answers in English and in writing.</h1>
+        <p class="mt-7 max-w-2xl text-lead">
+          Reinigungsbuddy cleans offices, startups, coworking spaces and practices in all 12 Berlin districts. You get <strong class="font-medium">a fixed quote within 24 hours</strong>, a <strong class="font-medium">photo report after every visit</strong> and you can <strong class="font-medium">cancel monthly</strong>. If something isn’t clean, we re-clean within 24 hours, free.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="/en/contact/" class="btn btn-primary">Get a fixed quote in 24 h<Icon name="arrow" size={18} class="arrow" /></a>
+          <a href="/en/services/" class="btn btn-ghost">All services</a>
+        </div>
+        <TrustLine lang="en" class="mt-8" />
+      </div>
+      <div class="col-span-4 lg:col-span-5"><NeedsConfigurator lang="en" preset={['buero', 'sanitaer']} compact id="cfg-en" /></div>
+    </div>
+  </section>
+  <figure><Photo src={heroImg} alt="Bright office corridor with glass doors, wooden floor and daylight" sizes="100vw" class="h-[56vh] max-h-[40rem] min-h-[18rem] w-full object-cover" /></figure>
+
+  <section class="wrap py-20 lg:py-28" aria-labelledby="s2">
+    <SectionHeader num={2} label="Why teams choose us" title="Built for international teams in Berlin." intro="Many Berlin offices are tech companies, agencies and startups with English as the working language. Cleaning shouldn’t be the one thing that needs a translator." id="s2" />
+    <ul class="grid-12 mt-12 gap-y-8">
+      {[
+        ['globe', 'English from day one', 'Quote, cleaning specification, invoices and WhatsApp messages in English if you prefer.'],
+        ['calendar', 'Fits hybrid work', 'Cleaning on your office days, not five days a week by default. Adjust the rhythm monthly.'],
+        ['camera', 'Proof without checking', 'Photo report after every visit, so the office manager doesn’t have to do evening rounds.'],
+      ].map(([i, t, x]) => (
+        <li class="reveal col-span-4 border-t border-ink pt-5"><Icon name={i} size={30} class="text-moss" /><h3 class="mt-4 text-2xl">{t}</h3><p class="mt-2 text-stone">{x}</p></li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="wrap pb-20" aria-labelledby="s3">
+    <SectionHeader num={3} label="Services" title="Everything that needs to be clean in your office." id="s3" />
+    <ul class="mt-12 border-t border-line">
+      {enServices.map((s, i) => (
+        <li class="grid grid-cols-[2.5rem_1fr] items-baseline gap-4 border-b border-line py-5 sm:grid-cols-[3rem_minmax(0,22rem)_1fr]">
+          <span class="num text-sm text-stone">{String(i + 1).padStart(2, '0')}</span>
+          <span class="font-display text-xl font-semibold tracking-tight sm:text-2xl">{s.name}</span>
+          <span class="col-start-2 text-stone sm:col-start-auto">{s.text}</span>
+        </li>
+      ))}
+    </ul>
+    <a href="/en/office-cleaning-berlin/" class="link-moss mt-8 inline-block">More about office cleaning in Berlin</a>
+  </section>
+
+  <ProblemBlock num={4} lang="en" />
+  <OfferStack num={5} lang="en" />
+  <ProcessSteps num={6} steps={[...offerEn.process]} label="Process" title="From enquiry to first clean" intro="Four steps. At every step you know what happens next, and when." />
+  <ComparisonTable num={7} lang="en" />
+  <GuaranteeBlock num={8} lang="en" />
+  <ServiceArea num={9} lang="en" />
+  <OwnerBlock num={10} lang="en" />
+  <FAQ num={11} items={[...offerEn.faq]} title="Questions" />
+  <FinalCTA num={12} lang="en" whatsappText="Hello, I would like a fixed quote for office cleaning." />
+</BaseLayout>

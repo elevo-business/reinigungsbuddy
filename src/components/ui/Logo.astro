@@ -1,0 +1,10 @@
+---
+/** Wortmarke + Signet. Text in General Sans (bereits geladen) statt Bild = scharf und leicht. */
+import Signet from './Signet.astro';
+interface Props { tone?: 'ink' | 'paper'; href?: string; class?: string }
+const { tone = 'ink', href = '/', class: cls = '' } = Astro.props;
+---
+<a href={href} class:list={['inline-flex items-center gap-2.5 no-underline', cls]}>
+  <Signet class="h-7 w-auto shrink-0" />
+  <span class:list={['font-display text-[1.32rem] font-semibold leading-none tracking-[-0.035em]', tone === 'paper' ? 'text-paper' : 'text-ink']}>Reinigungsbuddy</span>
+</a>

@@ -1,0 +1,99 @@
+---
+import { getCollection } from 'astro:content';
+import Logo from './ui/Logo.astro';
+import Signet from './ui/Signet.astro';
+import { site } from '~/config/site';
+import { offer } from '~/config/offer';
+import { langOf } from '~/lib/i18n';
+import { phoneLink, whatsappLink } from '~/lib/contact';
+
+const lang = langOf(Astro.url.pathname);
+const services = (await getCollection('leistungen')).sort((a, b) => a.data.order - b.data.order);
+const needsConsent = Boolean(site.analytics.metaPixelId || site.analytics.ga4Id);
+const tel = phoneLink();
+const wa = whatsappLink(lang === 'en' ? 'Hello, I have a question about office cleaning.' : 'Hallo, ich habe eine Frage zur Reinigung.');
+const year = new Date().getFullYear();
+const t = lang === 'en'
+  ? { services: 'Services', company: 'Company', legal: 'Legal', area: 'Service area: all of Berlin', claim: 'Office and commercial cleaning in Berlin. Fixed quote within 24 hours, cancel monthly, photo report after every visit.', cta: 'Get a fixed quote' }
+  : { services: 'Leistungen', company: 'Reinigungsbuddy', legal: 'Rechtliches', area: 'Einsatzgebiet: ganz Berlin', claim: 'Gebäude- und Büroreinigung in Berlin. Festpreis in 24 Stunden, monatlich kündbar, Foto-Protokoll nach jedem Einsatz.', cta: 'Festpreis anfragen' };
+---
+<footer class="on-dark relative overflow-hidden pb-28 lg:pb-10">
+  <Signet class="pointer-events-none absolute -bottom-24 -right-20 h-[22rem] w-auto opacity-[0.05]" color="#F4F3EF" />
+  <div class="wrap relative">
+    <div class="grid-12 gap-y-12 border-b border-line py-16">
+      <div class="col-span-4 lg:col-span-4">
+        <Logo tone="paper" href={lang === 'en' ? '/en/' : '/'} />
+        <p class="mt-5 max-w-sm text-fog">{t.claim}</p>
+        <div class="mt-7 flex flex-wrap gap-3">
+          <a href={lang === 'en' ? '/en/contact/' : '/angebot/'} class="btn btn-primary">{t.cta}</a>
+          {tel && <a href={tel} class="btn btn-ghost" data-track="phone_click">{site.contact.phone}</a>}
+          {wa && <a href={wa} class="btn btn-ghost" data-track="whatsapp_click" rel="noopener">WhatsApp</a>}
+        </div>
+      </div>
+
+      <nav class="col-span-2 lg:col-span-3 lg:col-start-5" aria-label={t.services}>
+        <h2 class="eyebrow text-fog">{t.services}</h2>
+        <ul class="mt-4 space-y-2.5">
+          {lang === 'en' ? (
+            <>
+              <li><a class="link-grow" href="/en/office-cleaning-berlin/">Office cleaning Berlin</a></li>
+              <li><a class="link-grow" href="/en/services/">All services</a></li>
+              <li><a class="link-grow" href="/leistungen/" hreflang="de" lang="de">Leistungen (Deutsch)</a></li>
+            </>
+          ) : (
+            services.map((s) => <li><a class="link-grow" href={`/${s.id}/`}>{s.data.name}</a></li>)
+          )}
+        </ul>
+      </nav>
+
+      <div class="col-span-2 lg:col-span-2">
+        <nav aria-label={t.company}>
+          <h2 class="eyebrow text-fog">{t.company}</h2>
+          <ul class="mt-4 space-y-2.5">
+            {lang === 'en' ? (
+              <>
+                <li><a class="link-grow" href="/en/">Home</a></li>
+                <li><a class="link-grow" href="/en/contact/">Contact</a></li>
+                <li><a class="link-grow" href="/" hreflang="de" lang="de">Deutsch</a></li>
+              </>
+            ) : (
+              <>
+                <li><a class="link-grow" href="/leistungen/">Alle Leistungen</a></li>
+                <li><a class="link-grow" href="/garantie/">Garantie</a></li>
+                <li><a class="link-grow" href="/ueber-uns/">Über uns</a></li>
+                <li><a class="link-grow" href="/ratgeber/">Ratgeber</a></li>
+                <li><a class="link-grow" href="/angebot/">Angebot anfragen</a></li>
+                <li><a class="link-grow" href="/en/" hreflang="en" lang="en">English</a></li>
+              </>
+            )}
+          </ul>
+        </nav>
+        <nav aria-label={t.legal} class="mt-10">
+          <h2 class="eyebrow text-fog">{t.legal}</h2>
+          <ul class="mt-4 space-y-2.5">
+            <li><a class="link-grow" href="/impressum/">{lang === 'en' ? 'Legal notice' : 'Impressum'}</a></li>
+            <li><a class="link-grow" href="/datenschutz/">{lang === 'en' ? 'Privacy' : 'Datenschutz'}</a></li>
+            <li><a class="link-grow" href="/agb/">{lang === 'en' ? 'Terms' : 'AGB'}</a></li>
+            {needsConsent && <li><button type="button" class="link-grow text-left" data-consent-open>{lang === 'en' ? 'Cookie settings' : 'Cookie-Einstellungen'}</button></li>}
+          </ul>
+        </nav>
+      </div>
+
+      <div class="col-span-4 lg:col-span-3 lg:col-start-10">
+        <h2 class="eyebrow text-fog">{t.area}</h2>
+        <p class="mt-4 text-[0.95rem] leading-relaxed text-paper/90">
+          {site.districts.map((d) => d.name).join(' · ')}
+          {site.surroundings.length > 0 && <> · {site.surroundings.join(' · ')}</>}
+        </p>
+        <p class="mt-5 text-[0.95rem] text-fog">
+          {lang === 'en' ? 'Reply' : 'Rückmeldung'} {lang === 'en' ? 'on the same working day' : offer.response.promise}.
+        </p>
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-3 py-6 text-sm text-fog sm:flex-row sm:items-center sm:justify-between">
+      <p>© {year} {site.name}</p>
+      <p>{lang === 'en' ? 'No hidden surcharges. No minimum term.' : 'Keine versteckten Zuschläge. Keine Mindestlaufzeit.'}</p>
+    </div>
+  </div>
+</footer>

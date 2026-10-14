@@ -1,0 +1,31 @@
+---
+import LegalLayout from '~/layouts/LegalLayout.astro';
+import { site } from '~/config/site';
+const P = (s: string) => `<mark class="ph">[Platzhalter: ${s}]</mark>`;
+const a = site.address;
+---
+<LegalLayout title="Impressum" metaTitle="Impressum | Reinigungsbuddy" description="Impressum von Reinigungsbuddy, Gebäudereinigung in Berlin: Anbieterkennzeichnung nach § 5 DDG." draftNote="Angaben vervollständigen und vor Veröffentlichung rechtlich prüfen lassen.">
+  <h2>Angaben gemäß § 5 DDG</h2>
+  <p>
+    {site.name}<br />
+    <Fragment set:html={P('Vor- und Nachname des Inhabers, Rechtsform')} /><br />
+    {a ? <>{a.street}<br />{a.postalCode} {a.city}</> : <Fragment set:html={P('Straße, Hausnummer, PLZ Berlin (ladungsfähige Anschrift)')} />}
+  </p>
+  <h2>Kontakt</h2>
+  <p>
+    Telefon: {site.contact.phone ?? <Fragment set:html={P('Telefonnummer')} />}<br />
+    E-Mail: {site.contact.email ?? site.leadEmail}
+  </p>
+  <h2>Umsatzsteuer</h2>
+  <p>Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG: {site.vatId ?? <Fragment set:html={P('USt-IdNr., falls vorhanden; sonst Abschnitt entfernen')} />}</p>
+  <h2>Handwerksrolle und Aufsicht</h2>
+  <p>
+    {site.chamberEntry ?? <Fragment set:html={P('Eintragung in die Handwerksrolle der Handwerkskammer Berlin mit Betriebsnummer, falls vorhanden. Gebäudereiniger ist ein zulassungsfreies Handwerk; bei Eintragung: Handwerkskammer Berlin, Blücherstraße 68, 10961 Berlin')} />}
+  </p>
+  <h2>Berufshaftpflicht</h2>
+  <p>{site.insurance ?? <Fragment set:html={P('Angaben zur Betriebs- bzw. Berufshaftpflichtversicherung (Versicherer, Geltungsbereich), falls vorhanden')} />}</p>
+  <h2>Verbraucherstreitbeilegung</h2>
+  <p>Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+  <h2>Bildnachweise</h2>
+  <p>Fotos: Unsplash (Unsplash-Lizenz), Fotografinnen und Fotografen siehe CREDITS.md im Projekt. Kartengrundlage: Amt für Statistik Berlin-Brandenburg, CC BY.</p>
+</LegalLayout>

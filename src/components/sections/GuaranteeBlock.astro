@@ -1,0 +1,32 @@
+---
+import Icon from '../ui/Icon.astro';
+import Signet from '../ui/Signet.astro';
+import { offer } from '~/config/offer';
+import { offerEn } from '~/config/offer.en';
+interface Props { num: number; full?: boolean; lang?: 'de' | 'en' }
+const { num, full = false, lang = 'de' } = Astro.props;
+const en = lang === 'en';
+const g = en ? offerEn.guarantee : offer.guarantee;
+const conds = full ? g.conditions : g.conditions.slice(0, 4);
+---
+<section class="wrap py-20 lg:py-28" aria-labelledby={`s${num}`}>
+  <div class="relative overflow-hidden rounded-3xl bg-mint px-6 py-12 text-ink sm:px-10 lg:px-16 lg:py-16">
+    <Signet class="pointer-events-none absolute -bottom-20 -right-16 h-80 w-auto opacity-25" color="#0F2E23" />
+    <div class="grid-12 relative gap-y-8">
+      <div class="col-span-4 lg:col-span-6">
+        <p class="eyebrow"><span class="num">{String(num).padStart(2, '0')}</span> — {en ? 'Guarantee' : 'Garantie'}</p>
+        <h2 id={`s${num}`} class="mt-4 text-display">{g.name}</h2>
+        <p class="mt-5 max-w-xl text-lead">{g.short}</p>
+      </div>
+      <div class="col-span-4 lg:col-span-6">
+        <h3 class="eyebrow">{en ? 'The conditions' : `Die Bedingungen${full ? '' : ' (Auszug)'}`}</h3>
+        <ol class="mt-4 space-y-3">
+          {conds.map((c, i) => (
+            <li class="flex gap-3 border-t border-ink/20 pt-3"><span class="num font-medium">{String(i + 1).padStart(2, '0')}</span><span>{c}</span></li>
+          ))}
+        </ol>
+        {!full && !en && <a href="/garantie/" class="btn btn-ink mt-7">Alle Bedingungen lesen<Icon name="arrow" size={18} class="arrow" /></a>}
+      </div>
+    </div>
+  </div>
+</section>

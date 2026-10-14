@@ -1,0 +1,36 @@
+---
+/** Exit-Intent-Hinweis auf das Leistungsverzeichnis. Nur Desktop, 1× pro Sitzung, Schalter in offer.ts. */
+import { offer } from '~/config/offer';
+import LeadMagnetForm from './LeadMagnetForm.astro';
+import Icon from '../ui/Icon.astro';
+const path = Astro.url.pathname;
+const active = offer.switches.exitIntent && !path.startsWith('/en/') && !path.startsWith('/angebot/');
+---
+{active && (
+  <dialog id="exit-intent" class="m-auto w-[min(40rem,calc(100vw-2rem))] rounded-2xl border border-line bg-paper p-0 text-ink backdrop:bg-ink/50" aria-labelledby="exit-title">
+    <div class="relative p-7 sm:p-9">
+      <button type="button" class="absolute right-4 top-4 inline-flex h-10 w-10 items-center justify-center rounded-full border border-line" data-close aria-label="Schließen"><Icon name="close" size={20} /></button>
+      <p class="eyebrow text-moss">Bevor Sie gehen</p>
+      <h2 id="exit-title" class="mt-2 text-3xl">Ihr Leistungsverzeichnis, kostenlos.</h2>
+      <p class="mt-3 text-stone">Welche Fläche wie oft gereinigt wird, schwarz auf weiß. Damit vergleichen Sie Angebote fair, auch wenn Sie nicht bei uns buchen.</p>
+      <div class="mt-6"><LeadMagnetForm id="lv-exit" /></div>
+    </div>
+  </dialog>
+)}
+<script>
+    const d = document.getElementById('exit-intent') as HTMLDialogElement | null;
+    if (d && window.matchMedia('(min-width: 64rem) and (pointer: fine)').matches) {
+      let shown = false;
+      try { shown = sessionStorage.getItem('rb-exit') === '1'; } catch { /* */ }
+      const onLeave = (e: MouseEvent) => {
+        if (shown || e.clientY > 8 || e.relatedTarget) return;
+        shown = true;
+        try { sessionStorage.setItem('rb-exit', '1'); } catch { /* */ }
+        d.showModal();
+        document.removeEventListener('mouseout', onLeave);
+      };
+      setTimeout(() => document.addEventListener('mouseout', onLeave), 8000);
+      d.querySelector('[data-close]')!.addEventListener('click', () => d.close());
+      d.addEventListener('click', (e) => { if (e.target === d) d.close(); });
+    }
+  </script>

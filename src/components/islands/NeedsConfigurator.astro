@@ -1,0 +1,133 @@
+---
+/**
+ * Bedarfs-Konfigurator: „Was soll bei Ihnen sauber werden?"
+ * Ausgabe OHNE Preise – Zusammenfassung + Weiterleitung ins Formular mit vorausgefüllten Werten.
+ */
+import Icon from '../ui/Icon.astro';
+import { offer } from '~/config/offer';
+
+interface Props {
+  preset?: string[];
+  lang?: 'de' | 'en';
+  compact?: boolean;
+  id?: string;
+}
+const { preset = [], lang = 'de', compact = false, id = 'konfigurator' } = Astro.props;
+const c = offer.configurator;
+
+const en: Record<string, [string, string]> = {
+  buero: ['Office areas', 'Desks, floors, bins'],
+  sanitaer: ['Washrooms & kitchen', 'Toilets, sinks, kitchenette'],
+  glas: ['Windows & glass', 'Windows, glass doors, partitions'],
+  teppich: ['Carpet & upholstery', 'Carpet floors, office chairs'],
+  grund: ['Deep clean', 'One-off, thorough, incl. floors'],
+  desinfektion: ['Disinfection', 'Touch points, washrooms'],
+  praxis: ['Practice / law firm', 'Reception, treatment rooms'],
+  treppenhaus: ['Stairwell & entrance', 'Stairs, railings, mailboxes'],
+  umzug: ['Move-out clean', 'Handover to landlord'],
+  material: ['Supplies', 'Soap, paper, bin bags'],
+};
+const areasEn = ['up to 100 m²', '100–250 m²', '250–500 m²', '500–1,000 m²', 'over 1,000 m²', 'not sure'];
+const freqEn = ['daily', '3× a week', '2× a week', 'weekly', 'every 2 weeks', 'one-off'];
+const t = lang === 'en'
+  ? { q: 'What needs to be clean?', sub: 'Pick everything that applies. No prices, no sign-up – you get a fixed quote within 24 hours.', area: 'Floor area', freq: 'How often?', next: 'Show my cleaning package', summary: 'Your cleaning package', promise: 'Fixed price within 24 hours after a free viewing.', cta: 'Request fixed price', edit: 'Change', none: 'Please choose at least one service.', target: '/en/contact/' }
+  : { q: 'Was soll bei Ihnen sauber werden?', sub: 'Alles anklicken, was zutrifft. Ohne Preise, ohne Anmeldung. Den Festpreis bekommen Sie in 24 Stunden.', area: 'Fläche', freq: 'Wie oft?', next: 'Mein Reinigungspaket anzeigen', summary: 'Ihr Reinigungspaket', promise: 'Festpreis innerhalb von 24 Stunden nach kostenloser Besichtigung.', cta: 'Festpreis anfordern', edit: 'Ändern', none: 'Bitte wählen Sie mindestens eine Leistung.', target: '/angebot/' };
+const label = (k: string, de: string) => (lang === 'en' ? en[k]?.[0] ?? de : de);
+const hint = (k: string, de: string) => (lang === 'en' ? en[k]?.[1] ?? de : de);
+const areas = lang === 'en' ? areasEn : c.areas;
+const freqs = lang === 'en' ? freqEn : c.frequencies;
+---
+<div class="needs-config rounded-2xl border border-line bg-paper-2/60 p-5 sm:p-7" data-configurator data-target={t.target} data-lang={lang} id={id}>
+  <form class="cfg-step" data-step="1" novalidate>
+    <fieldset>
+      <legend class:list={['font-display font-semibold tracking-tight', compact ? 'text-xl' : 'text-2xl sm:text-3xl']}>{t.q}</legend>
+      <p class="mt-2 text-[0.95rem] text-stone">{t.sub}</p>
+      <div class:list={['mt-5 grid gap-2.5', compact ? 'grid-cols-2' : 'grid-cols-2 xl:grid-cols-3']}>
+        {c.services.map((s) => (
+          <label class="tile max-sm:!pl-9 max-sm:text-[0.95rem] max-sm:before:!left-3">
+            <input type="checkbox" name="leistung" value={s.key} checked={preset.includes(s.key)} data-label={label(s.key, s.label)} />
+            <span class="tile-title">{label(s.key, s.label)}</span>
+            <span class="tile-hint max-sm:hidden">{hint(s.key, s.hint)}</span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+    <div class="mt-5 grid gap-4 sm:grid-cols-2">
+      <div>
+        <label class="field-label" for={`${id}-area`}>{t.area}</label>
+        <select id={`${id}-area`} name="flaeche" class="field">
+          {areas.map((a, i) => <option value={c.areas[i]} selected={i === 1}>{a}</option>)}
+        </select>
+      </div>
+      <div>
+        <label class="field-label" for={`${id}-freq`}>{t.freq}</label>
+        <select id={`${id}-freq`} name="haeufigkeit" class="field">
+          {freqs.map((f, i) => <option value={c.frequencies[i]} selected={i === 2}>{f}</option>)}
+        </select>
+      </div>
+    </div>
+    <p class="field-error mt-3 hidden" role="alert" data-error>{t.none}</p>
+    <button type="submit" class="btn btn-ink mt-6 w-full sm:w-auto">{t.next}<Icon name="arrow" size={18} class="arrow" /></button>
+  </form>
+
+  <div class="cfg-step hidden" data-step="2" tabindex="-1" aria-live="polite">
+    <p class="eyebrow text-moss">{t.summary}</p>
+    <ul class="mt-4 divide-y divide-line border-y border-line" data-summary-list></ul>
+    <dl class="mt-4 grid grid-cols-2 gap-4 text-[0.95rem]">
+      <div><dt class="text-stone">{t.area}</dt><dd class="font-medium" data-summary-area></dd></div>
+      <div><dt class="text-stone">{t.freq}</dt><dd class="font-medium" data-summary-freq></dd></div>
+    </dl>
+    <p class="mt-5 flex items-start gap-2.5 rounded-lg bg-mint-soft px-4 py-3 text-[0.95rem]">
+      <Icon name="tag" size={20} class="mt-0.5 shrink-0" />{t.promise}
+    </p>
+    <div class="mt-6 flex flex-wrap items-center gap-4">
+      <a href={t.target} class="btn btn-primary" data-cta>{t.cta}<Icon name="arrow" size={18} class="arrow" /></a>
+      <button type="button" class="link-moss text-[0.95rem]" data-edit>{t.edit}</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { track } from '~/lib/track';
+  document.querySelectorAll<HTMLElement>('[data-configurator]').forEach((root) => {
+    const form = root.querySelector<HTMLFormElement>('form[data-step="1"]')!;
+    const out = root.querySelector<HTMLElement>('[data-step="2"]')!;
+    const err = root.querySelector<HTMLElement>('[data-error]')!;
+    const list = root.querySelector<HTMLElement>('[data-summary-list]')!;
+    const cta = root.querySelector<HTMLAnchorElement>('[data-cta]')!;
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const checked = [...form.querySelectorAll<HTMLInputElement>('input[name="leistung"]:checked')];
+      if (!checked.length) {
+        err.classList.remove('hidden');
+        form.querySelector<HTMLInputElement>('input[name="leistung"]')?.focus();
+        return;
+      }
+      err.classList.add('hidden');
+      const area = form.querySelector<HTMLSelectElement>('[name="flaeche"]')!;
+      const freq = form.querySelector<HTMLSelectElement>('[name="haeufigkeit"]')!;
+      list.innerHTML = '';
+      checked.forEach((c) => {
+        const li = document.createElement('li');
+        li.className = 'flex items-center gap-3 py-2.5';
+        li.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" class="text-moss shrink-0"><path d="M4.8 12.6c1.7 2.1 3.3 3.2 4.9 3.2 2.5 0 5-2.4 9.5-8.8"/></svg>';
+        li.append(document.createTextNode(c.dataset.label || c.value));
+        list.append(li);
+      });
+      root.querySelector('[data-summary-area]')!.textContent = area.selectedOptions[0].text;
+      root.querySelector('[data-summary-freq]')!.textContent = freq.selectedOptions[0].text;
+      const params = new URLSearchParams({ l: checked.map((c) => c.value).join(','), f: area.value, h: freq.value });
+      cta.href = `${root.dataset.target}?${params.toString()}#anfrage`;
+      form.classList.add('hidden');
+      out.classList.remove('hidden');
+      out.focus();
+      track('configurator_complete', { services: checked.length, area: area.value, frequency: freq.value });
+    });
+    root.querySelector('[data-edit]')!.addEventListener('click', () => {
+      out.classList.add('hidden');
+      form.classList.remove('hidden');
+      form.querySelector<HTMLInputElement>('input[name="leistung"]')?.focus();
+    });
+  });
+</script>

@@ -1,0 +1,142 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import Photo from '~/components/ui/Photo.astro';
+import Icon from '~/components/ui/Icon.astro';
+import TrustLine from '~/components/sections/TrustLine.astro';
+import NeedsConfigurator from '~/components/islands/NeedsConfigurator.astro';
+import SectionHeader from '~/components/sections/SectionHeader.astro';
+import ProblemBlock from '~/components/sections/ProblemBlock.astro';
+import OfferStack from '~/components/sections/OfferStack.astro';
+import ProcessSteps from '~/components/sections/ProcessSteps.astro';
+import BeforeAfterGallery from '~/components/sections/BeforeAfterGallery.astro';
+import ComparisonTable from '~/components/sections/ComparisonTable.astro';
+import GuaranteeBlock from '~/components/sections/GuaranteeBlock.astro';
+import ServiceArea from '~/components/sections/ServiceArea.astro';
+import OwnerBlock from '~/components/sections/OwnerBlock.astro';
+import Testimonials from '~/components/sections/Testimonials.astro';
+import LeadMagnetBlock from '~/components/sections/LeadMagnetBlock.astro';
+import FAQ from '~/components/sections/FAQ.astro';
+import FinalCTA from '~/components/sections/FinalCTA.astro';
+import { offer } from '~/config/offer';
+import { hasStimmen } from '~/lib/collections';
+import { whatsappLink } from '~/lib/contact';
+import { faqPage } from '~/lib/schema';
+import heroImg from '~/assets/images/buero-flur-glastueren-tageslicht.jpg';
+
+const services = (await getCollection('leistungen')).sort((a, b) => a.data.order - b.data.order);
+const guides = (await getCollection('ratgeber')).sort((a, b) => a.data.order - b.data.order).slice(0, 3);
+const showGallery = offer.switches.showGallery && (await getCollection('projekte')).length > 0;
+const wa = whatsappLink('Hallo, ich interessiere mich für eine Gebäudereinigung in Berlin.');
+const faqs = [
+  { q: 'Was kostet eine Gebäudereinigung in Berlin?', a: 'Das hängt von Fläche, Häufigkeit, Bodenbelägen, Anzahl der Sanitärräume und Zeitfenster ab. Deshalb nennen wir keine Pauschalen, sondern einen Festpreis für Ihr Objekt, innerhalb von 24 Stunden nach der kostenlosen Besichtigung. Die Faktoren erklärt unser Ratgeber zu den Kosten der Büroreinigung.' },
+  { q: 'In welchen Bezirken reinigen Sie?', a: 'In allen 12 Berliner Bezirken, von Spandau bis Marzahn-Hellersdorf und von Reinickendorf bis Treptow-Köpenick. Die Besichtigung ist überall kostenlos.' },
+  ...offer.commonFaq.slice(0, 4),
+  { q: 'Sprechen Sie Englisch?', a: 'Ja. Viele unserer Kunden sind internationale Teams. Angebot, Leistungsverzeichnis und Kommunikation gibt es auf Wunsch komplett auf Englisch.' },
+];
+const url = new URL('/', Astro.site).toString();
+let n = 1;
+const next = () => ++n;
+---
+<BaseLayout
+  title="Gebäudereinigung Berlin – Festpreis 24 h | Reinigungsbuddy"
+  description="Gebäudereinigung in Berlin mit Festpreis in 24 h, Foto-Protokoll und 24-h-Nachbesserungsgarantie. Monatlich kündbar, alle 12 Bezirke. Jetzt anfragen."
+  image="/og/home.png"
+  schema={[faqPage(faqs, url)]}>
+  <!-- 01 Hero -->
+  <section class="wrap pb-12 pt-10 lg:pb-16 lg:pt-16">
+    <div class="grid-12 gap-y-10">
+      <div class="col-span-4 lg:col-span-7">
+        <p class="eyebrow text-moss"><span class="num">01</span> — Gebäudereinigung Berlin</p>
+        <h1 class="mt-5 text-mega">
+          Gebäudereinigung in Berlin, mit Festpreis, Foto-Protokoll und einer Garantie, die uns etwas kostet.
+        </h1>
+        <p class="mt-7 max-w-2xl text-lead">
+          Reinigungsbuddy reinigt Büros, Praxen und Gewerbeflächen in allen 12 Bezirken. Sie bekommen <strong class="font-medium">ein Festpreis-Angebot in 24 Stunden</strong>, ein <strong class="font-medium">Foto-Protokoll nach jedem Einsatz</strong> und können <strong class="font-medium">monatlich kündigen</strong>. Und wenn etwas nicht sauber ist, reinigen wir innerhalb von 24 Stunden kostenlos nach.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="/angebot/" class="btn btn-primary">Festpreis in 24 h anfragen<Icon name="arrow" size={18} class="arrow" /></a>
+          {wa ? (
+            <a href={wa} class="btn btn-ghost" data-track="whatsapp_click" rel="noopener"><Icon name="whatsapp" size={20} />Direkt per WhatsApp</a>
+          ) : (
+            <a href="/leistungen/" class="btn btn-ghost">Alle Leistungen</a>
+          )}
+        </div>
+        <TrustLine class="mt-8" />
+      </div>
+      <div class="col-span-4 lg:col-span-5">
+        <NeedsConfigurator preset={['buero', 'sanitaer']} compact id="cfg-home" />
+      </div>
+    </div>
+  </section>
+
+  <figure class="relative">
+    <Photo src={heroImg} alt="Heller Büroflur mit Glastüren, Holzboden und Tageslicht in einem modernen Bürogebäude" sizes="100vw" class="h-[60vh] max-h-[44rem] min-h-[20rem] w-full object-cover" />
+    <div class="wrap relative -mt-16 sm:-mt-20">
+      <dl class="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-line bg-line lg:grid-cols-4">
+        {[
+          ['24 h', 'bis zum Festpreis nach der Besichtigung'],
+          ['12', 'Berliner Bezirke im Einsatzgebiet'],
+          ['1', 'fester Ansprechpartner statt Hotline'],
+          ['0', 'Monate Mindestlaufzeit'],
+        ].map(([v, l]) => (
+          <div class="bg-paper p-5 sm:p-6">
+            <dt class="sr-only">{l}</dt>
+            <dd class="num font-display text-4xl font-semibold tracking-tight sm:text-5xl">{v}</dd>
+            <dd class="mt-1 text-[0.95rem] text-stone">{l}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </figure>
+
+  <!-- Leistungen -->
+  <section class="wrap py-20 lg:py-28" aria-labelledby="s2">
+    <SectionHeader num={next()} label="Leistungen" title="Alles, was in Ihrem Büro sauber sein muss. Ein Ansprechpartner." intro="Von der täglichen Unterhaltsreinigung bis zur Endreinigung beim Auszug. Sie brauchen keine zweite Firma für die Fenster und keine dritte für den Teppich." id="s2" wide />
+    <ul class="mt-12 border-t border-line">
+      {services.map((s, i) => (
+        <li class="border-b border-line">
+          <a href={`/${s.id}/`} class="group grid grid-cols-[2.5rem_1fr_auto] items-baseline gap-4 py-5 sm:grid-cols-[3rem_minmax(0,24rem)_1fr_auto]">
+            <span class="num text-sm text-stone">{String(i + 1).padStart(2, '0')}</span>
+            <span class="font-display text-xl font-semibold tracking-tight transition-colors group-hover:text-moss sm:text-[1.65rem]">{s.data.name}</span>
+            <span class="hidden text-stone sm:block">{s.data.teaser}</span>
+            <Icon name="arrow" size={22} class="transition-transform duration-300 group-hover:translate-x-1" />
+          </a>
+        </li>
+      ))}
+    </ul>
+    <p class="mt-6 text-stone">Dazu auf Wunsch: <a href="/leistungen/#verbrauchsmaterial" class="link-moss">Verbrauchsmaterial-Service</a> für Seife, Papier und Müllbeutel.</p>
+  </section>
+
+  <ProblemBlock num={next()} />
+  <OfferStack num={next()} />
+  <ProcessSteps num={next()} />
+  {showGallery && <BeforeAfterGallery num={next()} />}
+  <ComparisonTable num={next()} />
+  <GuaranteeBlock num={next()} />
+  <ServiceArea num={next()} />
+  {hasStimmen && <Testimonials num={next()} />}
+  <OwnerBlock num={next()} />
+  <LeadMagnetBlock num={next()} />
+
+  {guides.length > 0 && (
+    <section class="wrap py-20 lg:py-28" aria-labelledby="s-rg">
+      <SectionHeader num={next()} label="Ratgeber" title="Wissen, bevor Sie Angebote vergleichen." id="s-rg" />
+      <ul class="mt-12 grid gap-8 lg:grid-cols-3">
+        {guides.map((g) => (
+          <li class="reveal">
+            <a href={`/ratgeber/${g.id}/`} class="group block">
+              <div class="zoom rounded-xl"><Photo src={g.data.image} alt={g.data.imageAlt} sizes="(min-width: 64rem) 30vw, 100vw" widths={[480, 768, 1080]} class="aspect-[3/2] w-full object-cover" /></div>
+              <h3 class="mt-4 text-2xl transition-colors group-hover:text-moss">{g.data.title}</h3>
+              <p class="mt-2 text-stone">{g.data.excerpt}</p>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <a href="/ratgeber/" class="link-moss mt-10 inline-block">Alle Ratgeber-Artikel</a>
+    </section>
+  )}
+
+  <FAQ num={next()} items={faqs} title="Fragen zur Gebäudereinigung in Berlin" />
+  <FinalCTA num={next()} />
+</BaseLayout>

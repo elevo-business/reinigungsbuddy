@@ -1,0 +1,96 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import Breadcrumbs from '~/components/Breadcrumbs.astro';
+import Photo from '~/components/ui/Photo.astro';
+import Icon from '~/components/ui/Icon.astro';
+import SectionHeader from '~/components/sections/SectionHeader.astro';
+import NeedsConfigurator from '~/components/islands/NeedsConfigurator.astro';
+import ProcessSteps from '~/components/sections/ProcessSteps.astro';
+import FAQ from '~/components/sections/FAQ.astro';
+import FinalCTA from '~/components/sections/FinalCTA.astro';
+import { breadcrumbs, faqPage } from '~/lib/schema';
+
+const services = (await getCollection('leistungen')).sort((a, b) => a.data.order - b.data.order);
+const crumbs = [{ name: 'Start', href: '/' }, { name: 'Leistungen', href: '/leistungen/' }];
+const url = new URL('/leistungen/', Astro.site).toString();
+const faqs = [
+  { q: 'Kann ich mehrere Leistungen kombinieren?', a: 'Ja, das ist der Normalfall. Die meisten Kunden haben eine regelmäßige Büroreinigung mit Sanitär und Teeküche und dazu Intervall-Leistungen wie Fenster, Teppich oder eine jährliche Grundreinigung. Alles steht in einem Leistungsverzeichnis mit einem Festpreis.' },
+  { q: 'Gibt es Mindestflächen oder Mindestaufträge?', a: 'Nein, keine starre Grenze. Kleine Büros und Praxen sind bei uns genauso willkommen wie größere Flächen. Bei sehr kleinen Flächen besprechen wir einen sinnvollen Rhythmus, damit sich Anfahrt und Aufwand die Waage halten.' },
+  { q: 'Was genau ist der Verbrauchsmaterial-Service?', a: 'Wir kontrollieren bei jedem Einsatz Seife, Hand- und Toilettenpapier, Müllbeutel und auf Wunsch Spülmittel und Spülmaschinentabs und füllen nach. Das Material wird transparent mit der Reinigung abgerechnet.' },
+  { q: 'Wie schnell können Sie starten?', a: 'Nach Ihrer Zusage meist innerhalb von ein bis zwei Wochen, abhängig von Umfang und Zeitfenster. Den genauen Starttermin nennen wir im Angebot.' },
+];
+---
+<BaseLayout
+  title="Büroreinigung Leistungen | Reinigungsbuddy"
+  description="Alle Leistungen der Büroreinigung in Berlin: Unterhalts-, Grund-, Glas-, Teppich- und Praxisreinigung. Ein Ansprechpartner, ein Festpreis in 24 h."
+  image="/og/leistung.png"
+  schema={[breadcrumbs(crumbs, Astro.site!), faqPage(faqs, url), {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Leistungen von Reinigungsbuddy',
+    itemListElement: services.map((s, i) => ({ '@type': 'ListItem', position: i + 1, url: new URL(`/${s.id}/`, Astro.site).toString(), name: s.data.name })),
+  }]}>
+  <section class="wrap pb-16 pt-8 lg:pb-24 lg:pt-12">
+    <Breadcrumbs items={crumbs} />
+    <div class="grid-12 mt-8 gap-y-8">
+      <div class="col-span-4 lg:col-span-9">
+        <p class="eyebrow text-moss"><span class="num">01</span> — Leistungen</p>
+        <h1 class="mt-5 text-mega">Büroreinigung: alle Leistungen aus einer Hand.</h1>
+      </div>
+      <p class="col-span-4 text-lead lg:col-span-6 lg:col-start-4">
+        Von der täglichen Unterhaltsreinigung über Fenster, Teppich und Sanitär bis zur Endreinigung beim Büroumzug: Reinigungsbuddy deckt alles ab, was in Berliner Büros, Praxen und Gewerbeflächen sauber sein muss. Ein Ansprechpartner, ein Leistungsverzeichnis, ein Festpreis innerhalb von 24 Stunden nach der kostenlosen Besichtigung.
+      </p>
+    </div>
+  </section>
+
+  <section class="wrap pb-20" aria-label="Alle Leistungen">
+    <ul class="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+      {services.map((s, i) => (
+        <li class="reveal">
+          <a href={`/${s.id}/`} class="group block">
+            <div class="zoom overflow-hidden rounded-xl">
+              <Photo src={s.data.heroImage} alt={s.data.heroAlt} sizes="(min-width: 64rem) 30vw, (min-width: 40rem) 45vw, 100vw" widths={[480, 768, 1080]} class="aspect-[4/3] w-full object-cover" />
+            </div>
+            <div class="mt-4 flex items-baseline gap-3 border-t border-line pt-4">
+              <span class="num text-sm text-stone">{String(i + 1).padStart(2, '0')}</span>
+              <div>
+                <h2 class="text-2xl transition-colors group-hover:text-moss">{s.data.name}</h2>
+                <p class="mt-1.5 text-stone">{s.data.teaser}</p>
+              </div>
+            </div>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section id="verbrauchsmaterial" class="on-dark py-20 lg:py-28" aria-labelledby="vm">
+    <div class="wrap grid-12 gap-y-10">
+      <div class="col-span-4 lg:col-span-5">
+        <p class="eyebrow text-fog"><span class="num">+</span> — Zusatzleistung</p>
+        <h2 id="vm" class="mt-4 text-display">Verbrauchsmaterial-Service</h2>
+        <p class="mt-5 text-lead text-fog">Nie wieder „Papier ist alle". Wir kontrollieren bei jedem Einsatz den Bestand und füllen nach, ohne Einkaufslisten und ohne zweiten Lieferanten.</p>
+      </div>
+      <ul class="col-span-4 grid gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-2 lg:col-span-6 lg:col-start-7">
+        {[
+          ['drop', 'Flüssigseife & Desinfektionsspender'],
+          ['layers', 'Hand- und Toilettenpapier'],
+          ['box', 'Müllbeutel in allen Größen'],
+          ['cup', 'Spülmittel & Spülmaschinentabs'],
+        ].map(([icon, text]) => (
+          <li class="flex items-center gap-4 bg-ink p-6"><Icon name={icon} size={28} class="shrink-0 text-mint" /><span class="font-medium">{text}</span></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="wrap py-20 lg:py-28" aria-labelledby="cfg-title">
+    <SectionHeader num={2} label="Bedarf" title="Stellen Sie Ihr Paket zusammen." intro="Ohne Preise, ohne Anmeldung. Wählen Sie, was bei Ihnen sauber werden soll. Den Festpreis bekommen Sie in 24 Stunden." id="cfg-title" />
+    <div class="mt-10 lg:max-w-4xl"><NeedsConfigurator id="cfg-hub" /></div>
+  </section>
+
+  <ProcessSteps num={3} />
+  <FAQ num={4} items={faqs} title="Fragen zu den Leistungen" />
+  <FinalCTA num={5} />
+</BaseLayout>

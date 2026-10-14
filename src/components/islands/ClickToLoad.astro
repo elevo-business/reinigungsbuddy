@@ -1,0 +1,30 @@
+---
+/**
+ * Zwei-Klick-Lösung für externe Inhalte (Cal.com, Google-Bewertungen, Karten).
+ * Erst nach Klick wird der iframe eingesetzt – vorher fließen keine Daten an Dritte.
+ */
+interface Props { src: string; title: string; provider: string; height?: number; lang?: 'de' | 'en' }
+const { src, title, provider, height = 640, lang = 'de' } = Astro.props;
+const t = lang === 'en'
+  ? { btn: `Load ${provider}`, note: `Clicking loads content from ${provider}. Data such as your IP address will be transferred to ${provider}.` }
+  : { btn: `${provider} laden`, note: `Mit dem Klick werden Inhalte von ${provider} geladen. Dabei werden Daten wie Ihre IP-Adresse an ${provider} übertragen.` };
+---
+<div class="ctl rounded-xl border border-line bg-paper-2 p-6" data-ctl data-src={src} data-title={title} data-height={height}>
+  <p class="font-medium">{title}</p>
+  <p class="mt-2 max-w-prose text-sm text-stone">{t.note} <a href="/datenschutz/" class="link-moss">{lang === 'en' ? 'Privacy' : 'Datenschutz'}</a></p>
+  <button type="button" class="btn btn-ink mt-4">{t.btn}</button>
+</div>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-ctl]').forEach((box) => {
+    box.querySelector('button')!.addEventListener('click', () => {
+      const f = document.createElement('iframe');
+      f.src = box.dataset.src!;
+      f.title = box.dataset.title!;
+      f.loading = 'lazy';
+      f.style.width = '100%';
+      f.style.height = `${box.dataset.height}px`;
+      f.style.border = '0';
+      box.replaceWith(f);
+    });
+  });
+</script>

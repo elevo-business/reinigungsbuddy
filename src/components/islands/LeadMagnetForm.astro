@@ -1,0 +1,69 @@
+---
+/**
+ * Lead-Magnet: individuelles Leistungsverzeichnis für das eigene Büro (E-Mail-Opt-in).
+ * Versand per mailto (oder PUBLIC_FORM_ENDPOINT). Danach sofort die allgemeine Vorlage als PDF.
+ */
+import Icon from '../ui/Icon.astro';
+import { site } from '~/config/site';
+interface Props { id?: string; tone?: 'paper' | 'ink' }
+const { id = 'lv', tone = 'paper' } = Astro.props;
+const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT || '';
+const pdf = '/downloads/leistungsverzeichnis-bueroreinigung-vorlage.pdf';
+---
+<div data-lead-magnet data-mail={site.leadEmail} data-endpoint={endpoint} id={id}>
+  <form class="grid gap-3 sm:grid-cols-[1fr_1fr_auto] sm:items-end" novalidate data-lm-form>
+    <div>
+      <label for={`${id}-email`} class="field-label">E-Mail <span aria-hidden="true">*</span></label>
+      <input id={`${id}-email`} name="email" type="email" class="field" autocomplete="email" required aria-describedby={`${id}-err`} />
+    </div>
+    <div>
+      <label for={`${id}-size`} class="field-label">Ungefähre Bürofläche</label>
+      <select id={`${id}-size`} name="flaeche" class="field">
+        <option>bis 100 m²</option><option selected>100–250 m²</option><option>250–500 m²</option><option>über 500 m²</option>
+      </select>
+    </div>
+    <div class="absolute -left-[9999px]" aria-hidden="true"><input type="text" name="website" tabindex="-1" autocomplete="off" /></div>
+    <button type="submit" class:list={['btn', tone === 'ink' ? 'btn-primary' : 'btn-ink']}>Kostenlos anfordern<Icon name="arrow" size={18} class="arrow" /></button>
+    <p id={`${id}-err`} class="field-error hidden sm:col-span-3" data-lm-err>Bitte eine gültige E-Mail-Adresse eingeben.</p>
+    <p class:list={['text-sm sm:col-span-3', tone === 'ink' ? 'text-fog' : 'text-stone']}>
+      Kein Newsletter. Wir schicken Ihnen nur das Leistungsverzeichnis. <a href="/datenschutz/" class="link-moss">Datenschutz</a>
+    </p>
+  </form>
+  <div class="hidden" data-lm-done tabindex="-1">
+    <p class="font-display text-xl font-semibold">Danke! Bitte senden Sie die vorbereitete E-Mail ab.</p>
+    <p class:list={['mt-2', tone === 'ink' ? 'text-fog' : 'text-stone']}>
+      Ihr individuelles Leistungsverzeichnis erstellen wir nach einem kurzen Gespräch über Ihre Räume. Die allgemeine Vorlage können Sie sofort herunterladen:
+    </p>
+    <a href={pdf} class="btn btn-primary mt-4" download><Icon name="document" size={20} />Vorlage als PDF</a>
+  </div>
+</div>
+<script>
+  import { track } from '~/lib/track';
+  document.querySelectorAll<HTMLElement>('[data-lead-magnet]').forEach((root) => {
+    const form = root.querySelector<HTMLFormElement>('[data-lm-form]')!;
+    const started = Date.now();
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = form.querySelector<HTMLInputElement>('[name="email"]')!;
+      const ok = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim());
+      email.setAttribute('aria-invalid', String(!ok));
+      root.querySelector('[data-lm-err]')!.classList.toggle('hidden', ok);
+      if (!ok) return email.focus();
+      if ((form.querySelector('[name="website"]') as HTMLInputElement).value || Date.now() - started < 2000) return;
+      const area = (form.querySelector('[name="flaeche"]') as HTMLSelectElement).value;
+      const data = { typ: 'Leistungsverzeichnis', email: email.value.trim(), flaeche: area, quelle: location.pathname };
+      if (root.dataset.endpoint) {
+        try { await fetch(root.dataset.endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }); } catch { /* Fallback unten */ }
+      } else {
+        const body = `Bitte schicken Sie mir ein individuelles Leistungsverzeichnis für mein Büro.\n\nE-Mail: ${data.email}\nFläche: ${area}\nSeite: ${data.quelle}`;
+        window.location.href = `mailto:${root.dataset.mail}?subject=${encodeURIComponent('Leistungsverzeichnis anfordern')}&body=${encodeURIComponent(body)}`;
+      }
+      track('lead_magnet_optin', { area });
+      form.reset();
+      form.classList.add('hidden');
+      const done = root.querySelector<HTMLElement>('[data-lm-done]')!;
+      done.classList.remove('hidden');
+      done.focus();
+    });
+  });
+</script>

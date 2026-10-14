@@ -1,0 +1,16 @@
+---
+/** Zitierfähige Fakten (gut für KI-Suche / AI Overviews): kurze Label-Wert-Paare. */
+interface Props { facts: { label: string; value: string }[]; title?: string }
+const { facts, title = 'Auf einen Blick' } = Astro.props;
+---
+<div class="rounded-xl border border-line">
+  <h2 class="eyebrow border-b border-line px-5 py-3">{title}</h2>
+  <dl class="divide-y divide-line">
+    {facts.map((f) => (
+      <div class="grid grid-cols-[minmax(7rem,38%)_1fr] gap-4 px-5 py-3 text-[0.97rem]">
+        <dt class="text-stone">{f.label}</dt>
+        <dd>{f.value}</dd>
+      </div>
+    ))}
+  </dl>
+</div>

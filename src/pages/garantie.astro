@@ -1,0 +1,86 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import Breadcrumbs from '~/components/Breadcrumbs.astro';
+import Icon from '~/components/ui/Icon.astro';
+import SectionHeader from '~/components/sections/SectionHeader.astro';
+import FAQ from '~/components/sections/FAQ.astro';
+import FinalCTA from '~/components/sections/FinalCTA.astro';
+import { offer } from '~/config/offer';
+import { breadcrumbs, faqPage } from '~/lib/schema';
+const g = offer.guarantee;
+const crumbs = [{ name: 'Start', href: '/' }, { name: 'Garantie', href: '/garantie/' }];
+const url = new URL('/garantie/', Astro.site).toString();
+const steps = [
+  { title: 'Foto machen', text: 'Sie sehen etwas, das nicht sauber ist: Foto machen, kurz beschreiben, wo.' },
+  { title: 'Melden', text: 'Per WhatsApp oder E-Mail, innerhalb von 24 Stunden nach dem Einsatz. Sie bekommen eine Bestätigung.' },
+  { title: 'Nachbesserung', text: 'Wir reinigen innerhalb von 24 Stunden (werktags) nach Ihrer Meldung kostenlos nach.' },
+  { title: 'Oder Sie zahlen nicht', text: 'Schaffen wir die Frist nicht, wird der betroffene Einsatz nicht berechnet. Automatisch, ohne Diskussion.' },
+];
+const faqs = [
+  { q: 'Warum geben Sie diese Garantie?', a: 'Weil „Wir kümmern uns darum" kein Versprechen ist. Eine Garantie, die nichts kostet, wenn man sie bricht, ist Werbung. Unsere kostet uns den Einsatz, und genau deshalb halten wir sie ein.' },
+  { q: 'Wie oft kann ich die Garantie nutzen?', a: 'So oft etwas nicht stimmt. Wenn sich ein Mangel wiederholt, ist das für uns ein Signal, den Ablauf oder das Intervall zu ändern, und das besprechen wir mit Ihnen.' },
+  { q: 'Gilt die Garantie auch für einmalige Aufträge wie Grund- oder Endreinigung?', a: 'Ja, für alle Leistungen, die im Leistungsverzeichnis bzw. Angebot stehen. Bei Endreinigungen gilt sie bis zur Übergabe an den Vermieter, sofern wir vorher Zugang zu den Räumen haben.' },
+  { q: 'Was zählt als Werktag?', a: 'Montag bis Freitag, ausgenommen gesetzliche Feiertage in Berlin. Melden Sie am Freitagabend, läuft die Frist bis Montagabend.' },
+];
+---
+<BaseLayout
+  title="24-Stunden-Nachbesserungsgarantie | Reinigungsbuddy Berlin"
+  description="Nicht sauber? Foto schicken, wir reinigen in 24 h (werktags) kostenlos nach. Sonst zahlen Sie den Einsatz nicht. Alle Bedingungen auf einen Blick."
+  schema={[breadcrumbs(crumbs, Astro.site!), faqPage(faqs, url)]}>
+  <section class="wrap pb-16 pt-8 lg:pb-24 lg:pt-12">
+    <Breadcrumbs items={crumbs} />
+    <div class="grid-12 mt-8 gap-y-8">
+      <div class="col-span-4 lg:col-span-10">
+        <p class="eyebrow text-moss"><span class="num">01</span> — Garantie</p>
+        <h1 class="mt-5 text-mega">Eine Garantie, die uns etwas kostet, wenn wir sie brechen.</h1>
+      </div>
+      <p class="col-span-4 text-lead lg:col-span-7 lg:col-start-4">{g.short} Hier stehen alle Bedingungen, kurz und ohne Kleingedrucktes.</p>
+    </div>
+  </section>
+
+  <section class="wrap pb-20" aria-labelledby="ablauf">
+    <SectionHeader num={2} label="So funktioniert es" title="Vier Schritte, eine Konsequenz." id="ablauf" />
+    <ol class="mt-12 grid gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
+      {steps.map((s, i) => (
+        <li class:list={['p-6 lg:p-7', i === 3 ? 'bg-mint' : 'bg-paper']}>
+          <span class="num font-display text-[3.5rem] font-semibold leading-none">{String(i + 1).padStart(2, '0')}</span>
+          <h3 class="mt-8 text-xl">{s.title}</h3>
+          <p class:list={['mt-2 text-[0.98rem]', i === 3 ? '' : 'text-stone']}>{s.text}</p>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="on-dark py-20 lg:py-28" aria-labelledby="bed">
+    <div class="wrap">
+      <SectionHeader num={3} label="Bedingungen" title="Alle Bedingungen der Garantie" id="bed" />
+      <div class="grid-12 mt-12">
+        <ol class="col-span-4 space-y-0 lg:col-span-8 lg:col-start-4">
+          {g.conditions.map((c, i) => (
+            <li class="flex gap-5 border-t border-line py-5 text-lg"><span class="num font-display text-mint">{String(i + 1).padStart(2, '0')}</span><span>{c}</span></li>
+          ))}
+        </ol>
+      </div>
+      <p class="mt-10 max-w-2xl text-sm text-fog lg:ml-[33.4%]">Die Garantie gilt zusätzlich zu Ihren gesetzlichen Rechten und schränkt diese nicht ein. Die verbindliche Fassung ist Teil Ihres Angebots.</p>
+    </div>
+  </section>
+
+  <section class="wrap py-20" aria-labelledby="warum">
+    <SectionHeader num={4} label="Warum" title="Was nicht in der Garantie steht" intro="Wir versprechen nur, was ein kleiner, inhabergeführter Betrieb sicher halten kann." id="warum" />
+    <div class="grid-12 mt-10 gap-y-6">
+      <ul class="col-span-4 grid gap-4 sm:grid-cols-2 lg:col-span-8 lg:col-start-4">
+        {[
+          ['Kein 24/7-Notdienst', 'Wir reinigen nach, wir sind keine Feuerwehr. Nachts und am Wochenende läuft die Frist nicht.'],
+          ['Kein Ersatzteam auf Abruf', 'Fällt ein Termin aus, sagen wir es früh und holen ihn nach. Ausgefallene Termine berechnen wir nicht.'],
+          ['Keine Wunder', 'Alte, fixierte Flecken oder beschädigte Oberflächen nennen wir vorher beim Namen, statt sie zu versprechen.'],
+          ['Kein Kleingedrucktes', 'Was oben steht, ist alles. Die gleiche Fassung steht in Ihrem Angebot.'],
+        ].map(([t, x]) => (
+          <li class="rounded-xl border border-line p-5"><p class="flex items-center gap-2 font-medium"><Icon name="minus" size={20} class="text-stone" />{t}</p><p class="mt-2 text-stone">{x}</p></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <FAQ num={5} items={faqs} title="Fragen zur Garantie" />
+  <FinalCTA num={6} />
+</BaseLayout>

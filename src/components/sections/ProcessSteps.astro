@@ -1,0 +1,18 @@
+---
+import SectionHeader from './SectionHeader.astro';
+import { offer } from '~/config/offer';
+interface Props { num: number; steps?: { title: string; text: string }[]; label?: string; title?: string; intro?: string }
+const { num, steps = offer.process, label = 'Ablauf', title = 'Von der Anfrage bis zur ersten Reinigung', intro = 'Vier Schritte. Sie wissen bei jedem, was als Nächstes passiert und wann.' } = Astro.props;
+---
+<section class="wrap py-20 lg:py-28" aria-labelledby={`s${num}`}>
+  <SectionHeader num={num} label={label} title={title} intro={intro} id={`s${num}`} />
+  <ol class="mt-14 grid gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
+    {steps.map((s, i) => (
+      <li class="reveal bg-paper p-6 lg:p-7">
+        <span class="num font-display text-[3.5rem] font-semibold leading-none tracking-tight">{String(i + 1).padStart(2, '0')}</span>
+        <h3 class="mt-8 text-xl">{s.title}</h3>
+        <p class="mt-2 text-[0.98rem] text-stone">{s.text}</p>
+      </li>
+    ))}
+  </ol>
+</section>

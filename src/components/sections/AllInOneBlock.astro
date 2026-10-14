@@ -1,0 +1,31 @@
+---
+import { getCollection } from 'astro:content';
+import SectionHeader from './SectionHeader.astro';
+import Icon from '../ui/Icon.astro';
+interface Props { num: number; current?: string }
+const { num, current } = Astro.props;
+const all = (await getCollection('leistungen')).sort((a, b) => a.data.order - b.data.order).filter((s) => s.id !== current);
+---
+<section class="wrap py-20 lg:py-28" aria-labelledby={`s${num}`}>
+  <SectionHeader num={num} label="Alles aus einer Hand" title="Ein Ansprechpartner für alles, was in Ihrem Büro sauber sein muss." intro="Sie brauchen keine zweite Firma für die Fenster und keine dritte für den Teppich. Alles läuft über ein Leistungsverzeichnis, eine Rechnung und einen Ansprechpartner." id={`s${num}`} wide />
+  <ul class="mt-12 border-t border-line">
+    {all.map((s, i) => (
+      <li class="border-b border-line">
+        <a href={`/${s.id}/`} class="group grid grid-cols-[2.5rem_1fr_auto] items-baseline gap-4 py-5 sm:grid-cols-[3rem_minmax(0,22rem)_1fr_auto]">
+          <span class="num text-sm text-stone">{String(i + 1).padStart(2, '0')}</span>
+          <span class="font-display text-xl font-semibold tracking-tight transition-colors group-hover:text-moss sm:text-2xl">{s.data.name}</span>
+          <span class="hidden text-stone sm:block">{s.data.teaser}</span>
+          <Icon name="arrow" size={22} class="transition-transform duration-300 group-hover:translate-x-1" />
+        </a>
+      </li>
+    ))}
+    <li class="border-b border-line">
+      <a href="/leistungen/#verbrauchsmaterial" class="group grid grid-cols-[2.5rem_1fr_auto] items-baseline gap-4 py-5 sm:grid-cols-[3rem_minmax(0,22rem)_1fr_auto]">
+        <span class="num text-sm text-stone">+</span>
+        <span class="font-display text-xl font-semibold tracking-tight group-hover:text-moss sm:text-2xl">Verbrauchsmaterial-Service</span>
+        <span class="hidden text-stone sm:block">Seife, Hand- und Toilettenpapier, Müllbeutel, nachgefüllt bei jedem Einsatz.</span>
+        <Icon name="arrow" size={22} class="transition-transform duration-300 group-hover:translate-x-1" />
+      </a>
+    </li>
+  </ul>
+</section>

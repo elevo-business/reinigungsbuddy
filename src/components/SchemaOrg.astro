@@ -1,0 +1,6 @@
+---
+/** Gibt ein oder mehrere JSON-LD-Objekte aus. */
+interface Props { data: Record<string, unknown> | Record<string, unknown>[] }
+const list = Array.isArray(Astro.props.data) ? Astro.props.data : [Astro.props.data];
+---
+{list.map((d) => <script type="application/ld+json" set:html={JSON.stringify(d)} />)}

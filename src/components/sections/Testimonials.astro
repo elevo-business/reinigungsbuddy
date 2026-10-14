@@ -1,0 +1,21 @@
+---
+/** Echte Kundenstimmen – unsichtbar, solange src/content/stimmen/ keine Einträge enthält. */
+import { getCollection } from 'astro:content';
+import SectionHeader from './SectionHeader.astro';
+interface Props { num: number }
+import { hasStimmen } from '~/lib/collections';
+const items = hasStimmen ? await getCollection('stimmen') : [];
+---
+{items.length > 0 && (
+  <section class="wrap py-20 lg:py-28" aria-labelledby={`s${Astro.props.num}`}>
+    <SectionHeader num={Astro.props.num} label="Kundenstimmen" title="Was Kunden sagen" id={`s${Astro.props.num}`} />
+    <div class="mt-12 grid gap-8 lg:grid-cols-3">
+      {items.map((s) => (
+        <figure class="border-t border-ink pt-5">
+          <blockquote class="font-display text-xl font-medium leading-snug tracking-tight">„{s.data.quote}“</blockquote>
+          <figcaption class="mt-4 text-sm text-stone">{s.data.name}, {s.data.role}{s.data.company && `, ${s.data.company}`}{s.data.district && ` · ${s.data.district}`}</figcaption>
+        </figure>
+      ))}
+    </div>
+  </section>
+)}

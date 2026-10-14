@@ -1,0 +1,23 @@
+---
+import SectionHeader from './SectionHeader.astro';
+import Icon from '../ui/Icon.astro';
+import { withPlaceholders } from '~/lib/text';
+interface Props { num: number; items: { q: string; a: string }[]; title?: string; label?: string }
+const { num, items, title = 'Häufige Fragen', label = 'FAQ' } = Astro.props;
+---
+<section class="wrap py-20 lg:py-28" aria-labelledby={`s${num}`}>
+  <SectionHeader num={num} label={label} title={title} id={`s${num}`} />
+  <div class="grid-12 mt-10">
+    <div class="col-span-4 lg:col-span-8 lg:col-start-4">
+      {items.map((it) => (
+        <details class="group border-b border-line">
+          <summary class="flex items-start justify-between gap-6 py-5 font-display text-xl font-semibold tracking-tight">
+            <span>{it.q}</span>
+            <span class="mt-1 shrink-0 transition-transform duration-300 group-open:rotate-45"><Icon name="plus" size={22} /></span>
+          </summary>
+          <div class="max-w-2xl pb-6 text-[1.02rem] opacity-90" set:html={withPlaceholders(it.a)} />
+        </details>
+      ))}
+    </div>
+  </div>
+</section>

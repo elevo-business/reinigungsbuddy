@@ -1,0 +1,31 @@
+---
+import Icon from './ui/Icon.astro';
+import { phoneLink, whatsappLink } from '~/lib/contact';
+import { langOf } from '~/lib/i18n';
+interface Props { whatsappText?: string }
+const lang = langOf(Astro.url.pathname);
+const tel = phoneLink();
+const wa = whatsappLink(Astro.props.whatsappText ?? (lang === 'en' ? 'Hello, I am interested in office cleaning in Berlin.' : 'Hallo, ich interessiere mich für eine Reinigung in Berlin.'));
+const quote = lang === 'en' ? { href: '/en/contact/', label: 'Get a fixed quote in 24 h' } : { href: '/angebot/', label: 'Festpreis in 24 h anfragen' };
+const hide = ['/angebot/', '/en/contact/'].some((p) => Astro.url.pathname.startsWith(p));
+---
+{!hide && (
+  <div class="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-paper/95 px-3 pb-[max(0.6rem,env(safe-area-inset-bottom))] pt-2.5 backdrop-blur-[2px] lg:hidden" data-sticky-bar>
+    <div class="flex gap-2">
+      {tel && (
+        <a href={tel} class="btn btn-ghost min-h-12 flex-1 px-3" data-track="phone_click">
+          <Icon name="phone" size={20} />{lang === 'en' ? 'Call' : 'Anrufen'}
+        </a>
+      )}
+      {wa && (
+        <a href={wa} class="btn btn-ghost min-h-12 flex-1 px-3" data-track="whatsapp_click" rel="noopener">
+          <Icon name="whatsapp" size={20} />WhatsApp
+        </a>
+      )}
+      <a href={quote.href} class:list={['btn btn-primary min-h-12 px-4', tel || wa ? 'flex-1' : 'w-full']}>
+        {tel || wa ? (lang === 'en' ? 'Quote' : 'Angebot') : quote.label}
+        <Icon name="arrow" size={18} class="arrow" />
+      </a>
+    </div>
+  </div>
+)}

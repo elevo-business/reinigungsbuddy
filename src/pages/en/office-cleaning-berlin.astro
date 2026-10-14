@@ -1,0 +1,102 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import Breadcrumbs from '~/components/Breadcrumbs.astro';
+import Photo from '~/components/ui/Photo.astro';
+import Icon from '~/components/ui/Icon.astro';
+import TrustLine from '~/components/sections/TrustLine.astro';
+import NeedsConfigurator from '~/components/islands/NeedsConfigurator.astro';
+import FactsBlock from '~/components/sections/FactsBlock.astro';
+import ProblemBlock from '~/components/sections/ProblemBlock.astro';
+import OfferStack from '~/components/sections/OfferStack.astro';
+import ScopeChecklist from '~/components/sections/ScopeChecklist.astro';
+import BeforeAfterGallery from '~/components/sections/BeforeAfterGallery.astro';
+import ProcessSteps from '~/components/sections/ProcessSteps.astro';
+import ComparisonTable from '~/components/sections/ComparisonTable.astro';
+import GuaranteeBlock from '~/components/sections/GuaranteeBlock.astro';
+import OwnerBlock from '~/components/sections/OwnerBlock.astro';
+import FAQ from '~/components/sections/FAQ.astro';
+import FinalCTA from '~/components/sections/FinalCTA.astro';
+import { offerEn } from '~/config/offer.en';
+import { offer } from '~/config/offer';
+import { service, faqPage, breadcrumbs } from '~/lib/schema';
+import img from '~/assets/images/buero-flur-glaswaende.jpg';
+
+const url = new URL('/en/office-cleaning-berlin/', Astro.site).toString();
+const crumbs = [{ name: 'Home', href: '/en/' }, { name: 'Office cleaning Berlin', href: '/en/office-cleaning-berlin/' }];
+const direct = 'Reinigungsbuddy provides office cleaning for companies, agencies, startups and coworking spaces in all 12 Berlin districts, from desks and floors to washrooms and kitchens. After a free viewing you get a fixed quote within 24 hours. Cancel monthly, with a photo report after every visit.';
+const faqs = [
+  { q: 'How often should our office be cleaned?', a: 'It depends on team size and how often people are in. As a rule of thumb: washrooms and kitchen on every visit, desks one to three times a week, windows and carpets a few times a year. For hybrid teams we schedule cleaning after your main office days.' },
+  { q: 'Can we start with a deep clean?', a: 'Yes, and it often makes sense when switching from another provider. A one-off deep clean resets everything, then regular cleaning keeps it that way.' },
+  ...offerEn.faq,
+];
+const included = [
+  { group: 'Desks & office areas', items: ['Wipe free desk surfaces', 'Empty bins, replace liners, separate waste', 'Vacuum and mop hard floors, vacuum carpets', 'Door handles, light switches and touch points'] },
+  { group: 'Meeting rooms & reception', items: ['Tables, chairs and sideboards', 'Whiteboards on request', 'Reception desk and glass doors smudge-free', 'Entrance area and mats'] },
+  { group: 'Washrooms', items: ['Toilets, urinals and sinks cleaned and disinfected', 'Mirrors, taps and splash-zone tiles', 'Refill soap, paper towels and toilet paper', 'Mop floors'] },
+  { group: 'Kitchen', items: ['Worktops, sink and cabinet fronts', 'Load and unload the dishwasher (on request)', 'Microwave inside, coffee machine outside', 'Tables and chairs in the break area'] },
+];
+const excluded = ['Window cleaning inside and outside (bookable separately)', 'Carpet deep cleaning, upholstery and chairs', 'Deep cleaning and floor care', 'Tidying personal desks and shelves', 'Cleaning inside IT equipment'];
+const facts = [
+  { label: 'For', value: 'Offices, agencies, startups, coworking, law firms' },
+  { label: 'Area', value: 'All 12 Berlin districts' },
+  { label: 'Frequency', value: 'Daily to fortnightly, per room as needed' },
+  { label: 'Times', value: 'Early morning, evening or during the day' },
+  { label: 'Quote', value: 'Fixed price within 24 h after a free viewing' },
+  { label: 'Contract', value: 'Cancel monthly, no minimum term' },
+  { label: 'Language', value: 'English and German' },
+];
+const showGallery = offer.switches.showGallery;
+---
+<BaseLayout
+  title="Office Cleaning Berlin – Fixed Quote | Reinigungsbuddy"
+  description="Office cleaning in Berlin in English: fixed quote within 24 h, photo report and 24-hour re-clean guarantee. Cancel monthly. Request your quote now."
+  image="/og/en.png"
+  whatsappText="Hello, I am interested in office cleaning in Berlin."
+  schema={[service({ name: 'Office cleaning', serviceType: 'Office cleaning', description: direct, url, base: Astro.site!, lang: 'en' }), faqPage(faqs, url), breadcrumbs(crumbs, Astro.site!)]}>
+  <section class="wrap pb-14 pt-8 lg:pb-20 lg:pt-12">
+    <Breadcrumbs items={crumbs} />
+    <div class="grid-12 mt-8 gap-y-10">
+      <div class="col-span-4 lg:col-span-7">
+        <p class="eyebrow text-moss"><span class="num">01</span> — Office cleaning in Berlin</p>
+        <h1 class="mt-5 text-mega">Office cleaning in Berlin you notice on Monday morning.</h1>
+        <p class="mt-7 max-w-2xl text-lead">{direct}</p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="#anfrage-bereich" class="btn btn-primary">Get a fixed quote in 24 h<Icon name="arrow" size={18} class="arrow" /></a>
+          <a href="#scope" class="btn btn-ghost">What’s included?<Icon name="arrow-down" size={18} /></a>
+        </div>
+        <TrustLine lang="en" class="mt-8" />
+      </div>
+      <div class="col-span-4 lg:col-span-5"><NeedsConfigurator lang="en" preset={['buero', 'sanitaer']} compact id="cfg-en-office" /></div>
+    </div>
+  </section>
+  <figure><Photo src={img} alt="Bright office corridor with glass walls, black frames and a clean stone floor" sizes="100vw" class="h-[52vh] max-h-[40rem] min-h-[18rem] w-full object-cover" /></figure>
+
+  <section class="wrap py-20 lg:py-28" aria-labelledby="detail">
+    <div class="grid-12 gap-y-12">
+      <div class="prose-rb col-span-4 lg:col-span-7">
+        <p class="eyebrow opacity-80"><span class="num">02</span> — In detail</p>
+        <h2 id="detail">What good office cleaning looks like</h2>
+        <p>Good office cleaning goes unnoticed. You notice it when nobody mentions the coffee ring on the meeting table on Monday, when there is always paper in the washroom and when the glass door to reception has no handprints. That takes no magic, just a clear <strong>cleaning specification</strong>, a fixed rhythm and someone who feels responsible.</p>
+        <h3>Every Berlin office is different</h3>
+        <p>A period building in Kreuzberg has floorboards, stucco and deep window sills. An office block on the Spree has carpet tiles, glass partitions and a kitchen for 40 people. So we don’t work with flat rates. At the viewing we agree for every room <strong>what is cleaned, how often and with what</strong>: washrooms and kitchen on every visit, desks two to five times a week, meeting rooms after use, glass and carpets as interval services.</p>
+        <h3>Quality you can see without checking</h3>
+        <p>After every visit you get a short photo report: kitchen, washrooms, a look into the meeting rooms. If something still isn’t right, send a photo. We re-clean within 24 hours on working days, and if we don’t make it, you don’t pay for that visit.</p>
+        <h3>Made for hybrid teams</h3>
+        <p>Many teams are only in the office two or three days a week. Then cleaning five days a week makes little sense. We schedule cleaning after your main office days and adjust the rhythm monthly when your setup changes. No new contract, just a message.</p>
+        <p>German-speaking colleagues can find detailed pages on all services, including <a href="/bueroreinigung-berlin/" hreflang="de" lang="de">Büroreinigung Berlin</a>, on the German site.</p>
+      </div>
+      <aside class="col-span-4 lg:col-span-4 lg:col-start-9"><div class="lg:sticky lg:top-28"><FactsBlock facts={facts} title="Office cleaning: facts" /></div></aside>
+    </div>
+  </section>
+
+  <ProblemBlock num={3} lang="en" />
+  <OfferStack num={4} lang="en" />
+  <div id="scope"><ScopeChecklist num={5} title="What office cleaning includes" included={included} excluded={excluded} lang="en" /></div>
+  {showGallery && <BeforeAfterGallery num={6} lang="en" />}
+  <ProcessSteps num={showGallery ? 7 : 6} steps={[...offerEn.process]} label="Process" title="From enquiry to first clean" intro="Four steps. At every step you know what happens next, and when." />
+  <ComparisonTable num={showGallery ? 8 : 7} lang="en" />
+  <GuaranteeBlock num={showGallery ? 9 : 8} lang="en" />
+  <OwnerBlock num={showGallery ? 10 : 9} lang="en" />
+  <FAQ num={showGallery ? 11 : 10} items={faqs} title="Questions about office cleaning" />
+  <FinalCTA num={showGallery ? 12 : 11} lang="en" whatsappText="Hello, I would like a fixed quote for office cleaning." />
+</BaseLayout>

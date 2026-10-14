@@ -1,0 +1,15 @@
+---
+import Icon from '../ui/Icon.astro';
+import { site } from '~/config/site';
+interface Props { lang?: 'de' | 'en'; class?: string }
+const { lang = 'de', class: cls = '' } = Astro.props;
+const items = lang === 'en'
+  ? [['shield', '24-hour re-clean guarantee'], ['calendar', 'Cancel monthly'], ['camera', 'Photo report after every visit'], ['person', 'One fixed contact person']]
+  : [['shield', '24-h-Nachbesserungsgarantie'], ['calendar', 'Monatlich kündbar'], ['camera', 'Foto-Protokoll nach jedem Einsatz'], ['person', 'Ein fester Ansprechpartner']];
+if (site.insurance) items.push(['document', lang === 'en' ? 'Fully insured' : 'Betriebshaftpflicht versichert']);
+---
+<ul class:list={['flex flex-wrap gap-x-6 gap-y-2 text-[0.95rem]', cls]}>
+  {items.map(([icon, text]) => (
+    <li class="flex items-center gap-2"><Icon name={icon} size={20} class="shrink-0 text-moss [.on-dark_&]:text-mint" />{text}</li>
+  ))}
+</ul>

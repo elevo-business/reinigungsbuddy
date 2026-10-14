@@ -1,0 +1,26 @@
+---
+import SectionHeader from './SectionHeader.astro';
+import { offer } from '~/config/offer';
+import { offerEn } from '~/config/offer.en';
+interface Props { num: number; title?: string; intro?: string; lang?: 'de' | 'en' }
+const { num, lang = 'de' } = Astro.props;
+const en = lang === 'en';
+const title = Astro.props.title ?? (en ? 'Why offices switch cleaning companies' : 'Warum Büros die Reinigungsfirma wechseln');
+const intro = Astro.props.intro ?? (en ? 'Rarely because of price. Almost always because of these three things:' : 'Selten wegen des Preises. Fast immer wegen dieser drei Dinge:');
+const problems = en ? offerEn.problems : offer.problems;
+---
+<section class="wrap py-20 lg:py-28" aria-labelledby={`s${num}`}>
+  <SectionHeader num={num} label={en ? 'The problem' : 'Das Problem'} title={title} intro={intro} id={`s${num}`} />
+  <ol class="grid-12 mt-12 gap-y-10">
+    {problems.map((p, i) => (
+      <li class="reveal col-span-4 border-t border-ink pt-5 lg:col-span-4">
+        <span class="num font-display text-5xl font-semibold text-moss">{String(i + 1).padStart(2, '0')}</span>
+        <h3 class="mt-4 text-2xl">{p.title}</h3>
+        <p class="mt-3 text-stone">{p.text}</p>
+      </li>
+    ))}
+  </ol>
+  <p class="mt-12 max-w-3xl font-display text-2xl font-medium leading-snug tracking-tight sm:text-3xl">
+    {en ? <>Reinigungsbuddy is small and owner-run. That’s not a weakness, it’s why it works: <span class="bg-mint-soft px-1">you talk directly to the person who cleans your office.</span></> : <>Reinigungsbuddy ist klein und inhabergeführt. Das ist kein Nachteil, sondern der Grund, warum es funktioniert: <span class="bg-mint-soft px-1">Sie sprechen direkt mit dem, der bei Ihnen reinigt.</span></>}
+  </p>
+</section>

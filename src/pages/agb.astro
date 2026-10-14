@@ -1,0 +1,24 @@
+---
+import LegalLayout from '~/layouts/LegalLayout.astro';
+import { offer } from '~/config/offer';
+---
+<LegalLayout title="Allgemeine Geschäftsbedingungen" metaTitle="AGB (Entwurf) | Reinigungsbuddy" description="Allgemeine Geschäftsbedingungen von Reinigungsbuddy für Reinigungsleistungen in Berlin (Entwurf)." noindex draftNote="Platzhaltertext. Diese AGB sind ein unverbindlicher Entwurf und müssen vor Verwendung von einem Anwalt bzw. einer Anwältin geprüft und angepasst werden.">
+  <h2>§ 1 Geltungsbereich</h2>
+  <p>Diese Bedingungen gelten für alle Reinigungsleistungen von Reinigungsbuddy gegenüber Unternehmern im Sinne von § 14 BGB. Abweichende Bedingungen des Auftraggebers gelten nur, wenn wir ihnen schriftlich zustimmen.</p>
+  <h2>§ 2 Angebot und Leistungsumfang</h2>
+  <p>Grundlage jedes Auftrags ist das schriftliche Angebot mit Leistungsverzeichnis. Leistungen, die nicht im Leistungsverzeichnis stehen, sind nicht geschuldet. Änderungen des Umfangs werden vor Ausführung schriftlich vereinbart.</p>
+  <h2>§ 3 Festpreis</h2>
+  <p>Die im Angebot genannte Vergütung ist ein Festpreis für die im Leistungsverzeichnis beschriebenen Leistungen. Zuschläge, die nicht im Angebot stehen, werden nicht berechnet.</p>
+  <h2>§ 4 Laufzeit und Kündigung</h2>
+  <p>Laufende Reinigungsverträge haben keine Mindestlaufzeit und können von beiden Seiten mit einer Frist von <mark class="ph">[Platzhalter: z. B. einem Monat zum Monatsende]</mark> in Textform gekündigt werden.</p>
+  <h2>§ 5 Nachbesserungsgarantie</h2>
+  <ol>{offer.guarantee.conditions.map((c) => <li>{c}</li>)}</ol>
+  <h2>§ 6 Schlüssel und Zugang</h2>
+  <p>Schlüssel und Zugangsmittel werden gegen Übergabeprotokoll ausgehändigt und bei Vertragsende gegen Quittung zurückgegeben.</p>
+  <h2>§ 7 Haftung</h2>
+  <p><mark class="ph">[Platzhalter: Haftungsregelung und Hinweis auf Betriebshaftpflicht – anwaltlich formulieren lassen]</mark></p>
+  <h2>§ 8 Zahlung</h2>
+  <p><mark class="ph">[Platzhalter: Rechnungsstellung, Zahlungsziel]</mark></p>
+  <h2>§ 9 Schlussbestimmungen</h2>
+  <p>Es gilt deutsches Recht. Gerichtsstand ist, soweit zulässig, Berlin.</p>
+</LegalLayout>

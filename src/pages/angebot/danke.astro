@@ -1,0 +1,27 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import Icon from '~/components/ui/Icon.astro';
+import { offer } from '~/config/offer';
+import { whatsappLink } from '~/lib/contact';
+const wa = whatsappLink('Hallo, ich habe gerade eine Anfrage über die Website geschickt.');
+---
+<BaseLayout title="Danke für Ihre Anfrage | Reinigungsbuddy" description="Ihre Anfrage ist angekommen. Wir melden uns am selben Werktag." noindex>
+  <section class="wrap py-20 lg:py-28">
+    <p class="eyebrow text-moss">Anfrage erhalten</p>
+    <h1 class="mt-5 max-w-4xl text-mega">Danke! Wir melden uns {offer.response.promise}.</h1>
+    <p class="mt-6 max-w-2xl text-lead">Anfragen, die nach {offer.response.cutoff} oder am Wochenende eingehen, beantworten wir am nächsten Werktag. So geht es weiter:</p>
+    <ol class="mt-10 grid gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-3">
+      {[
+        ['Rückmeldung', `${offer.response.promise}, per Telefon oder E-Mail, wie Sie es angegeben haben`],
+        ['Besichtigung', 'kostenlos vor Ort oder per Video-Call, etwa 20–40 Minuten'],
+        ['Festpreis', 'innerhalb von 24 Stunden nach der Besichtigung, schriftlich mit Leistungsverzeichnis'],
+      ].map(([t, x], i) => (
+        <li class="bg-paper p-6"><span class="num font-display text-5xl font-semibold">{String(i + 1).padStart(2, '0')}</span><h2 class="mt-6 text-xl">{t}</h2><p class="mt-2 text-stone">{x}</p></li>
+      ))}
+    </ol>
+    <div class="mt-10 flex flex-wrap gap-3">
+      {wa && <a href={wa} class="btn btn-primary" data-track="whatsapp_click" rel="noopener"><Icon name="whatsapp" size={20} />Noch schneller per WhatsApp</a>}
+      <a href="/ratgeber/" class="btn btn-ghost">In der Zwischenzeit: Ratgeber lesen</a>
+    </div>
+  </section>
+</BaseLayout>

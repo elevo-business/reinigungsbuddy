@@ -1,0 +1,10 @@
+---
+/** Das Buddy-Signet (Bogen + Punkt) – nachgezeichnet aus dem Original-Logo. */
+interface Props { class?: string; color?: string; title?: string }
+const { class: cls = '', color = 'var(--color-mint)', title } = Astro.props;
+---
+<svg viewBox="200 270 700 540" class={cls} aria-hidden={title ? undefined : 'true'} role={title ? 'img' : undefined} focusable="false" xmlns="http://www.w3.org/2000/svg">
+  {title && <title>{title}</title>}
+  <path d="M268 628C335 705 403 742 470 742C568 742 664 663 758 510" fill="none" stroke={color} stroke-width="106" stroke-linecap="round" />
+  <circle cx="805" cy="348" r="58" fill={color} />
+</svg>

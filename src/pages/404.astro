@@ -1,0 +1,23 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import Signet from '~/components/ui/Signet.astro';
+import { getCollection } from 'astro:content';
+const services = (await getCollection('leistungen')).sort((a, b) => a.data.order - b.data.order).slice(0, 6);
+---
+<BaseLayout title="Seite nicht gefunden | Reinigungsbuddy" description="Diese Seite gibt es nicht (mehr). Hier geht es weiter zu Leistungen, Angebot und Ratgeber." noindex>
+  <section class="wrap grid-12 gap-y-10 py-20 lg:py-28">
+    <div class="col-span-4 lg:col-span-7">
+      <p class="eyebrow text-moss">Fehler 404</p>
+      <h1 class="mt-5 text-mega">Hier ist es sauber, aber leer.</h1>
+      <p class="mt-6 max-w-xl text-lead">Diese Seite gibt es nicht oder nicht mehr. Vielleicht suchen Sie eine dieser Seiten:</p>
+      <ul class="mt-8 divide-y divide-line border-y border-line">
+        <li><a href="/" class="block py-3 font-medium hover:text-moss">Startseite: Gebäudereinigung Berlin</a></li>
+        <li><a href="/angebot/" class="block py-3 font-medium hover:text-moss">Festpreis-Angebot anfragen</a></li>
+        {services.map((s) => <li><a href={`/${s.id}/`} class="block py-3 hover:text-moss">{s.data.name} in Berlin</a></li>)}
+        <li><a href="/ratgeber/" class="block py-3 hover:text-moss">Ratgeber</a></li>
+        <li><a href="/en/" class="block py-3 hover:text-moss" lang="en">English version</a></li>
+      </ul>
+    </div>
+    <div class="col-span-4 flex items-center justify-center lg:col-span-5"><Signet class="h-48 w-auto" /></div>
+  </section>
+</BaseLayout>

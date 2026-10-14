@@ -1,0 +1,21 @@
+---
+interface Props { items: { name: string; href: string }[]; tone?: 'ink' | 'paper' }
+const { items } = Astro.props;
+const lang = Astro.url.pathname.startsWith('/en/') ? 'en' : 'de';
+---
+<nav aria-label={lang === 'en' ? 'Breadcrumb' : 'Brotkrümelnavigation'} class="text-sm">
+  <ol class="flex flex-wrap items-center gap-x-2 gap-y-1 opacity-80">
+    {items.map((it, i) => (
+      <li class="flex items-center gap-2">
+        {i < items.length - 1 ? (
+          <>
+            <a href={it.href} class="link-grow">{it.name}</a>
+            <span aria-hidden="true">/</span>
+          </>
+        ) : (
+          <span aria-current="page">{it.name}</span>
+        )}
+      </li>
+    ))}
+  </ol>
+</nav>

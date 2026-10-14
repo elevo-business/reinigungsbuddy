@@ -1,0 +1,64 @@
+---
+/**
+ * Schlankes Consent-Banner (Google Consent Mode v2 kompatibel).
+ * Wird NUR ausgegeben, wenn in site.ts ein Meta Pixel oder GA4 hinterlegt ist.
+ * Vor der Einwilligung wird nichts geladen.
+ */
+import { site } from '~/config/site';
+import { langOf } from '~/lib/i18n';
+const { metaPixelId, ga4Id } = site.analytics;
+const active = Boolean(metaPixelId || ga4Id);
+const en = langOf(Astro.url.pathname) === 'en';
+---
+{active && (
+  <div id="consent" class="fixed inset-x-3 bottom-24 z-50 hidden max-w-lg rounded-xl border border-line bg-paper p-5 shadow-[0_20px_50px_-20px_rgb(15_46_35/0.5)] sm:left-6 sm:right-auto lg:bottom-6" role="dialog" aria-modal="false" aria-labelledby="consent-title">
+    <h2 id="consent-title" class="text-lg">{en ? 'Your choice' : 'Ihre Wahl'}</h2>
+    <p class="mt-2 text-[0.95rem] text-stone">
+      {en
+        ? 'With your consent we use marketing tools (Meta Pixel, Google Analytics) to measure which ads lead to enquiries. Without consent, nothing is loaded.'
+        : 'Mit Ihrer Einwilligung nutzen wir Marketing-Tools (Meta Pixel, Google Analytics), um zu messen, welche Anzeigen zu Anfragen führen. Ohne Einwilligung wird nichts geladen.'}
+      {' '}<a href="/datenschutz/" class="link-moss">{en ? 'Privacy' : 'Datenschutz'}</a>
+    </p>
+    <div class="mt-4 flex flex-wrap gap-2">
+      <button type="button" class="btn btn-ink min-h-11" data-consent="granted">{en ? 'Accept' : 'Einverstanden'}</button>
+      <button type="button" class="btn btn-ghost min-h-11" data-consent="denied">{en ? 'Decline' : 'Ablehnen'}</button>
+    </div>
+  </div>
+)}
+{active && (
+  <script is:inline define:vars={{ metaPixelId, ga4Id }}>
+    (function () {
+      var KEY = 'rb-consent';
+      var box = document.getElementById('consent');
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+      window.gtag('consent', 'default', { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', analytics_storage: 'denied' });
+      function load() {
+        window.gtag('consent', 'update', { ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted', analytics_storage: 'granted' });
+        if (ga4Id) {
+          var s = document.createElement('script'); s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=' + ga4Id; document.head.appendChild(s);
+          window.gtag('js', new Date()); window.gtag('config', ga4Id);
+        }
+        if (metaPixelId) {
+          !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+          window.fbq('init', metaPixelId); window.fbq('track', 'PageView');
+        }
+        window.rbConsent = true;
+      }
+      var saved = null;
+      try { saved = localStorage.getItem(KEY); } catch (e) {}
+      if (saved === 'granted') load();
+      else if (!saved) box.classList.remove('hidden');
+      box.addEventListener('click', function (e) {
+        var v = e.target.closest('[data-consent]'); if (!v) return;
+        var val = v.getAttribute('data-consent');
+        try { localStorage.setItem(KEY, val); } catch (e) {}
+        box.classList.add('hidden');
+        if (val === 'granted') load();
+      });
+      document.addEventListener('click', function (e) {
+        if (e.target.closest('[data-consent-open]')) { box.classList.remove('hidden'); box.querySelector('button').focus(); }
+      });
+    })();
+  </script>
+)}

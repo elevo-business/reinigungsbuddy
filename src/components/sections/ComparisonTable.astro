@@ -1,0 +1,35 @@
+---
+import SectionHeader from './SectionHeader.astro';
+import Icon from '../ui/Icon.astro';
+import { offer } from '~/config/offer';
+import { offerEn } from '~/config/offer.en';
+interface Props { num: number; lang?: 'de' | 'en' }
+const { num, lang = 'de' } = Astro.props;
+const en = lang === 'en';
+const rows = en ? offerEn.comparison : offer.comparison;
+const t = en ? { label: 'Comparison', title: 'Typical cleaning company vs. Reinigungsbuddy', intro: 'No names. You probably know the left column from experience.', topic: 'Topic', typical: 'Typical cleaning company' } : { label: 'Vergleich', title: 'Typische Reinigungsfirma oder Reinigungsbuddy', intro: 'Wir nennen keine Namen. Sie kennen die linke Spalte wahrscheinlich aus eigener Erfahrung.', topic: 'Thema', typical: 'Typische Reinigungsfirma' };
+---
+<section class="wrap py-20 lg:py-28" aria-labelledby={`s${num}`}>
+  <SectionHeader num={num} label={t.label} title={t.title} intro={t.intro} id={`s${num}`} />
+  <div class="mt-12 overflow-x-auto">
+    <table class="w-full min-w-[40rem] border-collapse text-left">
+      <caption class="sr-only">{t.title}</caption>
+      <thead>
+        <tr class="border-b border-ink">
+          <th scope="col" class="w-1/4 py-3 pr-4 font-display font-semibold">{t.topic}</th>
+          <th scope="col" class="w-[37.5%] py-3 pr-4 font-display font-semibold text-stone">{t.typical}</th>
+          <th scope="col" class="w-[37.5%] rounded-t-lg bg-ink px-4 py-3 font-display font-semibold text-paper">Reinigungsbuddy</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((r, i) => (
+          <tr class="border-b border-line">
+            <th scope="row" class="py-4 pr-4 font-medium">{r.topic}</th>
+            <td class="py-4 pr-4 text-stone"><span class="flex gap-2.5"><Icon name="cross" size={18} class="mt-1 shrink-0" />{r.typical}</span></td>
+            <td class:list={['bg-ink px-4 py-4 text-paper', i === rows.length - 1 && 'rounded-b-lg']}><span class="flex gap-2.5"><Icon name="check" size={18} class="mt-1 shrink-0 text-mint" />{r.us}</span></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</section>
