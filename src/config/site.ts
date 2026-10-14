@@ -11,7 +11,22 @@
 
 export const site = {
   name: 'Reinigungsbuddy',
-  legalName: '[PLATZHALTER: Inhaber, Rechtsform]',
+  legalName: 'ELEVO Solutions, Inhaber Mert Efe Celik',
+
+  /**
+   * Betreiber laut Impressum (übernommen von elevo.solutions).
+   * Reinigungsbuddy ist eine Marke von ELEVO Solutions (Einzelunternehmen).
+   */
+  operator: {
+    company: 'ELEVO Solutions',
+    legalForm: 'Einzelunternehmen',
+    owner: 'Mert Efe Celik',
+    street: 'Ahrstraße 6',
+    postalCode: '52511',
+    city: 'Geilenkirchen',
+    country: 'Deutschland',
+    email: 'hallo@elevo.solutions',
+  },
   tagline: 'Gebäudereinigung in Berlin',
 
   /** Wird beim Deployment über SITE_URL gesetzt; hier nur als Fallback. */
@@ -40,7 +55,7 @@ export const site = {
   /** Inhaber – erscheint im Inhaber-Block und als Autor im Ratgeber. */
   owner: {
     firstName: 'Mert',
-    fullName: '[PLATZHALTER: Vor- und Nachname]',
+    fullName: 'Mert Efe Celik',
     role: 'Inhaber',
     /** Pfad zu deinem Foto in src/assets/images/, sobald vorhanden (z. B. 'inhaber-mert.jpg'). */
     photo: null as string | null,
@@ -57,7 +72,7 @@ export const site = {
   sameAs: [] as string[],
 
   /** Rechtliches */
-  vatId: null as string | null,
+  vatId: 'DE364166667' as string | null,
   taxId: null as string | null,
   chamberEntry: null as string | null, // Handwerksrolle HWK Berlin
   insurance: null as string | null, // z. B. 'Betriebshaftpflicht bei XY, Deckungssumme …'

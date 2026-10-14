@@ -8,7 +8,7 @@ import tailwindcss from '@tailwindcss/vite';
 const SITE = process.env.SITE_URL || 'https://reinigungsbuddy.de';
 
 // Seiten, die nicht in die Sitemap gehören (noindex).
-const NOINDEX = ['/angebot/danke/', '/en/contact/thanks/', '/leistungsverzeichnis/vorlage/', '/agb/', '/404/'];
+const NOINDEX = ['/angebot/danke/', '/en/contact/thanks/', '/leistungsverzeichnis/vorlage/', '/404/'];
 
 export default defineConfig({
   site: SITE,

@@ -67,9 +67,9 @@ Auf der Website als gelb markierter Text `[Platzhalter: …]` sichtbar. Vollstä
 |---|---|
 | `src/config/site.ts` | Inhaber (Vor- und Nachname), Rechtsform, Anschrift (oder bewusst `null` für Service-Area-Business), Telefon, WhatsApp, öffentliche E-Mail, Servicezeiten, Profile (`sameAs`), USt-IdNr., Handwerksrolle, Versicherung, Domain |
 | `offer.ts` → FAQ „Schaden" | Versicherer und Deckungssumme der Betriebshaftpflicht |
-| `/impressum/` | Name, Rechtsform, Anschrift, Telefon, USt-IdNr., Handwerksrolle, Berufshaftpflicht |
-| `/datenschutz/` | Verantwortlicher, Hoster inkl. Speicherdauer und Drittland. Gesamten Text prüfen lassen |
-| `/agb/` | Kündigungsfrist, Haftung, Zahlung. **Gesamter Text ist ein Entwurf** (noindex), anwaltlich prüfen lassen |
+| `/impressum/` | ✓ fertig (Daten von elevo.solutions übernommen) |
+| `/datenschutz/` | ✓ fertig (Hosting netcup, E-Mail Google Workspace, Aufsicht LDI NRW) |
+| `/agb/` | ✓ fertig. Standard-Kündigungsfrist ohne Angebotsregelung: 3 Monate zum Monatsende (§ 10), bitte prüfen |
 | `/ueber-uns/` | Gründungsjahr, vollständiger Name |
 | `src/content/projekte/` | Eigene Vorher-Nachher-Fotos (siehe FOTO-ANLEITUNG.md) |
 | `src/content/stimmen/` | Echte Kundenstimmen mit Einwilligung (Sektion bleibt bis dahin unsichtbar) |

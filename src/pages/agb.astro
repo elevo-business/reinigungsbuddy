@@ -1,24 +1,103 @@
 ---
 import LegalLayout from '~/layouts/LegalLayout.astro';
+import { site } from '~/config/site';
 import { offer } from '~/config/offer';
+const o = site.operator;
 ---
-<LegalLayout title="Allgemeine Geschäftsbedingungen" metaTitle="AGB (Entwurf) | Reinigungsbuddy" description="Allgemeine Geschäftsbedingungen von Reinigungsbuddy für Reinigungsleistungen in Berlin (Entwurf)." noindex draftNote="Platzhaltertext. Diese AGB sind ein unverbindlicher Entwurf und müssen vor Verwendung von einem Anwalt bzw. einer Anwältin geprüft und angepasst werden.">
+<LegalLayout title="Allgemeine Geschäftsbedingungen" metaTitle="AGB | Reinigungsbuddy" description="Allgemeine Geschäftsbedingungen von Reinigungsbuddy (ELEVO Solutions) für Gebäude- und Büroreinigung.">
+  <p>Allgemeine Geschäftsbedingungen von {o.company}, Inhaber {o.owner}, {o.street}, {o.postalCode} {o.city}, für Reinigungsleistungen unter der Marke {site.name} (nachfolgend „Auftragnehmer“).</p>
+
   <h2>§ 1 Geltungsbereich</h2>
-  <p>Diese Bedingungen gelten für alle Reinigungsleistungen von Reinigungsbuddy gegenüber Unternehmern im Sinne von § 14 BGB. Abweichende Bedingungen des Auftraggebers gelten nur, wenn wir ihnen schriftlich zustimmen.</p>
-  <h2>§ 2 Angebot und Leistungsumfang</h2>
-  <p>Grundlage jedes Auftrags ist das schriftliche Angebot mit Leistungsverzeichnis. Leistungen, die nicht im Leistungsverzeichnis stehen, sind nicht geschuldet. Änderungen des Umfangs werden vor Ausführung schriftlich vereinbart.</p>
-  <h2>§ 3 Festpreis</h2>
-  <p>Die im Angebot genannte Vergütung ist ein Festpreis für die im Leistungsverzeichnis beschriebenen Leistungen. Zuschläge, die nicht im Angebot stehen, werden nicht berechnet.</p>
-  <h2>§ 4 Laufzeit und Kündigung</h2>
-  <p><mark class="ph">[Platzhalter: Vertragslaufzeit und Kündigungsfristen – anwaltlich formulieren lassen]</mark></p>
-  <h2>§ 5 Nachbesserungsgarantie</h2>
-  <ol>{offer.guarantee.conditions.map((c) => <li>{c}</li>)}</ol>
-  <h2>§ 6 Schlüssel und Zugang</h2>
-  <p>Schlüssel und Zugangsmittel werden gegen Übergabeprotokoll ausgehändigt und bei Vertragsende gegen Quittung zurückgegeben.</p>
-  <h2>§ 7 Haftung</h2>
-  <p><mark class="ph">[Platzhalter: Haftungsregelung und Hinweis auf Betriebshaftpflicht – anwaltlich formulieren lassen]</mark></p>
-  <h2>§ 8 Zahlung</h2>
-  <p><mark class="ph">[Platzhalter: Rechnungsstellung, Zahlungsziel]</mark></p>
-  <h2>§ 9 Schlussbestimmungen</h2>
-  <p>Es gilt deutsches Recht. Gerichtsstand ist, soweit zulässig, Berlin.</p>
+  <ol>
+    <li>Diese AGB gelten für alle Verträge über Reinigungs- und damit verbundene Dienstleistungen zwischen dem Auftragnehmer und seinen Auftraggebern. Sie gelten auch für alle künftigen Leistungen, ohne dass ihre Geltung erneut vereinbart werden muss.</li>
+    <li>Das Angebot des Auftragnehmers richtet sich ausschließlich an Unternehmer im Sinne von § 14 BGB, juristische Personen des öffentlichen Rechts und öffentlich-rechtliche Sondervermögen sowie Hausverwaltungen und Wohnungseigentümergemeinschaften.</li>
+    <li>Abweichende, entgegenstehende oder ergänzende Bedingungen des Auftraggebers werden nur Vertragsbestandteil, wenn der Auftragnehmer ihrer Geltung ausdrücklich in Textform zustimmt. Dies gilt auch dann, wenn der Auftragnehmer in Kenntnis solcher Bedingungen Leistungen vorbehaltlos erbringt.</li>
+    <li>Im Einzelfall getroffene Vereinbarungen, insbesondere im Angebot und im Leistungsverzeichnis, haben Vorrang vor diesen AGB.</li>
+  </ol>
+
+  <h2>§ 2 Objektbegehung, Angebot und Vertragsschluss</h2>
+  <ol>
+    <li>Grundlage jedes Angebots ist eine kostenlose Objektbegehung vor Ort. Darstellungen auf der Website sind kein bindendes Angebot.</li>
+    <li>Der Auftragnehmer übermittelt dem Auftraggeber in der Regel innerhalb von {offer.quoteHours} Stunden nach der Objektbegehung ein schriftliches Festpreis-Angebot mit Leistungsverzeichnis. Das Angebot ist 30 Tage ab Zugang gültig, soweit darin nichts anderes angegeben ist.</li>
+    <li>Der Vertrag kommt zustande, wenn der Auftraggeber das Angebot in Textform (z. B. per E-Mail) annimmt oder der Auftragnehmer mit Zustimmung des Auftraggebers mit der Leistung beginnt.</li>
+  </ol>
+
+  <h2>§ 3 Leistungsumfang und Änderungen</h2>
+  <ol>
+    <li>Art, Umfang, Häufigkeit und Zeitfenster der Leistungen ergeben sich abschließend aus dem Angebot und dem dazugehörigen Leistungsverzeichnis. Leistungen, die dort nicht aufgeführt sind, schuldet der Auftragnehmer nicht.</li>
+    <li>Änderungen und Zusatzleistungen (z. B. zusätzliche Flächen, Einsätze oder Sonderreinigungen) werden vor ihrer Ausführung in Textform vereinbart. Ändert sich der Leistungsumfang, passen die Parteien die Vergütung entsprechend an.</li>
+    <li>Ändern sich die tatsächlichen Verhältnisse im Objekt wesentlich gegenüber dem Stand der Objektbegehung (z. B. Fläche, Nutzung, Personenzahl, Verschmutzungsgrad), kann jede Partei eine Anpassung von Leistungsverzeichnis und Vergütung verlangen.</li>
+  </ol>
+
+  <h2>§ 4 Durchführung der Leistungen</h2>
+  <ol>
+    <li>Der Auftragnehmer führt die Leistungen fachgerecht, mit eigenem Personal und eigenen Reinigungsmitteln und Geräten aus, soweit nichts anderes vereinbart ist. Er ist berechtigt, geeignete Nachunternehmer einzusetzen; der feste Ansprechpartner für den Auftraggeber bleibt davon unberührt.</li>
+    <li>Die Reinigung erfolgt in den vereinbarten Zeitfenstern. Kann ein Termin aus Gründen, die der Auftragnehmer zu vertreten hat, nicht stattfinden, informiert er den Auftraggeber so früh wie möglich und holt den Einsatz in Absprache nach. Nicht durchgeführte Einsätze werden nicht berechnet.</li>
+    <li>Nach jedem Einsatz erhält der Auftraggeber ein Reinigungsprotokoll per E-Mail oder über einen anderen vereinbarten Kanal.</li>
+    <li>Das Personal des Auftragnehmers ist zur Verschwiegenheit über alle Tatsachen verpflichtet, die ihm bei der Ausführung im Objekt bekannt werden. Unterlagen, Akten und Bildschirme des Auftraggebers werden nicht eingesehen.</li>
+  </ol>
+
+  <h2>§ 5 Mitwirkungspflichten des Auftraggebers</h2>
+  <ol>
+    <li>Der Auftraggeber gewährt dem Auftragnehmer zu den vereinbarten Zeiten Zugang zu den zu reinigenden Räumen und stellt Wasser und Strom in dem für die Leistung erforderlichen Umfang unentgeltlich zur Verfügung. Soweit möglich, stellt er einen verschließbaren Raum oder Platz für Reinigungsmittel und Geräte bereit.</li>
+    <li>Der Auftraggeber weist den Auftragnehmer vor Beginn auf empfindliche Oberflächen, Materialien, Geräte und besondere Gefahren im Objekt hin (z. B. Naturstein, Holzböden, Laborbereiche, Alarmanlagen).</li>
+    <li>Arbeitsflächen, die gereinigt werden sollen, sind frei von persönlichen Gegenständen und Unterlagen zu halten. Für Gegenstände auf nicht freigeräumten Flächen übernimmt der Auftragnehmer keine Reinigungspflicht.</li>
+    <li>Kommt der Auftraggeber seinen Mitwirkungspflichten nicht nach und kann ein Einsatz deshalb nicht oder nur teilweise erfolgen, bleibt der Vergütungsanspruch für diesen Einsatz bestehen, abzüglich ersparter Aufwendungen.</li>
+  </ol>
+
+  <h2>§ 6 Schlüssel und Zugangsmittel</h2>
+  <ol>
+    <li>Schlüssel, Transponder, Codes und sonstige Zugangsmittel werden gegen ein schriftliches Übergabeprotokoll ausgehändigt und bei Vertragsende gegen Quittung zurückgegeben.</li>
+    <li>Der Auftragnehmer bewahrt Zugangsmittel sorgfältig auf, beschriftet sie nicht mit der Objektadresse und gibt sie nicht an unbefugte Dritte weiter.</li>
+    <li>Ein Verlust ist dem Auftraggeber unverzüglich anzuzeigen. Für die Haftung bei Verlust gilt § 9.</li>
+  </ol>
+
+  <h2>§ 7 Vergütung und Zahlung</h2>
+  <ol>
+    <li>Es gilt die im Angebot vereinbarte Vergütung als Festpreis für die im Leistungsverzeichnis beschriebenen Leistungen. Alle Preise verstehen sich zuzüglich der gesetzlichen Umsatzsteuer.</li>
+    <li>Laufende Leistungen werden monatlich nachträglich abgerechnet, einmalige Leistungen nach Abschluss der Arbeiten. Rechnungen sind innerhalb von 14 Tagen nach Zugang ohne Abzug zur Zahlung fällig.</li>
+    <li>Verbrauchsmaterial (z. B. Seife, Papier, Müllbeutel) wird nur geliefert und berechnet, wenn dies vereinbart ist.</li>
+    <li>Ändern sich die für die Kalkulation maßgeblichen Lohnkosten, insbesondere durch eine Änderung des für allgemeinverbindlich erklärten Tarifvertrags im Gebäudereiniger-Handwerk oder des gesetzlichen Mindestlohns, ist der Auftragnehmer berechtigt, die Vergütung für laufende Leistungen im Umfang der tatsächlichen Kostenänderung anzupassen. Die Anpassung wird mindestens vier Wochen vor ihrem Wirksamwerden in Textform mitgeteilt und begründet.</li>
+    <li>Gerät der Auftraggeber in Zahlungsverzug, gelten die gesetzlichen Regelungen. Der Auftragnehmer kann nach erfolgloser Mahnung mit angemessener Frist weitere Leistungen bis zum Ausgleich zurückhalten.</li>
+  </ol>
+
+  <h2>§ 8 Mängel und Nachbesserungsgarantie</h2>
+  <ol>
+    <li>Der Auftraggeber prüft die Leistung nach jedem Einsatz in angemessenem Umfang und meldet erkennbare Mängel innerhalb von 24 Stunden nach dem Einsatz, möglichst mit Foto, per E-Mail oder über einen anderen vereinbarten Kanal.</li>
+    <li>Für gemeldete Mängel gilt die {offer.guarantee.name}:
+      <ol>{offer.guarantee.conditions.map((c) => <li>{c}</li>)}</ol>
+    </li>
+    <li>Die Garantie gilt zusätzlich zu den gesetzlichen Rechten des Auftraggebers und schränkt diese nicht ein. Weitergehende Ansprüche bestehen nach Maßgabe von § 9.</li>
+  </ol>
+
+  <h2>§ 9 Haftung</h2>
+  <ol>
+    <li>Der Auftragnehmer haftet unbeschränkt für Schäden aus der Verletzung des Lebens, des Körpers oder der Gesundheit, für Schäden, die auf Vorsatz oder grober Fahrlässigkeit beruhen, sowie nach dem Produkthaftungsgesetz.</li>
+    <li>Bei einfacher Fahrlässigkeit haftet der Auftragnehmer nur für die Verletzung wesentlicher Vertragspflichten, deren Erfüllung die ordnungsgemäße Durchführung des Vertrags überhaupt erst ermöglicht und auf deren Einhaltung der Auftraggeber regelmäßig vertrauen darf. In diesem Fall ist die Haftung auf den vertragstypischen, vorhersehbaren Schaden begrenzt.</li>
+    <li>Bei Verlust von Schlüsseln oder Zugangsmitteln, den der Auftragnehmer zu vertreten hat, ersetzt er die Kosten für Ersatzschlüssel und, soweit zur Wahrung der Sicherheit erforderlich, für den Austausch betroffener Schlösser oder Schließanlagenteile.</li>
+    <li>Der Auftragnehmer haftet nicht für Schäden, die auf fehlende oder unrichtige Hinweise des Auftraggebers nach § 5 Abs. 2 zurückzuführen sind, sowie für den üblichen Verschleiß gereinigter Oberflächen.</li>
+    <li>Schäden sind dem Auftragnehmer unverzüglich, spätestens innerhalb von 7 Tagen nach ihrer Entdeckung, in Textform anzuzeigen, damit sie geprüft und dokumentiert werden können.</li>
+    <li>Die vorstehenden Haftungsbeschränkungen gelten auch zugunsten der Mitarbeitenden und Erfüllungsgehilfen des Auftragnehmers.</li>
+  </ol>
+
+  <h2>§ 10 Laufzeit und Kündigung</h2>
+  <ol>
+    <li>Laufzeit und Kündigungsfristen ergeben sich aus dem jeweiligen Angebot.</li>
+    <li>Ist im Angebot nichts anderes vereinbart, wird ein Vertrag über laufende Leistungen auf unbestimmte Zeit geschlossen und kann von jeder Partei mit einer Frist von drei Monaten zum Ende eines Kalendermonats gekündigt werden.</li>
+    <li>Einmalige Leistungen (z. B. Grund-, End- oder Sonderreinigungen) enden mit ihrer vollständigen Erbringung.</li>
+    <li>Das Recht zur außerordentlichen Kündigung aus wichtigem Grund bleibt unberührt.</li>
+    <li>Kündigungen bedürfen der Textform.</li>
+  </ol>
+
+  <h2>§ 11 Datenschutz</h2>
+  <p>Der Auftragnehmer verarbeitet personenbezogene Daten des Auftraggebers und seiner Ansprechpersonen nach Maßgabe der <a href="/datenschutz/">Datenschutzerklärung</a>.</p>
+
+  <h2>§ 12 Schlussbestimmungen</h2>
+  <ol>
+    <li>Es gilt das Recht der Bundesrepublik Deutschland unter Ausschluss des UN-Kaufrechts.</li>
+    <li>Ist der Auftraggeber Kaufmann, juristische Person des öffentlichen Rechts oder öffentlich-rechtliches Sondervermögen, ist ausschließlicher Gerichtsstand für alle Streitigkeiten aus dem Vertragsverhältnis der Sitz des Auftragnehmers. Der Auftragnehmer ist auch berechtigt, am allgemeinen Gerichtsstand des Auftraggebers zu klagen.</li>
+    <li>Änderungen und Ergänzungen des Vertrags bedürfen der Textform. Dies gilt auch für die Aufhebung dieses Textformerfordernisses.</li>
+    <li>Sollte eine Bestimmung dieser AGB ganz oder teilweise unwirksam sein oder werden, bleibt die Wirksamkeit der übrigen Bestimmungen unberührt. An die Stelle der unwirksamen Bestimmung tritt die gesetzliche Regelung.</li>
+  </ol>
+  <p>Stand: Oktober 2026</p>
 </LegalLayout>
