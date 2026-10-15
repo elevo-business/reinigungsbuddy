@@ -1,12 +1,10 @@
 ---
 import Icon from '../ui/Icon.astro';
-import { site } from '~/config/site';
 interface Props { lang?: 'de' | 'en'; class?: string }
 const { lang = 'de', class: cls = '' } = Astro.props;
 const items = lang === 'en'
-  ? [['tag', 'Fixed quote 24 h after site visit'], ['shield', '24-hour re-clean guarantee'], ['document', 'Cleaning report after every visit'], ['person', 'One fixed contact person']]
-  : [['tag', 'Festpreis 24 h nach Objektbegehung'], ['shield', '24-h-Nachbesserungsgarantie'], ['document', 'Reinigungsprotokoll nach jedem Einsatz'], ['person', 'Ein fester Ansprechpartner']];
-if (site.insurance) items.push(['document', lang === 'en' ? 'Fully insured' : 'Betriebshaftpflicht versichert']);
+  ? [['tag', 'Fixed price after a free site visit'], ['person', 'One contact person'], ['document', 'Cleaning report after every visit']]
+  : [['tag', 'Festpreis nach kostenloser Objektbegehung'], ['person', 'Ein fester Ansprechpartner'], ['document', 'Reinigungsprotokoll nach jedem Einsatz']];
 ---
 <ul class:list={['flex flex-wrap gap-x-6 gap-y-2 text-[0.95rem]', cls]}>
   {items.map(([icon, text]) => (

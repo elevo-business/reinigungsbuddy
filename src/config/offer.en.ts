@@ -4,10 +4,10 @@
  */
 export const offerEn = {
   pillars: [
-    { key: 'festpreis', title: 'Fixed quote within 24 hours', text: 'After a free on-site visit you get a written fixed-price quote within 24 hours. What it says is what it costs – no surcharges that only appear on the invoice.', icon: 'tag' },
-    { key: 'garantie', title: '24-hour re-clean guarantee', text: 'Something not clean? Send us a photo. We re-clean within 24 hours (working days) free of charge. If we miss that, you don’t pay for that visit.', icon: 'shield' },
-    { key: 'protokoll', title: 'Cleaning report after every visit', text: 'After each clean you get a short cleaning report via WhatsApp or email: what was done and when. You see what was done without having to check yourself.', icon: 'document' },
-    { key: 'ansprechpartner', title: 'One fixed contact', text: 'You talk directly to the person who plans and cleans. No call centre, no ticket system.', icon: 'person' },
+    { key: 'festpreis', title: 'A price that stays fixed', text: 'After a free on-site visit you receive a written quote within 24 hours. The price is the price. No surcharges, no surprises on the invoice.', icon: 'tag' },
+    { key: 'ansprechpartner', title: 'One contact person', text: 'One person who knows your premises and is easy to reach. No hotline, no queue, no handovers.', icon: 'person' },
+    { key: 'protokoll', title: 'You see what was done', text: 'After every visit you get a short cleaning report, so you know what was done without checking yourself.', icon: 'document' },
+    { key: 'garantie', title: 'Re-clean within 24 hours', text: 'If something isn’t right, just send a short message. We re-clean within 24 hours (working days) free of charge. If we can’t, we don’t charge for that visit.', icon: 'shield' },
   ],
   problems: [
     { title: 'It gets cleaned, but not clean.', text: 'The bins are empty, but the coffee rings on the meeting table have been there for weeks. Nobody feels responsible.' },
@@ -15,10 +15,9 @@ export const offerEn = {
     { title: 'Checking costs your time.', text: 'Office managers walk through the rooms in the evening, write lists and chase the cleaning company. That’s not their job.' },
   ],
   process: [
-    { title: 'Enquiry', text: 'Fill in the form – about two minutes. We reply on the same working day.' },
-    { title: 'Site visit', text: 'Free, on site. We walk through the rooms and agree times, access and special requests.' },
-    { title: 'Fixed quote in 24 h', text: 'Within 24 hours after the site visit you have your fixed quote with a detailed cleaning specification.' },
-    { title: 'Start', text: 'Key handover with a signed record, first clean on your preferred date, cleaning report after every visit.' },
+    { title: 'Send an enquiry', text: 'The form takes about two minutes. We get back to you on the same working day.' },
+    { title: 'Site visit', text: 'We visit for free and note rooms, times and requirements. Within 24 hours you have your fixed-price quote.' },
+    { title: 'Get started', text: 'You confirm, we take over the keys against a signed record and start on your preferred date.' },
   ],
   comparison: [
     { topic: 'Quote', typical: '“Price on request”, often after weeks', us: 'Fixed quote within 24 h after a site visit' },
@@ -28,8 +27,8 @@ export const offerEn = {
     { topic: 'Scope', typical: 'Generic “office cleaning”', us: 'Written specification: what, where, how often' },
   ],
   guarantee: {
-    name: '24-hour re-clean guarantee',
-    short: 'Not clean? Send a photo and we re-clean within 24 hours (working days) free of charge. If we don’t, you don’t pay for that visit.',
+    name: 'Re-clean guarantee',
+    short: 'If something isn’t clean, we re-clean within 24 hours (working days) free of charge. If we can’t, we don’t charge for that visit.',
     conditions: [
       'The guarantee covers all services listed in the agreed cleaning specification.',
       'Report the issue within 24 hours after the visit, ideally via WhatsApp or email with a photo.',

@@ -2,7 +2,6 @@
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import Breadcrumbs from '~/components/Breadcrumbs.astro';
 import Icon from '~/components/ui/Icon.astro';
-import NeedsConfigurator from '~/components/islands/NeedsConfigurator.astro';
 import SectionHeader from '~/components/sections/SectionHeader.astro';
 import ProcessSteps from '~/components/sections/ProcessSteps.astro';
 import FinalCTA from '~/components/sections/FinalCTA.astro';
@@ -18,7 +17,7 @@ const crumbs = [{ name: 'Home', href: '/en/' }, { name: 'Services', href: '/en/s
   schema={[breadcrumbs(crumbs, Astro.site!)]}>
   <section class="wrap pb-16 pt-8 lg:pt-12">
     <Breadcrumbs items={crumbs} />
-    <p class="eyebrow mt-8 text-moss"><span class="num">01</span> — Services</p>
+    <p class="eyebrow mt-8 text-moss">Services</p>
     <h1 class="mt-5 max-w-5xl text-mega">Commercial cleaning in Berlin, all from one contact.</h1>
     <p class="mt-6 max-w-2xl text-lead">From daily office cleaning to windows, carpets, washrooms and the move-out clean: one contact, one cleaning specification, one invoice and a fixed quote within 24 hours after a free site visit.</p>
   </section>
@@ -34,10 +33,6 @@ const crumbs = [{ name: 'Home', href: '/en/' }, { name: 'Services', href: '/en/s
       ))}
     </ul>
   </section>
-  <section class="wrap pb-20" aria-labelledby="cfg">
-    <SectionHeader num={2} label="Your package" title="Put together what you need." intro="No prices, no sign-up. Pick what needs to be clean – you get a fixed quote within 24 hours." id="cfg" />
-    <div class="mt-10 lg:max-w-4xl"><NeedsConfigurator lang="en" id="cfg-en-hub" /></div>
-  </section>
-  <ProcessSteps num={3} steps={[...offerEn.process]} label="Process" title="From enquiry to first clean" intro="Four steps. At every step you know what happens next, and when." />
-  <FinalCTA num={4} lang="en" />
+  <ProcessSteps steps={[...offerEn.process]} label="How it works" title="Three simple steps" />
+  <FinalCTA num={2} lang="en" />
 </BaseLayout>

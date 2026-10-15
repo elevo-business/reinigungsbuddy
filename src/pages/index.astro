@@ -1,137 +1,103 @@
 ---
+/**
+ * Startseite – bewusst schlicht:
+ * Hero · So einfach geht's · Leistungen · Was Sie bekommen · Einsatzgebiet · Fragen · Anfrage
+ */
 import { getCollection } from 'astro:content';
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import Photo from '~/components/ui/Photo.astro';
 import Icon from '~/components/ui/Icon.astro';
 import TrustLine from '~/components/sections/TrustLine.astro';
-import NeedsConfigurator from '~/components/islands/NeedsConfigurator.astro';
 import SectionHeader from '~/components/sections/SectionHeader.astro';
-import ProblemBlock from '~/components/sections/ProblemBlock.astro';
-import OfferStack from '~/components/sections/OfferStack.astro';
 import ProcessSteps from '~/components/sections/ProcessSteps.astro';
-import BeforeAfterGallery from '~/components/sections/BeforeAfterGallery.astro';
-import ComparisonTable from '~/components/sections/ComparisonTable.astro';
-import GuaranteeBlock from '~/components/sections/GuaranteeBlock.astro';
-import ServiceArea from '~/components/sections/ServiceArea.astro';
+import OfferStack from '~/components/sections/OfferStack.astro';
 import Testimonials from '~/components/sections/Testimonials.astro';
 import FAQ from '~/components/sections/FAQ.astro';
 import FinalCTA from '~/components/sections/FinalCTA.astro';
 import { offer } from '~/config/offer';
+import { site } from '~/config/site';
 import { hasStimmen } from '~/lib/collections';
 import { whatsappLink } from '~/lib/contact';
 import { faqPage } from '~/lib/schema';
 import heroImg from '~/assets/images/buero-flur-glastueren-tageslicht.jpg';
 
 const services = (await getCollection('leistungen')).sort((a, b) => a.data.order - b.data.order);
-const guides = (await getCollection('ratgeber')).sort((a, b) => a.data.order - b.data.order).slice(0, 3);
-const showGallery = offer.switches.showGallery && (await getCollection('projekte')).length > 0;
 const wa = whatsappLink('Hallo, ich interessiere mich für eine Gebäudereinigung in Berlin.');
 const faqs = [
-  { q: 'Was kostet eine Gebäudereinigung in Berlin?', a: 'Das hängt von Fläche, Häufigkeit, Bodenbelägen, Anzahl der Sanitärräume und Zeitfenster ab. Deshalb nennen wir keine Pauschalen, sondern einen Festpreis für Ihr Objekt, innerhalb von 24 Stunden nach der kostenlosen Objektbegehung. Die Faktoren erklärt unser Ratgeber zu den Kosten der Büroreinigung.' },
-  { q: 'In welchen Bezirken reinigen Sie?', a: 'In allen 12 Berliner Bezirken, von Spandau bis Marzahn-Hellersdorf und von Reinickendorf bis Treptow-Köpenick. Die Objektbegehung ist überall kostenlos.' },
-  ...offer.commonFaq.slice(0, 4),
-  { q: 'Sprechen Sie Englisch?', a: 'Ja. Viele unserer Kunden sind internationale Teams. Angebot, Leistungsverzeichnis und Kommunikation gibt es auf Wunsch komplett auf Englisch.' },
+  { q: 'Was kostet eine Gebäudereinigung in Berlin?', a: 'Das hängt von Fläche, Häufigkeit, Bodenbelägen, Sanitärräumen und Zeitfenster ab. Deshalb nennen wir keine Pauschalen. Nach der kostenlosen Objektbegehung erhalten Sie innerhalb von 24 Stunden einen Festpreis für genau Ihr Objekt.' },
+  { q: 'In welchen Bezirken sind Sie unterwegs?', a: 'In allen 12 Berliner Bezirken, von Spandau bis Marzahn-Hellersdorf und von Reinickendorf bis Treptow-Köpenick. Die Objektbegehung ist überall kostenlos.' },
+  offer.commonFaq[1],
+  offer.commonFaq[3],
+  offer.commonFaq[4],
 ];
 const url = new URL('/', Astro.site).toString();
-let n = 1;
-const next = () => ++n;
 ---
 <BaseLayout
   title="Gebäudereinigung Berlin – Festpreis 24 h | Reinigungsbuddy"
-  description="Gebäudereinigung in Berlin: Festpreis 24 h nach Objektbegehung, Reinigungsprotokoll und 24-h-Nachbesserungsgarantie. Alle 12 Bezirke. Jetzt anfragen."
+  description="Gebäudereinigung in Berlin für Büros, Praxen und Treppenhäuser. Fester Ansprechpartner, Reinigungsprotokoll, Festpreis 24 h nach Objektbegehung."
   image="/og/home.png"
   schema={[faqPage(faqs, url)]}>
-  <!-- 01 Hero -->
-  <section class="wrap pb-12 pt-10 lg:pb-16 lg:pt-16">
-    <div class="grid-12 gap-y-10">
-      <div class="col-span-4 lg:col-span-7">
-        <p class="eyebrow text-moss"><span class="num">01</span> — Gebäudereinigung Berlin</p>
-        <h1 class="mt-5 text-[clamp(2.35rem,4.6vw+0.6rem,4.9rem)] leading-[1]">
-          Gebäude&shy;reinigung in Berlin. Mit Festpreis, Reinigungsprotokoll und einer Garantie, die uns etwas kostet.
-        </h1>
-        <p class="mt-7 max-w-2xl text-lead">
-          Reinigungsbuddy reinigt Büros, Praxen und Gewerbeflächen in allen 12 Bezirken. Sie bekommen <strong class="font-medium">ein Festpreis-Angebot innerhalb von 24 Stunden nach der Objektbegehung</strong> und ein <strong class="font-medium">Reinigungsprotokoll nach jedem Einsatz</strong>. Und wenn etwas nicht sauber ist, reinigen wir innerhalb von 24 Stunden kostenlos nach.
-        </p>
-        <div class="mt-8 flex flex-wrap gap-3">
-          <a href="/angebot/" class="btn btn-primary">Festpreis in 24 h anfragen<Icon name="arrow" size={18} class="arrow" /></a>
-          {wa ? (
-            <a href={wa} class="btn btn-ghost" data-track="whatsapp_click" rel="noopener"><Icon name="whatsapp" size={20} />Direkt per WhatsApp</a>
-          ) : (
-            <a href="/leistungen/" class="btn btn-ghost">Alle Leistungen</a>
-          )}
-        </div>
-        <TrustLine class="mt-8" />
+
+  <!-- Hero -->
+  <section class="wrap pb-14 pt-12 lg:pb-20 lg:pt-20">
+    <div class="max-w-4xl">
+      <p class="eyebrow text-moss">Gebäudereinigung in Berlin</p>
+      <h1 class="mt-5 text-[clamp(2.5rem,5vw+0.8rem,5rem)] leading-[1.02]">
+        Gebäude&shy;reinigung in Berlin, um die Sie sich nicht kümmern müssen.
+      </h1>
+      <p class="mt-7 max-w-2xl text-lead text-stone">
+        Wir reinigen Büros, Praxen und Treppenhäuser in ganz Berlin. Sie haben einen festen Ansprechpartner, bekommen nach jedem Einsatz ein Reinigungsprotokoll und innerhalb von 24 Stunden nach der Objektbegehung Ihren Festpreis.
+      </p>
+      <div class="mt-9 flex flex-wrap gap-3">
+        <a href="/angebot/" class="btn btn-primary">Kostenlose Objektbegehung anfragen<Icon name="arrow" size={18} class="arrow" /></a>
+        {wa ? (
+          <a href={wa} class="btn btn-ghost" data-track="whatsapp_click" rel="noopener"><Icon name="whatsapp" size={20} />WhatsApp</a>
+        ) : (
+          <a href="#leistungen" class="btn btn-ghost">Leistungen ansehen</a>
+        )}
       </div>
-      <div class="col-span-4 lg:col-span-5">
-        <NeedsConfigurator preset={['buero', 'sanitaer']} compact id="cfg-home" />
-      </div>
+      <TrustLine class="mt-9" />
     </div>
   </section>
 
-  <figure class="relative">
-    <Photo src={heroImg} alt="Heller Büroflur mit Glastüren, Holzboden und Tageslicht in einem modernen Bürogebäude" sizes="100vw" class="h-[60vh] max-h-[44rem] min-h-[20rem] w-full object-cover" />
-    <div class="wrap relative -mt-16 sm:-mt-20">
-      <dl class="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-line bg-line lg:grid-cols-3">
-        {[
-          ['24 h', 'bis zum Festpreis nach der Objektbegehung'],
-          ['12', 'Berliner Bezirke im Einsatzgebiet'],
-          ['1', 'fester Ansprechpartner statt Hotline'],
-        ].map(([v, l]) => (
-          <div class="bg-paper p-5 sm:p-6">
-            <dt class="sr-only">{l}</dt>
-            <dd class="num font-display text-4xl font-semibold tracking-tight sm:text-5xl">{v}</dd>
-            <dd class="mt-1 text-[0.95rem] text-stone">{l}</dd>
-          </div>
-        ))}
-      </dl>
-    </div>
+  <figure class="wrap">
+    <Photo src={heroImg} alt="Heller Büroflur mit Glastüren, Holzboden und Tageslicht in einem modernen Bürogebäude" sizes="(min-width: 90rem) 1344px, 100vw" class="aspect-[4/3] w-full rounded-2xl object-cover sm:aspect-[21/9]" priority />
   </figure>
 
+  <ProcessSteps />
+
   <!-- Leistungen -->
-  <section class="wrap py-20 lg:py-28" aria-labelledby="s2">
-    <SectionHeader num={next()} label="Leistungen" title="Alles, was in Ihrem Büro sauber sein muss. Ein Ansprechpartner." intro="Von der täglichen Unterhaltsreinigung bis zur Endreinigung beim Auszug. Sie brauchen keine zweite Firma für die Fenster und keine dritte für den Teppich." id="s2" wide />
-    <ul class="mt-12 border-t border-line">
-      {services.map((s, i) => (
-        <li class="border-b border-line">
-          <a href={`/${s.id}/`} class="group grid grid-cols-[2.5rem_1fr_auto] items-baseline gap-4 py-5 sm:grid-cols-[3rem_minmax(0,24rem)_1fr_auto]">
-            <span class="num text-sm text-stone">{String(i + 1).padStart(2, '0')}</span>
-            <span class="font-display text-xl font-semibold tracking-tight transition-colors group-hover:text-moss sm:text-[1.65rem]">{s.data.name}</span>
-            <span class="hidden text-stone sm:block">{s.data.teaser}</span>
-            <Icon name="arrow" size={22} class="transition-transform duration-300 group-hover:translate-x-1" />
-          </a>
-        </li>
-      ))}
-    </ul>
-    <p class="mt-6 text-stone">Dazu auf Wunsch: <a href="/leistungen/#verbrauchsmaterial" class="link-moss">Verbrauchsmaterial-Service</a> für Seife, Papier und Müllbeutel.</p>
-  </section>
-
-  <ProblemBlock num={next()} />
-  <OfferStack num={next()} />
-  <ProcessSteps num={next()} />
-  {showGallery && <BeforeAfterGallery num={next()} />}
-  <ComparisonTable num={next()} />
-  <GuaranteeBlock num={next()} />
-  <ServiceArea num={next()} />
-  {hasStimmen && <Testimonials num={next()} />}
-
-  {guides.length > 0 && (
-    <section class="wrap py-20 lg:py-28" aria-labelledby="s-rg">
-      <SectionHeader num={next()} label="Ratgeber" title="Wissen, bevor Sie Angebote vergleichen." id="s-rg" />
-      <ul class="mt-12 grid gap-8 lg:grid-cols-3">
-        {guides.map((g) => (
-          <li class="reveal">
-            <a href={`/ratgeber/${g.id}/`} class="group block">
-              <div class="zoom rounded-xl"><Photo src={g.data.image} alt={g.data.imageAlt} sizes="(min-width: 64rem) 30vw, 100vw" widths={[480, 768, 1080]} class="aspect-[3/2] w-full object-cover" /></div>
-              <h3 class="mt-4 text-2xl transition-colors group-hover:text-moss">{g.data.title}</h3>
-              <p class="mt-2 text-stone">{g.data.excerpt}</p>
+  <section id="leistungen" class="bg-paper-2/60 py-20 lg:py-24" aria-labelledby="leistungen-titel">
+    <div class="wrap">
+      <SectionHeader label="Leistungen" title="Alles, was in Ihren Räumen sauber sein muss" intro="Von der regelmäßigen Büroreinigung bis zur Endreinigung beim Auszug. Ein Ansprechpartner, eine Rechnung." id="leistungen-titel" />
+      <ul class="mt-12 grid gap-x-10 sm:grid-cols-2">
+        {services.map((s) => (
+          <li class="border-b border-line">
+            <a href={`/${s.id}/`} class="group flex items-start justify-between gap-4 py-5">
+              <span>
+                <span class="block font-display text-xl font-semibold tracking-tight transition-colors group-hover:text-moss">{s.data.name}</span>
+                <span class="mt-1 block text-[0.95rem] text-stone">{s.data.teaser}</span>
+              </span>
+              <Icon name="arrow" size={20} class="mt-1.5 shrink-0 transition-transform duration-300 group-hover:translate-x-1" />
             </a>
           </li>
         ))}
       </ul>
-      <a href="/ratgeber/" class="link-moss mt-10 inline-block">Alle Ratgeber-Artikel</a>
-    </section>
-  )}
+    </div>
+  </section>
 
-  <FAQ num={next()} items={faqs} title="Fragen zur Gebäudereinigung in Berlin" />
-  <FinalCTA num={next()} />
+  <OfferStack />
+
+  {hasStimmen && <Testimonials num={0} />}
+
+  <!-- Einsatzgebiet (kurz) -->
+  <section class="wrap pb-6" aria-labelledby="gebiet">
+    <div class="rounded-2xl border border-line p-6 sm:p-8">
+      <h2 id="gebiet" class="text-2xl">Im Einsatz in allen 12 Berliner Bezirken</h2>
+      <p class="mt-3 text-stone">{site.districts.map((d) => d.name).join(' · ')}</p>
+    </div>
+  </section>
+
+  <FAQ num={1} items={faqs} title="Häufige Fragen" />
+  <FinalCTA num={2} />
 </BaseLayout>

@@ -6,14 +6,14 @@ import { whatsappLink } from '~/lib/contact';
 import { offer } from '~/config/offer';
 interface Props { num: number; title?: string; text?: string; whatsappText?: string; lang?: 'de' | 'en' }
 const { num, lang = 'de' } = Astro.props;
-const title = Astro.props.title ?? (lang === 'en' ? 'Your fixed quote, within 24 hours.' : 'Ihr Festpreis, in 24 Stunden.');
-const text = Astro.props.text ?? (lang === 'en' ? 'Tell us about your premises. We reply on the same working day and arrange a free site visit.' : `Erzählen Sie uns kurz von Ihren Räumen. Wir melden uns ${offer.response.promise} und vereinbaren eine kostenlose Objektbegehung.`);
+const title = Astro.props.title ?? (lang === 'en' ? 'Let’s take a look at your premises.' : 'Lassen Sie uns Ihr Objekt ansehen.');
+const text = Astro.props.text ?? (lang === 'en' ? 'Tell us briefly about your premises. We get back to you on the same working day and arrange a free site visit. Your fixed-price quote follows within 24 hours.' : `Erzählen Sie uns kurz von Ihren Räumen. Wir melden uns ${offer.response.promise} und vereinbaren eine kostenlose Objektbegehung. Ihr Festpreis-Angebot folgt innerhalb von 24 Stunden.`);
 const wa = whatsappLink(Astro.props.whatsappText ?? 'Hallo, ich hätte gern ein Festpreis-Angebot.');
 ---
-<section class="on-dark py-20 lg:py-28" aria-labelledby={`s${num}`} id="anfrage-bereich">
+<section class="on-dark py-20 lg:py-24" aria-labelledby={`s${num}`} id="anfrage-bereich">
   <div class="wrap grid-12 gap-y-12">
     <div class="col-span-4 lg:col-span-4">
-      <p class="eyebrow text-fog"><span class="num">{String(num).padStart(2, '0')}</span> — {lang === 'en' ? 'Enquiry' : 'Anfrage'}</p>
+      <p class="eyebrow text-mint">{lang === 'en' ? 'Enquiry' : 'Anfrage'}</p>
       <h2 id={`s${num}`} class="mt-4 text-display">{title}</h2>
       <p class="mt-5 text-lead text-fog">{text}</p>
       <TrustLine lang={lang} class="mt-8 flex-col !gap-3" />

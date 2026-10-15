@@ -4,19 +4,13 @@ import Breadcrumbs from '~/components/Breadcrumbs.astro';
 import Photo from '~/components/ui/Photo.astro';
 import Icon from '~/components/ui/Icon.astro';
 import TrustLine from '~/components/sections/TrustLine.astro';
-import NeedsConfigurator from '~/components/islands/NeedsConfigurator.astro';
 import FactsBlock from '~/components/sections/FactsBlock.astro';
-import ProblemBlock from '~/components/sections/ProblemBlock.astro';
 import OfferStack from '~/components/sections/OfferStack.astro';
 import ScopeChecklist from '~/components/sections/ScopeChecklist.astro';
-import BeforeAfterGallery from '~/components/sections/BeforeAfterGallery.astro';
 import ProcessSteps from '~/components/sections/ProcessSteps.astro';
-import ComparisonTable from '~/components/sections/ComparisonTable.astro';
-import GuaranteeBlock from '~/components/sections/GuaranteeBlock.astro';
 import FAQ from '~/components/sections/FAQ.astro';
 import FinalCTA from '~/components/sections/FinalCTA.astro';
 import { offerEn } from '~/config/offer.en';
-import { offer } from '~/config/offer';
 import { service, faqPage, breadcrumbs } from '~/lib/schema';
 import img from '~/assets/images/buero-flur-glaswaende.jpg';
 
@@ -43,7 +37,6 @@ const facts = [
   { label: 'Quote', value: 'Fixed price within 24 h after a free site visit' },
   { label: 'Language', value: 'English and German' },
 ];
-const showGallery = offer.switches.showGallery;
 ---
 <BaseLayout
   title="Office Cleaning Berlin – Fixed Quote | Reinigungsbuddy"
@@ -54,25 +47,24 @@ const showGallery = offer.switches.showGallery;
   <section class="wrap pb-14 pt-8 lg:pb-20 lg:pt-12">
     <Breadcrumbs items={crumbs} />
     <div class="grid-12 mt-8 gap-y-10">
-      <div class="col-span-4 lg:col-span-7">
-        <p class="eyebrow text-moss"><span class="num">01</span> — Office cleaning in Berlin</p>
-        <h1 class="mt-5 text-mega">Office cleaning in Berlin you notice on Monday morning.</h1>
+      <div class="col-span-4 lg:col-span-9">
+        <p class="eyebrow text-moss">Office cleaning in Berlin</p>
+        <h1 class="mt-5 text-[clamp(2.3rem,4.4vw+0.8rem,4.5rem)] leading-[1.04]">Office cleaning in Berlin that simply works.</h1>
         <p class="mt-7 max-w-2xl text-lead">{direct}</p>
         <div class="mt-8 flex flex-wrap gap-3">
-          <a href="#anfrage-bereich" class="btn btn-primary">Get a fixed quote in 24 h<Icon name="arrow" size={18} class="arrow" /></a>
+          <a href="#anfrage-bereich" class="btn btn-primary">Request a free site visit<Icon name="arrow" size={18} class="arrow" /></a>
           <a href="#scope" class="btn btn-ghost">What’s included?<Icon name="arrow-down" size={18} /></a>
         </div>
         <TrustLine lang="en" class="mt-8" />
       </div>
-      <div class="col-span-4 lg:col-span-5"><NeedsConfigurator lang="en" preset={['buero', 'sanitaer']} compact id="cfg-en-office" /></div>
     </div>
   </section>
-  <figure><Photo src={img} alt="Bright office corridor with glass walls, black frames and a clean stone floor" sizes="100vw" class="h-[52vh] max-h-[40rem] min-h-[18rem] w-full object-cover" /></figure>
+  <figure class="wrap"><Photo src={img} alt="Bright office corridor with glass walls, black frames and a clean stone floor" sizes="(min-width: 90rem) 1344px, 100vw" class="aspect-[4/3] w-full rounded-2xl object-cover sm:aspect-[21/9]" priority /></figure>
 
   <section class="wrap py-20 lg:py-28" aria-labelledby="detail">
     <div class="grid-12 gap-y-12">
       <div class="prose-rb col-span-4 lg:col-span-7">
-        <p class="eyebrow opacity-80"><span class="num">02</span> — In detail</p>
+        <p class="eyebrow opacity-80">In detail</p>
         <h2 id="detail">What good office cleaning looks like</h2>
         <p>Good office cleaning goes unnoticed. You notice it when nobody mentions the coffee ring on the meeting table on Monday, when there is always paper in the washroom and when the glass door to reception has no handprints. That takes no magic, just a clear <strong>cleaning specification</strong>, a fixed rhythm and someone who feels responsible.</p>
         <h3>Every Berlin office is different</h3>
@@ -87,13 +79,9 @@ const showGallery = offer.switches.showGallery;
     </div>
   </section>
 
-  <ProblemBlock num={3} lang="en" />
-  <OfferStack num={4} lang="en" />
+  <OfferStack lang="en" />
   <div id="scope"><ScopeChecklist num={5} title="What office cleaning includes" included={included} excluded={excluded} lang="en" /></div>
-  {showGallery && <BeforeAfterGallery num={6} lang="en" />}
-  <ProcessSteps num={showGallery ? 7 : 6} steps={[...offerEn.process]} label="Process" title="From enquiry to first clean" intro="Four steps. At every step you know what happens next, and when." />
-  <ComparisonTable num={showGallery ? 8 : 7} lang="en" />
-  <GuaranteeBlock num={showGallery ? 9 : 8} lang="en" />
-  <FAQ num={showGallery ? 10 : 9} items={faqs} title="Questions about office cleaning" />
-  <FinalCTA num={showGallery ? 11 : 10} lang="en" whatsappText="Hello, I would like a fixed quote for office cleaning." />
+  <ProcessSteps steps={[...offerEn.process]} label="How it works" title="Three simple steps" />
+  <FAQ num={1} items={faqs} title="Questions about office cleaning" />
+  <FinalCTA num={2} lang="en" whatsappText="Hello, I would like a fixed quote for office cleaning." />
 </BaseLayout>

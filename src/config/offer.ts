@@ -21,34 +21,34 @@ export const offer = {
   pillars: [
     {
       key: 'festpreis',
-      title: 'Festpreis in 24 Stunden',
-      text: 'Nach einer kostenlosen Objektbegehung vor Ort bekommen Sie innerhalb von 24 Stunden ein schriftliches Festpreis-Angebot. Was drinsteht, kostet es. Keine Zuschläge, die erst auf der Rechnung auftauchen.',
+      title: 'Ein Preis, der feststeht',
+      text: 'Nach der kostenlosen Objektbegehung erhalten Sie innerhalb von 24 Stunden ein schriftliches Angebot. Der Preis gilt so, wie er dort steht. Ohne Zuschläge und ohne Überraschungen auf der Rechnung.',
       icon: 'tag',
     },
     {
-      key: 'garantie',
-      title: '24-Stunden-Nachbesserung',
-      text: 'Ist etwas nicht sauber, schicken Sie uns ein Foto. Wir reinigen innerhalb von 24 Stunden (werktags) kostenlos nach. Schaffen wir das nicht, zahlen Sie diesen Einsatz nicht.',
-      icon: 'shield',
+      key: 'ansprechpartner',
+      title: 'Ein Ansprechpartner',
+      text: 'Sie haben eine feste Person, die Ihr Objekt kennt und erreichbar ist. Keine Hotline, keine Warteschleife, keine wechselnden Zuständigkeiten.',
+      icon: 'person',
     },
     {
       key: 'protokoll',
-      title: 'Reinigungsprotokoll nach jedem Einsatz',
-      text: 'Nach jeder Reinigung erhalten Sie ein kurzes Reinigungsprotokoll per WhatsApp oder E-Mail: was erledigt wurde und wann. Sie sehen, was gemacht wurde, ohne selbst nachkontrollieren zu müssen.',
+      title: 'Sie sehen, was gemacht wurde',
+      text: 'Nach jedem Einsatz erhalten Sie ein kurzes Reinigungsprotokoll. So wissen Sie Bescheid, ohne selbst kontrollieren zu müssen.',
       icon: 'document',
     },
     {
-      key: 'ansprechpartner',
-      title: 'Ein fester Ansprechpartner',
-      text: 'Sie sprechen direkt mit dem, der bei Ihnen reinigt und plant. Kein Callcenter, kein Ticket-System, keine wechselnden Objektleiter.',
-      icon: 'person',
+      key: 'garantie',
+      title: 'Nachbesserung in 24 Stunden',
+      text: 'Ist etwas nicht in Ordnung, genügt eine kurze Nachricht. Wir reinigen innerhalb von 24 Stunden (werktags) kostenlos nach. Gelingt uns das nicht, berechnen wir den Einsatz nicht.',
+      icon: 'shield',
     },
   ],
 
   /** Garantie-Bedingungen (Seite /garantie/ + Garantie-Block). Kurz und eindeutig halten. */
   guarantee: {
-    name: '24-Stunden-Nachbesserungsgarantie',
-    short: 'Nicht sauber? Foto schicken, wir reinigen innerhalb von 24 Stunden (werktags) kostenlos nach. Klappt das nicht, zahlen Sie den Einsatz nicht.',
+    name: 'Nachbesserungsgarantie',
+    short: 'Ist etwas nicht sauber, reinigen wir innerhalb von 24 Stunden (werktags) kostenlos nach. Gelingt uns das nicht, berechnen wir den Einsatz nicht.',
     conditions: [
       'Die Garantie gilt für alle Leistungen, die im vereinbarten Leistungsverzeichnis stehen.',
       'Melden Sie den Mangel innerhalb von 24 Stunden nach dem Einsatz, am einfachsten per WhatsApp oder E-Mail mit Foto.',
@@ -59,12 +59,11 @@ export const offer = {
     ],
   },
 
-  /** Ablauf in 4 Schritten */
+  /** Ablauf in 3 Schritten */
   process: [
-    { title: 'Anfrage', text: 'Formular ausfüllen. Das dauert etwa zwei Minuten. Sie bekommen am selben Werktag eine Rückmeldung.' },
-    { title: 'Objektbegehung', text: 'Kostenlos vor Ort. Wir gehen gemeinsam durch die Räume und klären Zeiten, Zugang und Sonderwünsche.' },
-    { title: 'Festpreis in 24 h', text: 'Innerhalb von 24 Stunden nach der Objektbegehung liegt Ihr Festpreis-Angebot mit Leistungsverzeichnis vor.' },
-    { title: 'Start', text: 'Schlüsselübergabe mit Protokoll, erster Einsatz zum Wunschtermin, danach Reinigungsprotokoll nach jeder Reinigung.' },
+    { title: 'Anfrage stellen', text: 'Das Formular dauert etwa zwei Minuten. Wir melden uns am selben Werktag bei Ihnen.' },
+    { title: 'Objekt ansehen', text: 'Wir kommen kostenlos vorbei und nehmen Räume, Zeiten und Wünsche auf. Innerhalb von 24 Stunden danach haben Sie Ihr Festpreis-Angebot.' },
+    { title: 'Loslegen', text: 'Sie sagen zu, wir übernehmen den Schlüssel gegen Protokoll und starten zum Wunschtermin.' },
   ],
 
   /** Warum Büros die Reinigungsfirma wechseln (Problem-Block) */

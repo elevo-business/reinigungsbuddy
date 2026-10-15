@@ -6,7 +6,7 @@ interface Props { whatsappText?: string }
 const lang = langOf(Astro.url.pathname);
 const tel = phoneLink();
 const wa = whatsappLink(Astro.props.whatsappText ?? (lang === 'en' ? 'Hello, I am interested in office cleaning in Berlin.' : 'Hallo, ich interessiere mich für eine Reinigung in Berlin.'));
-const quote = lang === 'en' ? { href: '/en/contact/', label: 'Get a fixed quote in 24 h' } : { href: '/angebot/', label: 'Festpreis in 24 h anfragen' };
+const quote = lang === 'en' ? { href: '/en/contact/', label: 'Request a free site visit' } : { href: '/angebot/', label: 'Kostenlose Objektbegehung anfragen' };
 const hide = ['/angebot/', '/en/contact/'].some((p) => Astro.url.pathname.startsWith(p));
 ---
 {!hide && (

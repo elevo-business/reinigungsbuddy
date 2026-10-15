@@ -1,13 +1,11 @@
 ---
 import { shy } from '~/lib/text';
-interface Props { num?: number | string; label: string; title: string; intro?: string; id?: string; wide?: boolean }
-const { num, label, title, intro, id, wide = false } = Astro.props;
-const n = typeof num === 'number' ? String(num).padStart(2, '0') : num;
+/** Schlichter Abschnittskopf: kleines Label, Überschrift, optional ein Satz Einleitung. */
+interface Props { num?: number | string; label?: string; title: string; intro?: string; id?: string; wide?: boolean; center?: boolean }
+const { label, title, intro, id, center = false } = Astro.props;
 ---
-<div class="grid-12 gap-y-5 border-t border-line pt-5">
-  <p class="eyebrow col-span-4 lg:col-span-3 opacity-80">{n && <span class="num">{n}</span>}{n && ' — '}{label}</p>
-  <div class:list={['col-span-4', wide ? 'lg:col-span-9' : 'lg:col-span-8']}>
-    <h2 id={id} class="text-display">{shy(title)}</h2>
-    {intro && <p class="mt-5 max-w-2xl text-lead opacity-85">{intro}</p>}
-  </div>
+<div class:list={['max-w-3xl', center && 'mx-auto text-center']}>
+  {label && <p class="eyebrow text-moss">{label}</p>}
+  <h2 id={id} class="mt-3 text-[clamp(1.9rem,2.6vw+0.8rem,3rem)] leading-[1.08]">{shy(title)}</h2>
+  {intro && <p class="mt-4 text-lead text-stone">{intro}</p>}
 </div>

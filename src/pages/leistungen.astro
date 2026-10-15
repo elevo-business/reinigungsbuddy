@@ -5,7 +5,6 @@ import Breadcrumbs from '~/components/Breadcrumbs.astro';
 import Photo from '~/components/ui/Photo.astro';
 import Icon from '~/components/ui/Icon.astro';
 import SectionHeader from '~/components/sections/SectionHeader.astro';
-import NeedsConfigurator from '~/components/islands/NeedsConfigurator.astro';
 import ProcessSteps from '~/components/sections/ProcessSteps.astro';
 import FAQ from '~/components/sections/FAQ.astro';
 import FinalCTA from '~/components/sections/FinalCTA.astro';
@@ -36,11 +35,11 @@ const faqs = [
     <Breadcrumbs items={crumbs} />
     <div class="grid-12 mt-8 gap-y-8">
       <div class="col-span-4 lg:col-span-9">
-        <p class="eyebrow text-moss"><span class="num">01</span> — Leistungen</p>
+        <p class="eyebrow text-moss">Leistungen</p>
         <h1 class="mt-5 text-mega">Büro&shy;reinigung: alle Leistungen aus einer Hand.</h1>
       </div>
       <p class="col-span-4 text-lead lg:col-span-6 lg:col-start-4">
-        Von der täglichen Unterhaltsreinigung über Fenster, Teppich und Sanitär bis zur Endreinigung beim Büroumzug: Reinigungsbuddy deckt alles ab, was in Berliner Büros, Praxen und Gewerbeflächen sauber sein muss. Ein Ansprechpartner, ein Leistungsverzeichnis, ein Festpreis innerhalb von 24 Stunden nach der kostenlosen Objektbegehung.
+        Von der täglichen Unterhaltsreinigung über Fenster, Teppich und Sanitär bis zur Endreinigung beim Büroumzug: Reinigungsbuddy deckt alles ab, was in Berliner Büros, Praxen und Gewerbeflächen sauber sein muss. Ein Ansprechpartner, ein Leistungsverzeichnis und ein Festpreis innerhalb von 24 Stunden nach der kostenlosen Objektbegehung.
       </p>
     </div>
   </section>
@@ -69,7 +68,7 @@ const faqs = [
   <section id="verbrauchsmaterial" class="on-dark py-20 lg:py-28" aria-labelledby="vm">
     <div class="wrap grid-12 gap-y-10">
       <div class="col-span-4 lg:col-span-5">
-        <p class="eyebrow text-fog"><span class="num">+</span> — Zusatzleistung</p>
+        <p class="eyebrow text-mint">Zusatzleistung</p>
         <h2 id="vm" class="mt-4 text-display">Verbrauchsmaterial-Service</h2>
         <p class="mt-5 text-lead text-fog">Nie wieder „Papier ist alle". Wir kontrollieren bei jedem Einsatz den Bestand und füllen nach, ohne Einkaufslisten und ohne zweiten Lieferanten.</p>
       </div>
@@ -86,12 +85,8 @@ const faqs = [
     </div>
   </section>
 
-  <section class="wrap py-20 lg:py-28" aria-labelledby="cfg-title">
-    <SectionHeader num={2} label="Bedarf" title="Stellen Sie Ihr Paket zusammen." intro="Ohne Preise, ohne Anmeldung. Wählen Sie, was bei Ihnen sauber werden soll. Den Festpreis bekommen Sie in 24 Stunden." id="cfg-title" />
-    <div class="mt-10 lg:max-w-4xl"><NeedsConfigurator id="cfg-hub" /></div>
-  </section>
 
-  <ProcessSteps num={3} />
+  <ProcessSteps />
   <FAQ num={4} items={faqs} title="Fragen zu den Leistungen" />
   <FinalCTA num={5} />
 </BaseLayout>

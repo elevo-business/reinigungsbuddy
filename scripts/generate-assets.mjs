@@ -17,10 +17,10 @@ const exe = process.env.CHROMIUM_PATH || (fs.existsSync('/opt/pw-browsers/chromi
 const font = (f) => 'data:font/woff2;base64,' + fs.readFileSync(path.join(root, 'public/fonts', f)).toString('base64');
 
 const og = [
-  { file: 'home', kicker: 'Gebäudereinigung Berlin', title: 'Festpreis in 24 h. Reinigungs&shy;protokoll. Garantie.' },
-  { file: 'leistung', kicker: 'Büroreinigung Berlin', title: 'Ein Ansprechpartner für alles, was sauber sein muss.' },
+  { file: 'home', kicker: 'Gebäudereinigung Berlin', title: 'Gebäude&shy;reinigung, um die Sie sich nicht kümmern müssen.' },
+  { file: 'leistung', kicker: 'Reinigung in Berlin', title: 'Ein Ansprechpartner für alles, was sauber sein muss.' },
   { file: 'ratgeber', kicker: 'Ratgeber Büroreinigung', title: 'Wissen, bevor Sie Angebote vergleichen.' },
-  { file: 'en', kicker: 'Office cleaning Berlin', title: 'Fixed quote in 24 h. Cleaning report. Guarantee.' },
+  { file: 'en', kicker: 'Office cleaning Berlin', title: 'Office cleaning you don’t have to think about.' },
 ];
 
 const signet = '<svg viewBox="200 270 700 540" xmlns="http://www.w3.org/2000/svg"><path d="M268 628C335 705 403 742 470 742C568 742 664 663 758 510" fill="none" stroke="#4FC79C" stroke-width="106" stroke-linecap="round"/><circle cx="805" cy="348" r="58" fill="#4FC79C"/></svg>';
@@ -30,7 +30,7 @@ const tpl = (o) => `<!doctype html><html><head><style>
 *{margin:0;box-sizing:border-box}body{width:1200px;height:630px;background:#0F2E23;color:#F4F3EF;font-family:S;position:relative;overflow:hidden}
 .w{position:absolute;inset:64px 72px;display:flex;flex-direction:column;justify-content:space-between}
 .k{font-size:24px;letter-spacing:.08em;text-transform:uppercase;color:#A9C2B7}
-h1{font-family:G;font-weight:600;font-size:84px;line-height:.98;letter-spacing:-.035em;max-width:960px}
+h1{font-family:G;font-weight:600;font-size:76px;line-height:.98;letter-spacing:-.035em;max-width:960px}
 .b{display:flex;align-items:center;gap:16px;font-family:G;font-size:34px;letter-spacing:-.03em}.b svg{height:40px}
 .big{position:absolute;right:-80px;bottom:-120px;height:520px;opacity:.12}
 </style></head><body><div class="big">${signet}</div><div class="w"><p class="k">${o.kicker}</p><h1>${o.title}</h1><div class="b">${signet}<span>Reinigungsbuddy</span></div></div></body></html>`;
