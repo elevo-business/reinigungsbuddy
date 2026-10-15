@@ -29,7 +29,7 @@ const SITE_NAME = 'Reinigungsbuddy';
 const AUTO_REPLY = env.AUTO_REPLY !== '0';
 const ADMIN_PASSWORD = env.ADMIN_PASSWORD || '';
 const WEBHOOK = env.LEAD_WEBHOOK_URL || '';
-const THANKS = { de: '/angebot/danke/', en: '/en/contact/thanks/' };
+const THANKS = { de: '/danke/', en: '/en/contact/thanks/' };
 
 const log = (...a) => console.log(new Date().toISOString(), ...a);
 
@@ -85,11 +85,14 @@ function readAll() {
 const FIELDS = {
   objektart: 80, flaeche: 40, haeufigkeit: 40, bezirk: 60, start: 40,
   name: 120, firma: 160, email: 160, telefon: 40, nachricht: 3000,
-  leistung: 80, quelle: 200, sprache: 2,
+  leistung: 80, quelle: 200, landingpage: 200, formular: 20, sprache: 2,
   gclid: 200, gbraid: 200, wbraid: 200,
   utm_source: 100, utm_medium: 100, utm_campaign: 150, utm_term: 150, utm_content: 150,
 };
-const REQUIRED = ['objektart', 'flaeche', 'haeufigkeit', 'bezirk', 'name', 'email'];
+// Kurzformular: Fläche, Name, E-Mail. Das Mehrschritt-Formular prüft seine weiteren Pflichtfelder im Browser.
+const REQUIRED = ['flaeche', 'name', 'email'];
+/** Zielgruppe der Anzeigen: Büros ab 100 m². Kleinere Flächen werden als nicht qualifiziert markiert. */
+const SMALL_AREA = 'bis 100 m²';
 const EMAIL_RE = /^[^\s@<>()",;]+@[^\s@<>()",;]+\.[^\s@<>()",;]{2,}$/;
 
 function clean(raw) {
@@ -112,7 +115,7 @@ function limited(ip) {
   list.push(now);
   hits.set(ip, list);
   if (hits.size > 5000) hits.clear();
-  return list.length > 5;
+  return list.length > 10;
 }
 
 /* ---------- Texte ---------- */
@@ -120,6 +123,7 @@ const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '
 
 function rows(l) {
   return [
+    ['Qualifiziert', l.qualifiziert ? 'ja' : 'NEIN – Fläche unter 100 m²'],
     ['Objekt', l.objektart],
     ['Leistung (Seite)', l.leistung],
     ['Fläche', l.flaeche],
@@ -133,6 +137,8 @@ function rows(l) {
     ['Nachricht', l.nachricht],
     ['Sprache', l.sprache],
     ['Seite', l.quelle],
+    ['Einstiegsseite', l.landingpage],
+    ['Formular', l.formular === 'kurz' ? 'Kurzformular' : 'Mehrschritt'],
     ['Google Ads (gclid)', l.gclid || l.gbraid || l.wbraid],
     ['Kampagne', [l.utm_source, l.utm_medium, l.utm_campaign, l.utm_term].filter(Boolean).join(' / ')],
     ['Eingang', berlin(l.ts)],
@@ -142,7 +148,7 @@ function rows(l) {
 
 function leadMail(l) {
   const r = rows(l);
-  const subject = `Neue Anfrage: ${l.objektart}, ${l.flaeche}, ${l.bezirk}${l.firma ? ' – ' + l.firma : ''}`;
+  const subject = `${l.qualifiziert ? '' : '[unter 100 m²] '}Neue Anfrage: ${[l.firma || l.name, l.flaeche, l.objektart, l.bezirk].filter(Boolean).join(', ')}${l.gclid || l.gbraid || l.wbraid ? ' (Google Ads)' : ''}`;
   const text = r.map(([k, v]) => `${k}: ${v}`).join('\n') + `\n\nAntworten: einfach auf diese E-Mail antworten (geht direkt an ${l.email}).`;
   const tel = l.telefon ? `<p style="margin:0 0 16px"><a href="tel:${esc(l.telefon.replace(/[^\d+]/g, ''))}" style="display:inline-block;background:#1a6e4f;color:#fff;padding:10px 16px;border-radius:999px;text-decoration:none">Jetzt anrufen: ${esc(l.telefon)}</a></p>` : '';
   const html = `<div style="font-family:Arial,sans-serif;font-size:15px;color:#14211c">
@@ -247,6 +253,7 @@ async function handleLead(req, res) {
 
   l.id = `${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-${crypto.randomBytes(3).toString('hex')}`;
   l.ts = new Date().toISOString();
+  l.qualifiziert = l.flaeche !== SMALL_AREA;
 
   let saved = false;
   if (storeOk) {
@@ -254,7 +261,7 @@ async function handleLead(req, res) {
   }
   if (!saved && !mailer && !WEBHOOK) return send(res, 500, { ok: false, error: 'not_configured' });
 
-  log(`Anfrage ${l.id} (${l.objektart}, ${l.bezirk}${l.gclid ? ', Google Ads' : ''})`);
+  log(`Anfrage ${l.id} (${l.flaeche}${l.qualifiziert ? '' : ', nicht qualifiziert'}${l.gclid ? ', Google Ads' : ''})`);
   if (saved) {
     deliver(l).catch((e) => log('FEHLER Zustellung:', e.message));
     return done(l.id);
@@ -282,18 +289,18 @@ function handleAdmin(req, res) {
   }
   const leads = readAll().reverse();
   if (new URL(req.url, 'http://x').searchParams.get('format') === 'csv') {
-    const keys = ['id', 'ts', ...Object.keys(FIELDS)];
+    const keys = ['id', 'ts', 'qualifiziert', ...Object.keys(FIELDS)];
     const csv = [keys.join(';'), ...leads.map((l) => keys.map((k) => `"${String(l[k] ?? '').replace(/"/g, '""').replace(/\n/g, ' ')}"`).join(';'))].join('\n');
     res.writeHead(200, { 'Content-Type': 'text/csv; charset=utf-8', 'Content-Disposition': 'attachment; filename="anfragen.csv"', 'Cache-Control': 'no-store' });
     return res.end('﻿' + csv);
   }
-  const cols = ['Eingang', 'Name', 'Firma', 'E-Mail', 'Telefon', 'Objekt', 'Fläche', 'Häufigkeit', 'Bezirk', 'Nachricht', 'Quelle'];
+  const cols = ['Eingang', 'Name', 'Firma', 'E-Mail', 'Telefon', 'Fläche', 'Objekt', 'Häufigkeit', 'Bezirk', 'Nachricht', 'Quelle'];
   const html = `<!doctype html><html lang="de"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
 <title>Anfragen (${leads.length})</title>
 <style>body{font:14px system-ui,sans-serif;margin:16px;color:#14211c}table{border-collapse:collapse;width:100%}td,th{border-bottom:1px solid #ddd;padding:6px;text-align:left;vertical-align:top}th{background:#f4f3ef;position:sticky;top:0}.wrap{overflow-x:auto}a{color:#1a6e4f}</style>
 <h1>Anfragen (${leads.length})</h1><p><a href="?format=csv">Als CSV herunterladen</a> · Status: E-Mail ${mailer ? 'aktiv' : '<b>nicht eingerichtet</b>'}${WEBHOOK ? ', Webhook aktiv' : ''}</p>
 <div class="wrap"><table><tr>${cols.map((c) => `<th>${c}</th>`).join('')}</tr>${leads
-    .map((l) => `<tr><td>${esc(berlin(l.ts))}</td><td>${esc(l.name)}</td><td>${esc(l.firma)}</td><td><a href="mailto:${esc(l.email)}">${esc(l.email)}</a></td><td>${l.telefon ? `<a href="tel:${esc(l.telefon)}">${esc(l.telefon)}</a>` : ''}</td><td>${esc(l.objektart)}</td><td>${esc(l.flaeche)}</td><td>${esc(l.haeufigkeit)}</td><td>${esc(l.bezirk)}</td><td style="white-space:pre-wrap">${esc(l.nachricht)}</td><td>${esc(l.quelle)}${l.gclid || l.gbraid || l.wbraid ? ' · Google Ads' : ''}${l.utm_campaign ? ' · ' + esc(l.utm_campaign) : ''}</td></tr>`)
+    .map((l) => `<tr><td>${esc(berlin(l.ts))}</td><td>${esc(l.name)}</td><td>${esc(l.firma)}</td><td><a href="mailto:${esc(l.email)}">${esc(l.email)}</a></td><td>${l.telefon ? `<a href="tel:${esc(l.telefon)}">${esc(l.telefon)}</a>` : ''}</td><td>${esc(l.flaeche)}${l.qualifiziert === false ? ' <b>(unter 100 m²)</b>' : ''}</td><td>${esc(l.objektart)}</td><td>${esc(l.haeufigkeit)}</td><td>${esc(l.bezirk)}</td><td style="white-space:pre-wrap">${esc(l.nachricht)}</td><td>${esc(l.quelle)}${l.gclid || l.gbraid || l.wbraid ? ' · Google Ads' : ''}${l.utm_campaign ? ' · ' + esc(l.utm_campaign) : ''}</td></tr>`)
     .join('')}</table></div>`;
   res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex' });
   res.end(html);

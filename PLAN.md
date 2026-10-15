@@ -44,7 +44,7 @@ Dieses Dokument legt Sitemap, Keyword-Mapping, Designsystem, Komponenten und Arc
 ├── /garantie/
 ├── /ueber-uns/
 ├── /angebot/                       Mehrstufiges Formular (indexierbar)
-│   └── /angebot/danke/             noindex, nicht in Sitemap
+│   └── /danke/             noindex, nicht in Sitemap
 ├── /leistungsverzeichnis/danke/    Lead-Magnet-Bestätigung, noindex
 ├── /impressum/  /datenschutz/  /agb/   (AGB: noindex, solange Entwurf)
 ├── /404

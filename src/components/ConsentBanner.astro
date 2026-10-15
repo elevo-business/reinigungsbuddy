@@ -44,17 +44,13 @@ const en = langOf(Astro.url.pathname) === 'en';
           if (googleAdsId) window.gtag('config', googleAdsId, { allow_enhanced_conversions: true });
           if (ga4Id) window.gtag('config', ga4Id);
         }
-        // Kampagnen-Herkunft (gclid, utm_*) für diese Sitzung merken – nur mit Einwilligung
-        try {
-          var q = new URLSearchParams(location.search), a = {};
-          ['gclid', 'gbraid', 'wbraid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(function (k) { if (q.get(k)) a[k] = q.get(k); });
-          if (Object.keys(a).length) sessionStorage.setItem('rb-attr', JSON.stringify(a));
-        } catch (e) {}
+
         if (metaPixelId) {
           !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
           window.fbq('init', metaPixelId); window.fbq('track', 'PageView');
         }
         window.rbConsent = true;
+        window.dispatchEvent(new Event('rb:consent'));
       }
       var saved = null;
       try { saved = localStorage.getItem(KEY); } catch (e) {}

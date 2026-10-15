@@ -2,7 +2,8 @@
  * Conversion-Events – eine Funktion für alle Tools.
  *
  *  lead_form_submit      Anfrageformular abgeschickt
- *  phone_click           Klick auf eine Telefonnummer
+ *  phone_click           Klick auf eine Telefonnummer (tel:-Link) – optional eigene Google-Ads-Conversion
+ *  email_click           Klick auf eine E-Mail-Adresse (mailto:-Link) – optional eigene Google-Ads-Conversion
  *  whatsapp_click        Klick auf einen WhatsApp-Link
  *  form_start            erste Auswahl im Anfrageformular
  *  form_step             nächster Schritt im Anfrageformular erreicht
@@ -28,6 +29,7 @@ const META_EVENTS: Record<string, string> = {
   lead_magnet_optin: 'CompleteRegistration',
   phone_click: 'Contact',
   whatsapp_click: 'Contact',
+  email_click: 'Contact',
 };
 
 function debugOn() {
@@ -51,45 +53,95 @@ export function track(event: string, props: Props = {}) {
   }
 }
 
-/**
- * Lead-Conversion nach erfolgreichem Absenden des Formulars.
- * Google Ads: Conversion mit transaction_id (= Anfrage-Nr., verhindert Doppelzählung)
- * und Enhanced Conversions (E-Mail/Telefon werden von gtag gehasht übertragen) – nur nach Einwilligung.
- * Wartet höchstens 1,2 Sekunden, damit die Weiterleitung zur Danke-Seite nie hängt.
- */
-export function trackLead(lead: { id: string; email: string; phone?: string; objektart: string; bezirk: string }, cfg: { adsId?: string; adsLabel?: string }) {
-  track('lead_form_submit', { objektart: lead.objektart, bezirk: lead.bezirk });
-  return new Promise<void>((resolve) => {
-    let done = false;
-    const finish = () => { if (!done) { done = true; resolve(); } };
-    setTimeout(finish, 1200);
-    if (!window.rbConsent || !window.gtag) return finish();
-    window.gtag('event', 'generate_lead', { lead_source: 'website_form' });
-    if (cfg.adsId && cfg.adsLabel) {
-      const phone = (lead.phone || '').replace(/[^\d+]/g, '');
-      const user: Record<string, string> = { email: lead.email.trim().toLowerCase() };
-      if (/^\+\d{8,}$/.test(phone)) user.phone_number = phone;
-      else if (/^0\d{6,}$/.test(phone)) user.phone_number = '+49' + phone.slice(1);
-      window.gtag('set', 'user_data', user);
-      window.gtag('event', 'conversion', { send_to: `${cfg.adsId}/${cfg.adsLabel}`, transaction_id: lead.id, event_callback: finish });
-    } else finish();
-  });
+const ATTR_KEYS = ['gclid', 'gbraid', 'wbraid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
+const ATTR_COOKIE = 'rb_attr';
+
+function readCookie(name: string) {
+  const m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+  return m ? decodeURIComponent(m[1]) : '';
 }
 
-/** Kampagnen-Herkunft: aus der aktuellen URL, sonst aus der Sitzung (nur nach Einwilligung gespeichert) */
+/**
+ * Kampagnen-Herkunft (gclid, utm_*) und Einstiegsseite.
+ * Aus der aktuellen URL; sonst aus dem First-Party-Cookie „rb_attr" (90 Tage, nur nach Einwilligung gesetzt).
+ */
 export function attribution(): Record<string, string> {
-  const keys = ['gclid', 'gbraid', 'wbraid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
   const q = new URLSearchParams(location.search);
   const out: Record<string, string> = {};
-  keys.forEach((k) => { const v = q.get(k); if (v) out[k] = v; });
-  if (Object.keys(out).length) return out;
-  try { return JSON.parse(sessionStorage.getItem('rb-attr') || '{}'); } catch { return {}; }
+  ATTR_KEYS.forEach((k) => { const v = q.get(k); if (v) out[k] = v.slice(0, 200); });
+  if (Object.keys(out).length) return { ...out, landingpage: location.pathname };
+  try { return JSON.parse(readCookie(ATTR_COOKIE) || '{}'); } catch { return {}; }
+}
+
+/** Nach Einwilligung: Kampagnen-Kennungen aus der URL für 90 Tage merken (für spätere Offline-Conversions). */
+export function rememberAttribution() {
+  const q = new URLSearchParams(location.search);
+  if (!ATTR_KEYS.some((k) => q.get(k))) return;
+  const value = encodeURIComponent(JSON.stringify(attribution()));
+  document.cookie = `${ATTR_COOKIE}=${value}; Max-Age=${90 * 24 * 3600}; Path=/; SameSite=Lax${location.protocol === 'https:' ? '; Secure' : ''}`;
+}
+
+/** Telefonnummer für erweiterte Conversions ins Format +49… bringen */
+function e164(phone = '') {
+  const p = phone.replace(/[^\d+]/g, '');
+  if (/^\+\d{8,}$/.test(p)) return p;
+  if (/^00\d{8,}$/.test(p)) return '+' + p.slice(2);
+  if (/^0\d{6,}$/.test(p)) return '+49' + p.slice(1);
+  return '';
+}
+
+type AdsCfg = { id?: string; lead?: string; phone?: string; email?: string };
+function adsCfg(): AdsCfg {
+  try { return JSON.parse(document.getElementById('rb-cfg')?.textContent || '{}').ads || {}; } catch { return {}; }
+}
+
+/** Google-Ads-Conversion senden (nur mit Einwilligung und eingetragener ID) */
+export function adsConversion(kind: 'lead' | 'phone' | 'email', extra: Record<string, unknown> = {}) {
+  const c = adsCfg();
+  const label = c[kind];
+  if (!window.rbConsent || !window.gtag || !c.id || !label) return false;
+  window.gtag('event', 'conversion', { send_to: `${c.id}/${label}`, ...extra });
+  return true;
+}
+
+/**
+ * Lead-Conversion auf der Danke-Seite.
+ * Das Formular legt nach erfolgreichem Versand (und nur mit Einwilligung) Anfrage-Nr., E-Mail und Telefon
+ * kurz im Sitzungsspeicher ab. Hier wird daraus die Google-Ads-Conversion mit transaction_id
+ * (verhindert Doppelzählung beim Neuladen) und erweiterten Conversions (gtag hasht E-Mail/Telefon).
+ * Anfragen unter 100 m² zählen nicht als Google-Ads-Conversion (nicht qualifiziert).
+ */
+export function fireLeadConversion() {
+  let lead: { id: string; email: string; phone?: string; small?: boolean } | null = null;
+  try {
+    lead = JSON.parse(sessionStorage.getItem('rb-lead') || 'null');
+    sessionStorage.removeItem('rb-lead');
+  } catch { /* kein Speicher */ }
+  const id = new URLSearchParams(location.search).get('id');
+  if (!lead || !id || lead.id !== id || id === 'x' || !window.rbConsent || !window.gtag) return;
+  window.gtag('event', 'generate_lead', { lead_source: 'website_form', qualified: !lead.small });
+  if (lead.small) return;
+  const user: Record<string, string> = { email: lead.email.trim().toLowerCase() };
+  const phone = e164(lead.phone);
+  if (phone) user.phone_number = phone;
+  window.gtag('set', 'user_data', user);
+  adsConversion('lead', { transaction_id: id });
 }
 
 export function initTracking() {
   window.rbTrack = track;
+  if (window.rbConsent) rememberAttribution();
+  else window.addEventListener('rb:consent', rememberAttribution, { once: true });
   document.addEventListener('click', (e) => {
-    const el = (e.target as HTMLElement).closest<HTMLElement>('[data-track]');
+    const target = e.target as HTMLElement;
+    const link = target.closest<HTMLAnchorElement>('a[href^="tel:"], a[href^="mailto:"]');
+    if (link) {
+      const tel = link.href.startsWith('tel:');
+      track(tel ? 'phone_click' : 'email_click', { label: (link.textContent || '').trim().slice(0, 40) });
+      adsConversion(tel ? 'phone' : 'email');
+      return;
+    }
+    const el = target.closest<HTMLElement>('[data-track]');
     if (el) track(el.dataset.track!, { label: (el.textContent || '').trim().slice(0, 40) });
   });
 }

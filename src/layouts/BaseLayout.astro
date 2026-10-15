@@ -13,6 +13,7 @@ import { phoneLink } from '~/lib/contact';
 import { site } from '~/config/site';
 import { langOf } from '~/lib/i18n';
 import { localBusiness, website } from '~/lib/schema';
+import { bezirkMap } from '~/lib/bezirke';
 
 interface Props {
   title: string;
@@ -27,6 +28,12 @@ interface Props {
 }
 const { title, description, image, noindex, type, schema = [], whatsappText, variant = 'default' } = Astro.props;
 const landing = variant === 'landing';
+const a = site.analytics;
+/** Konfiguration für die Browser-Skripte (Google-Ads-Labels, erlaubte ?bezirk=-Werte) */
+const cfg = JSON.stringify({
+  ads: a.googleAdsId ? { id: a.googleAdsId, lead: a.googleAdsLabel, phone: a.googleAdsPhoneLabel, email: a.googleAdsEmailLabel } : {},
+  bezirke: bezirkMap(),
+}).replace(/</g, '\\u003c');
 const needsConsent = Boolean(site.analytics.metaPixelId || site.analytics.ga4Id || site.analytics.googleAdsId);
 const lang = langOf(Astro.url.pathname);
 const base = Astro.site!;
@@ -51,6 +58,7 @@ const plausible = site.analytics.plausibleDomain;
     <SchemaOrg data={graph} />
     {plausible && <script is:inline defer data-domain={plausible} src={site.analytics.plausibleScript}></script>}
     <slot name="head" />
+    <script type="application/json" id="rb-cfg" set:html={cfg} />
   </head>
   <body class="min-h-dvh">
     {landing ? (

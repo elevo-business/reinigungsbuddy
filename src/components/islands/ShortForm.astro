@@ -1,0 +1,124 @@
+---
+/**
+ * Kurzformular für den Hero der Zielseiten (Google Ads): Fläche, Name, Firma, E-Mail, Telefon.
+ * Versand wie das Mehrschritt-Formular über /api/anfrage (src/lib/lead.ts), danach /danke/.
+ * Ohne JavaScript funktioniert es als normales HTML-Formular.
+ */
+import Icon from '../ui/Icon.astro';
+import { offer } from '~/config/offer';
+import { site } from '~/config/site';
+
+interface Props {
+  id?: string;
+  /** Leistung der Seite, z. B. „Büroreinigung" */
+  leistung?: string;
+  /** Objektart, falls durch die Seite eindeutig (z. B. „Büro") */
+  objekt?: string;
+  source?: string;
+}
+const { id = 'kurz', leistung = '', objekt = '', source = Astro.url.pathname } = Astro.props;
+const areas = offer.configurator.areas.filter((a) => a !== 'weiß ich nicht genau');
+---
+<div data-sf data-sending="Wird gesendet …" data-thanks="/danke/">
+  <form action="/api/anfrage" method="post" novalidate class="grid gap-4 sm:grid-cols-2" data-sf-form>
+    <input type="hidden" name="quelle" value={source} />
+    <input type="hidden" name="leistung" value={leistung} />
+    <input type="hidden" name="objektart" value={objekt} />
+    <input type="hidden" name="sprache" value="de" />
+    <input type="hidden" name="formular" value="kurz" />
+    <input type="hidden" name="t" value="" data-started />
+    <div class="absolute -left-[9999px]" aria-hidden="true">
+      <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+    </div>
+
+    <div class="sm:col-span-2">
+      <label class="field-label" for={`${id}-flaeche`}>Fläche ungefähr <span aria-hidden="true">*</span></label>
+      <select id={`${id}-flaeche`} name="flaeche" class="field" required aria-describedby={`${id}-flaeche-err`}>
+        <option value="">Bitte wählen</option>
+        {areas.map((a) => <option value={a}>{a}</option>)}
+        <option value="weiß ich nicht genau">weiß ich nicht genau</option>
+      </select>
+      <p id={`${id}-flaeche-err`} class="field-error hidden" data-error-for="flaeche">Bitte auswählen.</p>
+      <p class="mt-2 hidden text-sm text-stone" data-small-hint>Wir betreuen vor allem Büros und Gewerbeflächen ab 100 m². Schicken Sie Ihre Anfrage trotzdem gern ab, wir melden uns.</p>
+    </div>
+    <div>
+      <label class="field-label" for={`${id}-name`}>Ihr Name <span aria-hidden="true">*</span></label>
+      <input id={`${id}-name`} name="name" class="field" autocomplete="name" required aria-describedby={`${id}-name-err`} />
+      <p id={`${id}-name-err`} class="field-error hidden" data-error-for="name">Bitte ausfüllen.</p>
+    </div>
+    <div>
+      <label class="field-label" for={`${id}-firma`}>Firma</label>
+      <input id={`${id}-firma`} name="firma" class="field" autocomplete="organization" />
+    </div>
+    <div>
+      <label class="field-label" for={`${id}-email`}>E-Mail <span aria-hidden="true">*</span></label>
+      <input id={`${id}-email`} name="email" type="email" class="field" autocomplete="email" inputmode="email" required aria-describedby={`${id}-email-err`} />
+      <p id={`${id}-email-err`} class="field-error hidden" data-error-for="email">Bitte eine gültige E-Mail-Adresse eingeben.</p>
+    </div>
+    <div>
+      <label class="field-label" for={`${id}-tel`}>Telefon <span class="font-normal text-stone">(für den Rückruf)</span></label>
+      <input id={`${id}-tel`} name="telefon" type="tel" class="field" autocomplete="tel" inputmode="tel" />
+    </div>
+
+    <div class="sm:col-span-2">
+      <button type="submit" class="btn btn-primary w-full" data-submit><span data-submit-label>Kostenlose Objektbegehung anfragen</span><Icon name="arrow" size={18} class="arrow" /></button>
+      <p class="mt-3 text-center text-sm text-stone">Kostenlos und unverbindlich · Rückmeldung {offer.response.promise} · <a href="/datenschutz/" class="link-moss">Datenschutz</a></p>
+      <p class="field-error mt-2 hidden" role="alert" data-fail>Das hat leider nicht geklappt. Bitte versuchen Sie es noch einmal oder schreiben Sie uns an <a class="underline" href={`mailto:${site.leadEmail}`}>{site.leadEmail}</a>.</p>
+      <p class="field-error mt-2 hidden" role="alert" data-toomany>Es wurden gerade sehr viele Anfragen gesendet. Bitte versuchen Sie es in ein paar Minuten noch einmal oder schreiben Sie uns an <a class="underline" href={`mailto:${site.leadEmail}`}>{site.leadEmail}</a>.</p>
+    </div>
+  </form>
+</div>
+
+<script>
+  import { track } from '~/lib/track';
+  import { sendLead, EMAIL_RE, SMALL_AREA } from '~/lib/lead';
+
+  document.querySelectorAll<HTMLElement>('[data-sf]').forEach((root) => {
+    const form = root.querySelector<HTMLFormElement>('[data-sf-form]')!;
+    const submit = root.querySelector<HTMLButtonElement>('[data-submit]')!;
+    let started = false;
+    form.querySelector<HTMLInputElement>('[data-started]')!.value = String(Date.now());
+
+    const valid = (el: HTMLInputElement | HTMLSelectElement) => {
+      const v = el.value.trim();
+      return v !== '' && (el.type !== 'email' || EMAIL_RE.test(v));
+    };
+    const setErr = (el: HTMLInputElement | HTMLSelectElement, on: boolean) => {
+      root.querySelector(`[data-error-for="${el.name}"]`)?.classList.toggle('hidden', !on);
+      el.setAttribute('aria-invalid', String(on));
+    };
+    const required = () => [...form.querySelectorAll<HTMLInputElement | HTMLSelectElement>('[required]')];
+
+    form.addEventListener('focusout', (e) => {
+      const el = e.target as HTMLInputElement;
+      if (el.required && el.value !== '' && !valid(el)) setErr(el, true);
+    });
+    const onEdit = (e: Event) => {
+      const el = e.target as HTMLInputElement;
+      if (!started) { started = true; track('form_start', { form: 'kurz' }); }
+      if (el.name === 'flaeche') root.querySelector('[data-small-hint]')?.classList.toggle('hidden', el.value !== SMALL_AREA);
+      if (el.required && el.getAttribute('aria-invalid') === 'true' && valid(el)) setErr(el, false);
+    };
+    form.addEventListener('input', onEdit);
+    form.addEventListener('change', onEdit);
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      let first: HTMLElement | null = null;
+      for (const el of required()) {
+        const ok = valid(el);
+        setErr(el, !ok);
+        if (!ok) first ??= el;
+      }
+      if (first) { first.focus(); return; }
+      await sendLead(form, {
+        submit,
+        label: root.querySelector<HTMLElement>('[data-submit-label]')!,
+        sending: root.dataset.sending || '…',
+        fail: root.querySelector<HTMLElement>('[data-fail]')!,
+        tooMany: root.querySelector<HTMLElement>('[data-toomany]')!,
+        thanks: root.dataset.thanks!,
+      });
+    });
+  });
+</script>

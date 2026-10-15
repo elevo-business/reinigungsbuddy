@@ -1,0 +1,72 @@
+---
+/**
+ * Hero mit Kurzformular für Seiten, auf die Google-Anzeigen zeigen.
+ * Links: Ort, Headline, Subline, alle Zusagen aus den Anzeigen. Rechts (mobil direkt darunter): Formular.
+ * ?bezirk=spandau ersetzt „Berlin" in der Zeile über der Headline durch den Bezirk.
+ */
+import ShortForm from '../islands/ShortForm.astro';
+import Icon from '../ui/Icon.astro';
+import { offer } from '~/config/offer';
+
+interface Props {
+  /** z. B. „Büroreinigung" – ergibt „Büroreinigung in Berlin" über der Headline */
+  name: string;
+  /** Headline als HTML (darf &shy; enthalten) */
+  h1: string;
+  sub: string;
+  /** kürzere Subline fürs Handy, damit das Formular ohne Scrollen sichtbar ist */
+  subShort?: string;
+  leistung?: string;
+  objekt?: string;
+  /** Hinweis „ab 100 m²" zeigen (Büro-Zielgruppe der Anzeigen) */
+  minArea?: boolean;
+}
+const { name, h1, sub, subShort, leistung = name, objekt = '', minArea = true } = Astro.props;
+const promises = [
+  'Kostenlose Objektbegehung',
+  'Festpreis innerhalb von 24 Stunden danach',
+  'Keine versteckten Zuschläge',
+  'Ein fester Ansprechpartner',
+  'Reinigungsprotokoll nach jedem Einsatz',
+  'Nachbesserung innerhalb von 24 Stunden (werktags)',
+  `Rückmeldung ${offer.response.promise}`,
+  'In allen 12 Berliner Bezirken',
+];
+---
+<div class="grid gap-x-12 gap-y-8 lg:grid-cols-12">
+  <div class="lg:col-span-6 lg:row-start-1">
+    <p class="eyebrow text-moss"><span data-hero-place data-name={name}>{name} in Berlin</span>{minArea && <span class="hidden sm:inline"> · für Büros ab 100 m²</span>}</p>
+    <h1 class="mt-4 text-[clamp(1.85rem,3.6vw+0.9rem,3.9rem)] leading-[1.05]" set:html={h1} />
+    {subShort ? (
+      <>
+        <p class="mt-4 max-w-xl text-lead text-stone sm:hidden">{subShort}</p>
+        <p class="mt-5 hidden max-w-xl text-lead text-stone sm:block">{sub}</p>
+      </>
+    ) : (
+      <p class="mt-4 max-w-xl text-lead text-stone sm:mt-5">{sub}</p>
+    )}
+  </div>
+
+  <div class="lg:col-span-6 lg:col-start-7 lg:row-span-2 lg:row-start-1">
+    <div id="anfrage-karte" class="scroll-mt-4 rounded-2xl border border-line bg-white p-4 shadow-[0_24px_60px_-30px_rgb(15_46_35/0.35)] sm:p-7">
+      <h2 class="text-xl sm:text-2xl">Kostenlose Objektbegehung anfragen</h2>
+      <p class="mt-1 text-[0.95rem] text-stone">{minArea ? 'Für Büros und Gewerbeflächen ab 100 m². ' : ''}Dauert etwa 30 Sekunden.</p>
+      <div class="mt-5"><ShortForm leistung={leistung} objekt={objekt} /></div>
+    </div>
+  </div>
+
+  <div class="lg:col-span-6 lg:row-start-2">
+    <ul class="grid gap-x-6 gap-y-2.5 sm:grid-cols-2">
+      {promises.map((p) => (
+        <li class="flex gap-2.5 text-[0.97rem]"><Icon name="check" size={20} class="mt-0.5 shrink-0 text-moss" /><span>{p}</span></li>
+      ))}
+    </ul>
+  </div>
+</div>
+
+<script>
+  import { bezirkFromUrl } from '~/lib/lead';
+  const b = bezirkFromUrl();
+  const el = document.querySelector<HTMLElement>('[data-hero-place]');
+  if (b && el) el.textContent = `${el.dataset.name} in ${b.name}`;
+</script>

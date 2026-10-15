@@ -3,6 +3,8 @@ import Logo from './ui/Logo.astro';
 import Icon from './ui/Icon.astro';
 import { getCollection } from 'astro:content';
 import { alternateOf, langOf } from '~/lib/i18n';
+import { phoneLink } from '~/lib/contact';
+import { site } from '~/config/site';
 
 const path = Astro.url.pathname;
 const lang = langOf(path);
@@ -24,6 +26,7 @@ const nav =
       ];
 const switchHref = lang === 'en' ? alt.de ?? '/' : alt.en ?? '/en/';
 const cta = lang === 'en' ? { label: 'Get a quote', href: '/en/contact/' } : { label: 'Angebot anfragen', href: '/angebot/' };
+const tel = phoneLink();
 const isActive = (href: string) => path === href || (href !== '/' && path.startsWith(href));
 ---
 <header id="site-header" class="sticky top-0 z-40 border-b border-transparent bg-paper/95 backdrop-blur-[2px] transition-[border-color] duration-300 data-[scrolled]:border-line">
@@ -61,6 +64,16 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
       <a href={switchHref} class="link-grow hidden text-sm font-medium sm:inline" hreflang={lang === 'en' ? 'de' : 'en'} lang={lang === 'en' ? 'de' : 'en'}>
         {lang === 'en' ? 'Deutsch' : 'English'}
       </a>
+      {tel && (
+        <a href={tel} class="hidden items-center gap-2 font-display font-semibold md:inline-flex" aria-label={`${lang === 'en' ? 'Call' : 'Anrufen'}: ${site.contact.phone}`}>
+          <Icon name="phone" size={18} class="text-moss" />{site.contact.phone}
+        </a>
+      )}
+      {tel && (
+        <a href={tel} class="inline-flex h-11 items-center gap-1.5 rounded-full bg-mint px-3.5 font-display text-[0.95rem] font-semibold text-ink md:hidden" aria-label={`${lang === 'en' ? 'Call' : 'Anrufen'}: ${site.contact.phone}`}>
+          <Icon name="phone" size={18} />{lang === 'en' ? 'Call' : 'Anrufen'}
+        </a>
+      )}
       <a href={cta.href} class="btn btn-ink hidden min-h-11 px-5 text-[0.95rem] sm:inline-flex">
         {cta.label}<Icon name="arrow" size={18} class="arrow" />
       </a>

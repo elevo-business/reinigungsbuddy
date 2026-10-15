@@ -8,4 +8,8 @@ import BaseLayout from '~/layouts/BaseLayout.astro';
     <p class="mt-6 max-w-2xl text-lead">Enquiries after 4 pm or at the weekend are answered on the next working day. Next: a free site visit, then your fixed quote within 24 hours.</p>
     <a href="/en/" class="btn btn-ghost mt-10">Back to the homepage</a>
   </section>
+  <script>
+    import { fireLeadConversion } from '~/lib/track';
+    fireLeadConversion();
+  </script>
 </BaseLayout>

@@ -117,6 +117,9 @@ export const site = {
      */
     googleAdsId: null as string | null,
     googleAdsLabel: null as string | null,
+    /** Optional: eigene Conversion-Aktionen für Klicks auf Telefonnummer bzw. E-Mail-Adresse (nur das Label) */
+    googleAdsPhoneLabel: null as string | null,
+    googleAdsEmailLabel: null as string | null,
   },
 } as const;
 

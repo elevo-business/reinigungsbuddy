@@ -12,7 +12,7 @@
  */
 import { getCollection } from 'astro:content';
 import BaseLayout from '~/layouts/BaseLayout.astro';
-import MultiStepForm from '~/components/islands/MultiStepForm.astro';
+import HeroLead from '~/components/sections/HeroLead.astro';
 import Photo from '~/components/ui/Photo.astro';
 import Icon from '~/components/ui/Icon.astro';
 import SectionHeader from '~/components/sections/SectionHeader.astro';
@@ -33,6 +33,7 @@ export async function getStaticPaths() {
     'praxisreinigung-berlin': 'Praxis / Kanzlei',
     'treppenhausreinigung-berlin': 'Treppenhaus / Wohnhaus',
     'bueroreinigung-berlin': 'Büro',
+    'unterhaltsreinigung-berlin': 'Büro',
   };
   const generic = {
     params: { slug: 'gebaeudereinigung-berlin' },
@@ -42,6 +43,7 @@ export async function getStaticPaths() {
       image: heroImg,
       imageAlt: 'Heller Büroflur mit Glastüren, Holzboden und Tageslicht in einem modernen Bürogebäude',
       objekt: '',
+      minArea: true,
       included: services.map((s) => s.data.name),
       includedTitle: 'Das übernehmen wir für Sie',
       faq: [] as { q: string; a: string }[],
@@ -57,6 +59,7 @@ export async function getStaticPaths() {
         image: s.data.heroImage,
         imageAlt: s.data.heroAlt,
         objekt: objekt[s.id] ?? '',
+        minArea: !['praxisreinigung-berlin', 'treppenhausreinigung-berlin'].includes(s.id),
         included: s.data.included.flatMap((g) => g.items).slice(0, 8),
         includedTitle: `Das gehört zur ${s.data.name}`,
         faq: s.data.faq.slice(0, 2),
@@ -76,12 +79,6 @@ const faqs = [
 ];
 const long = `${p.name} Berlin – Festpreis 24 h | Reinigungsbuddy`;
 const title = long.length <= 60 ? long : `${p.name} Berlin | Reinigungsbuddy`;
-const bullets = [
-  'Festpreis innerhalb von 24 Stunden nach der kostenlosen Objektbegehung',
-  'Ein fester Ansprechpartner für alles',
-  'Reinigungsprotokoll nach jedem Einsatz',
-  'Nachbesserung innerhalb von 24 Stunden (werktags)',
-];
 ---
 <BaseLayout
   variant="landing"
@@ -91,34 +88,7 @@ const bullets = [
   image="/og/leistung.png">
 
   <section class="wrap pb-14 pt-6 sm:pt-10 lg:pb-20 lg:pt-14">
-    <div class="grid gap-x-12 gap-y-8 lg:grid-cols-12">
-      <div class="lg:col-span-6 lg:row-start-1">
-        <p class="eyebrow text-moss">{p.name} in Berlin</p>
-        <h1 class="mt-4 text-[clamp(1.85rem,3.6vw+0.9rem,3.9rem)] leading-[1.05]">
-          {shy(p.name)} in Berlin. Ihr Festpreis 24 Stunden nach der Objektbegehung.
-        </h1>
-        <p class="mt-5 max-w-xl text-lead text-stone">{p.sub}</p>
-      </div>
-
-      <div class="lg:col-span-6 lg:col-start-7 lg:row-span-2 lg:row-start-1">
-        <div class="scroll-mt-4 rounded-2xl border border-line bg-white p-4 shadow-[0_24px_60px_-30px_rgb(15_46_35/0.35)] sm:p-7" id="anfrage-karte">
-          <h2 class="text-2xl">Kostenlose Objektbegehung anfragen</h2>
-          <p class="mt-1 text-[0.95rem] text-stone">3 kurze Schritte, etwa eine Minute.</p>
-          <div class="mt-5">
-            <MultiStepForm id="anfrage" heading={false} compact leistung={p.name} objekt={p.objekt} source={`/lp/${slug}/`} />
-          </div>
-        </div>
-      </div>
-
-      <div class="lg:col-span-6 lg:row-start-2">
-        <ul class="space-y-3">
-          {bullets.map((b) => (
-            <li class="flex gap-3"><Icon name="check" size={22} class="mt-0.5 shrink-0 text-moss" /><span>{b}</span></li>
-          ))}
-        </ul>
-        <p class="mt-6 text-[0.95rem] text-stone">Im Einsatz in allen 12 Berliner Bezirken. Rückmeldung {offer.response.promise}.</p>
-      </div>
-    </div>
+    <HeroLead name={p.name} h1={`${shy(p.name)} in Berlin. Ihr Festpreis 24 Stunden nach der Objektbegehung.`.replace(/&(?!shy;)/g, '&amp;')} sub={p.sub} objekt={p.objekt} minArea={p.minArea} />
   </section>
 
   <figure class="wrap">

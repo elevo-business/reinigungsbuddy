@@ -25,6 +25,8 @@ const wa = whatsappLink('Hallo, ich habe gerade eine Anfrage über die Website g
     </div>
   </section>
   <script>
+    import { fireLeadConversion } from '~/lib/track';
+    fireLeadConversion();
     const id = new URLSearchParams(location.search).get('id');
     const el = document.querySelector<HTMLElement>('[data-lead-id]');
     if (el && id && /^[\w-]{6,40}$/.test(id) && id !== 'x') { el.textContent = ` (Anfrage-Nr. ${id})`; el.classList.remove('hidden'); }

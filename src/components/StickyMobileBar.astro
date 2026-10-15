@@ -33,7 +33,12 @@ const hide = ['/angebot/', '/en/contact/'].some((p) => Astro.url.pathname.starts
 <script>
   // Leiste ausblenden, solange ein Anfrageformular sichtbar ist (verdeckt sonst die Buttons)
   const bar = document.querySelector<HTMLElement>('[data-sticky-bar]');
-  const forms = document.querySelectorAll('[data-msf]');
+  // Seite mit Formular im Hero: Button springt dorthin statt auf /angebot/
+  if (bar && document.getElementById('anfrage-karte')) {
+    const cta = bar.querySelector<HTMLAnchorElement>('a.btn-primary');
+    if (cta) cta.href = '#anfrage-karte';
+  }
+  const forms = document.querySelectorAll('[data-msf], [data-sf]');
   if (bar && forms.length && 'IntersectionObserver' in window) {
     const visible = new Set<Element>();
     const io = new IntersectionObserver((entries) => {

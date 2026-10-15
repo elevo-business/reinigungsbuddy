@@ -107,10 +107,10 @@ Alle Stockbilder sind im HTML mit `<!-- STOCK: später durch eigenes Foto ersetz
 
 Das Formular schickt die Anfrage an einen kleinen Server im selben Container (`server/server.mjs`, nginx leitet `/api/` dorthin weiter). Der Server
 
-1. prüft die Angaben (Pflichtfelder, Honeypot, Mindest-Ausfüllzeit, höchstens 5 Anfragen pro 10 Minuten und IP),
+1. prüft die Angaben (Pflichtfelder, Honeypot, Mindest-Ausfüllzeit, höchstens 10 Anfragen pro 10 Minuten und IP),
 2. **speichert jede Anfrage zuerst** in `/data/anfragen.jsonl` (so geht keine Anfrage verloren, auch wenn der E-Mail-Versand hakt),
 3. schickt sie per E-Mail an `LEAD_TO` (Antworten gehen direkt an die Kundin bzw. den Kunden) und eine Eingangsbestätigung an die Kundin bzw. den Kunden,
-4. leitet auf `/angebot/danke/?id=<Anfrage-Nr.>` weiter.
+4. leitet auf `/danke/?id=<Anfrage-Nr.>` weiter (noindex). Dort wird die Google-Ads-Conversion gezählt.
 
 Ohne JavaScript funktioniert das Formular als normales HTML-Formular mit derselben Weiterleitung.
 
@@ -148,21 +148,19 @@ In `site.ts` → `analytics`:
 | Feld | Wirkung |
 |---|---|
 | `plausibleDomain` | Plausible (cookielos, ohne Banner) wird geladen |
-| `googleAdsId`, `googleAdsLabel` | Google Ads Conversion-Tracking. Consent-Banner erscheint, gtag lädt **erst nach Zustimmung** |
-| `metaPixelId`, `ga4Id` | Consent-Banner erscheint. Pixel bzw. GA4 laden **erst nach Zustimmung** (Google Consent Mode v2 voreingestellt auf „denied") |
+| `googleAdsId`, `googleAdsLabel` | Google Ads: gtag lädt **erst nach Zustimmung**, Lead-Conversion auf `/danke/` |
+| `googleAdsPhoneLabel`, `googleAdsEmailLabel` | optional: eigene Conversions für Klicks auf `tel:`- bzw. `mailto:`-Links |
+| `metaPixelId`, `ga4Id` | Pixel bzw. GA4, ebenfalls erst nach Zustimmung |
 
-Ohne Werte wird nichts geladen und kein Banner gezeigt. Die Einrichtung in Google Ads steht Schritt für Schritt in **[GOOGLE-ADS.md](GOOGLE-ADS.md)**.
+Ist mindestens eine ID eingetragen, erscheint das Consent-Banner (Google Consent Mode v2, Standard „denied", Basic-Modus: ohne Einwilligung wird kein Google-Skript geladen). Die Einrichtung in Google Ads steht in **[GOOGLE-ADS.md](GOOGLE-ADS.md)**.
 
-Conversion-Events (an Plausible immer, an Google/Meta nur nach Einwilligung):
+**So wird gemessen:**
+- Formular abgeschickt → Server bestätigt → Weiterleitung auf `/danke/?id=<Anfrage-Nr.>`. Dort feuert die Google-Ads-Conversion mit `transaction_id` = Anfrage-Nr. (kein Doppelzählen beim Neuladen) und erweiterten Conversions (E-Mail/Telefon, von gtag gehasht).
+- Anfragen mit Fläche „bis 100 m²" werden gespeichert und gemailt (Betreff „[unter 100 m²]"), zählen aber **nicht** als Google-Ads-Conversion, damit Google auf qualifizierte Anfragen optimiert.
+- `gclid`, `gbraid`, `wbraid`, `utm_*` und die Einstiegsseite gehen mit jeder Anfrage an den Server. Nach Einwilligung werden sie zusätzlich 90 Tage im First-Party-Cookie `rb_attr` gemerkt, damit auch spätere Anfragen zugeordnet werden (Grundlage für Offline-Conversion-Importe).
+- `?bezirk=spandau` an der URL ersetzt „Berlin" in der Zeile über der Headline (z. B. „Büroreinigung in Spandau") und füllt den Bezirk der Anfrage. Erlaubt sind Bezirke, deren Teile und Ortsteile aus `site.ts`, alles andere wird ignoriert.
 
-| Event | Auslöser | Google Ads / Meta |
-|---|---|---|
-| `lead_form_submit` | Anfrage vom Server **bestätigt** (nicht beim Klick) | Conversion mit Anfrage-Nr. als `transaction_id` + erweiterte Conversions · Meta „Lead" |
-| `form_start` | erste Eingabe im Formular | |
-| `form_step` | Schritt 2 bzw. 3 erreicht | |
-| `form_error` | Versand fehlgeschlagen | |
-| `phone_click` | Klick auf Telefonnummer | Meta „Contact" |
-| `whatsapp_click` | Klick auf WhatsApp-Link | Meta „Contact" |
+Weitere Events (an Plausible immer, an Google/Meta nur nach Einwilligung): `form_start`, `form_step`, `form_error`, `lead_form_submit`, `phone_click`, `email_click`, `whatsapp_click`.
 
 **Debug:** `?debug=1` an eine URL hängen. Alle Events erscheinen dann in der Browser-Konsole (gilt für die ganze Sitzung).
 
@@ -206,7 +204,8 @@ Benötigt Chromium für Playwright (`npx playwright install chromium` oder `CHRO
 
 - [PLAN.md](PLAN.md): Konzept, Sitemap, Keyword-Mapping, Designsystem
 - [QA.md](QA.md): Prüfergebnisse und offene Platzhalter
-- [GOOGLE-ADS.md](GOOGLE-ADS.md): Landingpages, Conversion-Tracking und Kampagnen-Start
+- [GOOGLE-ADS.md](GOOGLE-ADS.md): Zielseiten, Conversion-Tracking und Kampagnen-Start
+- [UEBERGABE.md](UEBERGABE.md): Stand der Abstimmung mit der Google-Ads-Kampagne
 - [SEO-CHECKLISTE.md](SEO-CHECKLISTE.md): alles außerhalb der Website (Google-Profil, Verzeichnisse, Bewertungen)
 - [FOTO-ANLEITUNG.md](FOTO-ANLEITUNG.md): eigene Vorher-Nachher-Fotos
 - [CREDITS.md](CREDITS.md): Bildnachweise und Lizenzen

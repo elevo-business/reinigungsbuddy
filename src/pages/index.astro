@@ -7,7 +7,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import Photo from '~/components/ui/Photo.astro';
 import Icon from '~/components/ui/Icon.astro';
-import TrustLine from '~/components/sections/TrustLine.astro';
+import HeroLead from '~/components/sections/HeroLead.astro';
 import SectionHeader from '~/components/sections/SectionHeader.astro';
 import ProcessSteps from '~/components/sections/ProcessSteps.astro';
 import OfferStack from '~/components/sections/OfferStack.astro';
@@ -17,12 +17,10 @@ import FinalCTA from '~/components/sections/FinalCTA.astro';
 import { offer } from '~/config/offer';
 import { site } from '~/config/site';
 import { hasStimmen } from '~/lib/collections';
-import { whatsappLink } from '~/lib/contact';
 import { faqPage } from '~/lib/schema';
 import heroImg from '~/assets/images/buero-flur-glastueren-tageslicht.jpg';
 
 const services = (await getCollection('leistungen')).sort((a, b) => a.data.order - b.data.order);
-const wa = whatsappLink('Hallo, ich interessiere mich für eine Gebäudereinigung in Berlin.');
 const faqs = [
   { q: 'Was kostet eine Gebäudereinigung in Berlin?', a: 'Das hängt von Fläche, Häufigkeit, Bodenbelägen, Sanitärräumen und Zeitfenster ab. Deshalb nennen wir keine Pauschalen. Nach der kostenlosen Objektbegehung erhalten Sie innerhalb von 24 Stunden einen Festpreis für genau Ihr Objekt.' },
   { q: 'In welchen Bezirken sind Sie unterwegs?', a: 'In allen 12 Berliner Bezirken, von Spandau bis Marzahn-Hellersdorf und von Reinickendorf bis Treptow-Köpenick. Die Objektbegehung ist überall kostenlos.' },
@@ -38,30 +36,16 @@ const url = new URL('/', Astro.site).toString();
   image="/og/home.png"
   schema={[faqPage(faqs, url)]}>
 
-  <!-- Hero -->
-  <section class="wrap pb-14 pt-12 lg:pb-20 lg:pt-20">
-    <div class="max-w-4xl">
-      <p class="eyebrow text-moss">Gebäudereinigung in Berlin</p>
-      <h1 class="mt-5 text-[clamp(2.5rem,5vw+0.8rem,5rem)] leading-[1.02]">
-        Gebäude&shy;reinigung in Berlin, um die Sie sich nicht kümmern müssen.
-      </h1>
-      <p class="mt-7 max-w-2xl text-lead text-stone">
-        Wir reinigen Büros, Praxen und Treppenhäuser in ganz Berlin. Sie haben einen festen Ansprechpartner, bekommen nach jedem Einsatz ein Reinigungsprotokoll und innerhalb von 24 Stunden nach der Objektbegehung Ihren Festpreis.
-      </p>
-      <div class="mt-9 flex flex-wrap gap-3">
-        <a href="/angebot/" class="btn btn-primary">Kostenlose Objektbegehung anfragen<Icon name="arrow" size={18} class="arrow" /></a>
-        {wa ? (
-          <a href={wa} class="btn btn-ghost" data-track="whatsapp_click" rel="noopener"><Icon name="whatsapp" size={20} />WhatsApp</a>
-        ) : (
-          <a href="#leistungen" class="btn btn-ghost">Leistungen ansehen</a>
-        )}
-      </div>
-      <TrustLine class="mt-9" />
-    </div>
+  <!-- Hero mit Kurzformular (Zielseite der Google-Anzeigen „Gebäudereinigung / Reinigungsfirma") -->
+  <section class="wrap pb-14 pt-6 sm:pt-10 lg:pb-20 lg:pt-14">
+    <HeroLead
+      name="Gebäudereinigung"
+      h1="Gebäude&shy;reinigung in Berlin, um die Sie sich nicht kümmern müssen."
+      sub="Wir reinigen Büros, Praxen und Gewerbeflächen in ganz Berlin. Regelmäßig, nachvollziehbar und mit einem Preis, der feststeht." />
   </section>
 
   <figure class="wrap">
-    <Photo src={heroImg} alt="Heller Büroflur mit Glastüren, Holzboden und Tageslicht in einem modernen Bürogebäude" sizes="(min-width: 90rem) 1344px, 100vw" class="aspect-[4/3] w-full rounded-2xl object-cover sm:aspect-[21/9]" priority />
+    <Photo src={heroImg} alt="Heller Büroflur mit Glastüren, Holzboden und Tageslicht in einem modernen Bürogebäude" sizes="(min-width: 90rem) 1344px, 100vw" class="aspect-[4/3] w-full rounded-2xl object-cover sm:aspect-[21/9]" />
   </figure>
 
   <ProcessSteps />

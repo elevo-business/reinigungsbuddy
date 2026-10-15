@@ -8,7 +8,7 @@ import tailwindcss from '@tailwindcss/vite';
 const SITE = process.env.SITE_URL || 'https://reinigungs-buddy.de';
 
 // Seiten, die nicht in die Sitemap gehören (noindex). Dazu alle Google-Ads-Landingpages unter /lp/.
-const NOINDEX = ['/angebot/danke/', '/en/contact/thanks/', '/leistungsverzeichnis/vorlage/', '/404/'];
+const NOINDEX = ['/danke/', '/en/contact/thanks/', '/leistungsverzeichnis/vorlage/', '/404/'];
 
 export default defineConfig({
   site: SITE,

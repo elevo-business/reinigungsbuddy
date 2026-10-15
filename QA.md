@@ -21,7 +21,7 @@ Stand: 14.10.2026 · Build: Astro 7.3.8 · geprüft auf dem lokalen Produktions-
 | Sperrliste (kündbar, Mindestlaufzeit, Foto-Protokoll, Besichtigung, Video-Call, „Ich bin Mert", Leistungsverzeichnis gratis) | ✓ 0 Treffer, Prüfung läuft bei jedem Build |
 | Floskel-Check (Anti-Generik-Liste) | ✓ 0 Treffer |
 | Formular (Server-Versand) | ✓ 3 Schritte, Validierung, Honeypot/Zeitprüfung/Rate-Limit, Speicherung, E-Mail + Eingangsbestätigung, Conversion mit transaction_id, ohne JavaScript nutzbar |
-| Formular (Webhook-Modus) | ✓ JSON-Payload vollständig, Weiterleitung auf `/angebot/danke/`, Event |
+| Formular (Webhook-Modus) | ✓ JSON-Payload vollständig, Weiterleitung auf `/danke/`, Event |
 | Mobil 360 px und 390 px | ✓ kein horizontales Scrollen (16 Seiten geprüft) |
 | Tastatur | ✓ Skip-Link als erster Tab-Stopp, Menü mit Enter/Esc inkl. Fokus-Rückgabe, FAQ per Enter, Slider per Pfeiltasten |
 | `prefers-reduced-motion` | ✓ Reveals und Transitions abgeschaltet |

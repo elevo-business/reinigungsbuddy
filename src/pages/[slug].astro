@@ -8,10 +8,11 @@ import BaseLayout from '~/layouts/BaseLayout.astro';
 import Breadcrumbs from '~/components/Breadcrumbs.astro';
 import Photo from '~/components/ui/Photo.astro';
 import Icon from '~/components/ui/Icon.astro';
-import TrustLine from '~/components/sections/TrustLine.astro';
+import HeroLead from '~/components/sections/HeroLead.astro';
 import FactsBlock from '~/components/sections/FactsBlock.astro';
 import ScopeChecklist from '~/components/sections/ScopeChecklist.astro';
 import OfferStack from '~/components/sections/OfferStack.astro';
+import SectionHeader from '~/components/sections/SectionHeader.astro';
 import ProcessSteps from '~/components/sections/ProcessSteps.astro';
 import FAQ from '~/components/sections/FAQ.astro';
 import FinalCTA from '~/components/sections/FinalCTA.astro';
@@ -19,8 +20,8 @@ import Testimonials from '~/components/sections/Testimonials.astro';
 import { offer } from '~/config/offer';
 import { hasStimmen } from '~/lib/collections';
 import { shy } from '~/lib/text';
-import { whatsappLink } from '~/lib/contact';
 import { service, faqPage, breadcrumbs } from '~/lib/schema';
+import { site } from '~/config/site';
 
 export async function getStaticPaths() {
   const items = await getCollection('leistungen');
@@ -40,7 +41,12 @@ const crumbs = [
 const all = (await getCollection('leistungen')).sort((a, b) => a.data.order - b.data.order);
 const related = all.filter((s) => s.id !== entry.id).slice(0, 9);
 const ratgeber = d.guide ? (await getCollection('ratgeber')).find((r) => r.id === d.guide) : undefined;
-const wa = whatsappLink(d.whatsappText);
+/** Vorauswahl Objektart und Zielgruppen-Hinweis „ab 100 m²" je Leistung */
+const objekt = ({ 'bueroreinigung-berlin': 'Büro', 'unterhaltsreinigung-berlin': 'Büro', 'praxisreinigung-berlin': 'Praxis / Kanzlei', 'treppenhausreinigung-berlin': 'Treppenhaus / Wohnhaus' } as Record<string, string>)[entry.id] ?? '';
+const minArea = !['praxisreinigung-berlin', 'treppenhausreinigung-berlin'].includes(entry.id);
+/** Bezirksliste für die Anzeigengruppen „Büroreinigung + Bezirk" */
+const showDistricts = ['bueroreinigung-berlin', 'unterhaltsreinigung-berlin'].includes(entry.id);
+const esc = (t: string) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;');
 ---
 <BaseLayout
   title={d.metaTitle}
@@ -52,26 +58,15 @@ const wa = whatsappLink(d.whatsappText);
     faqPage(faqs, url),
     breadcrumbs(crumbs, Astro.site!),
   ]}>
-  <section class="wrap pb-12 pt-8 lg:pb-16 lg:pt-12">
+  <section class="wrap pb-14 pt-6 lg:pb-20 lg:pt-10">
     <Breadcrumbs items={crumbs} />
-    <div class="mt-10 max-w-4xl">
-      <p class="eyebrow text-moss">{d.name} in Berlin</p>
-      <h1 class="mt-5 text-[clamp(2.3rem,4.4vw+0.8rem,4.5rem)] leading-[1.04]">{shy(d.h1)}</h1>
-      <p class="mt-6 max-w-2xl text-lead text-stone">{d.directAnswer}</p>
-      <div class="mt-8 flex flex-wrap gap-3">
-        <a href="#anfrage-bereich" class="btn btn-primary">Kostenlose Objektbegehung anfragen<Icon name="arrow" size={18} class="arrow" /></a>
-        {wa ? (
-          <a href={wa} class="btn btn-ghost" data-track="whatsapp_click" rel="noopener"><Icon name="whatsapp" size={20} />WhatsApp</a>
-        ) : (
-          <a href="#leistungsumfang" class="btn btn-ghost">Was ist enthalten?</a>
-        )}
-      </div>
-      <TrustLine class="mt-8" />
+    <div class="mt-6 lg:mt-10">
+      <HeroLead name={d.name} h1={esc(shy(d.h1))} sub={d.directAnswer} subShort={d.teaser} objekt={objekt} minArea={minArea} />
     </div>
   </section>
 
   <figure class="wrap">
-    <Photo src={d.heroImage} alt={d.heroAlt} sizes="(min-width: 90rem) 1344px, 100vw" class="aspect-[4/3] w-full rounded-2xl object-cover sm:aspect-[21/9]" priority />
+    <Photo src={d.heroImage} alt={d.heroAlt} sizes="(min-width: 90rem) 1344px, 100vw" class="aspect-[4/3] w-full rounded-2xl object-cover sm:aspect-[21/9]" />
   </figure>
 
   <div id="leistungsumfang"><ScopeChecklist num={1} title={`Das gehört zur ${d.name}`} included={d.included} excluded={d.excluded} /></div>
@@ -92,6 +87,20 @@ const wa = whatsappLink(d.whatsappText);
       </aside>
     </div>
   </section>
+
+  {showDistricts && (
+    <section class="wrap py-20 lg:py-24" aria-labelledby="bezirke">
+      <SectionHeader label="Einsatzgebiet" title={`${d.name} in Ihrem Bezirk`} intro="Wir sind in allen 12 Berliner Bezirken im Einsatz. Die Objektbegehung ist überall kostenlos." id="bezirke" />
+      <ul class="mt-10 grid gap-x-10 sm:grid-cols-2 lg:grid-cols-3">
+        {site.districts.map((b) => (
+          <li class="border-t border-line py-4">
+            <h3 class="text-lg">{d.name} {b.name}</h3>
+            <p class="mt-1 text-[0.95rem] text-stone">{b.areas.join(', ')}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
 
   <OfferStack />
   <ProcessSteps />
