@@ -32,7 +32,11 @@ export const site = {
   /** Wird beim Deployment über SITE_URL gesetzt; hier nur als Fallback. */
   url: 'https://reinigungs-buddy.de',
 
-  /** Anfragen gehen per mailto an diese Adresse (solange PUBLIC_FORM_ENDPOINT leer ist). */
+  /**
+   * Hierhin gehen die Anfragen aus dem Formular (über den Anfrage-Server, siehe server/server.mjs).
+   * Wird nur noch als Notfall-Adresse angezeigt, falls der Versand einmal fehlschlägt.
+   * Die Zieladresse für den Server selbst steht in der Umgebungsvariable LEAD_TO.
+   */
   leadEmail: 'mert@reinigungs-buddy.de',
 
   /** Öffentlich angezeigte Kontaktdaten – vorerst ausgeblendet (null). */
@@ -104,6 +108,15 @@ export const site = {
     /** Nur nach Einwilligung geladen: */
     metaPixelId: null as string | null,
     ga4Id: null as string | null,
+    /**
+     * Google Ads Conversion-Tracking (nur nach Einwilligung).
+     * In Google Ads: Ziele → Conversions → Neue Conversion-Aktion → Website → manuell einrichten.
+     * Dort stehen beide Werte im Event-Snippet: send_to: 'AW-123456789/AbCdEfGhIjK'
+     *   googleAdsId    = 'AW-123456789'
+     *   googleAdsLabel = 'AbCdEfGhIjK'
+     */
+    googleAdsId: null as string | null,
+    googleAdsLabel: null as string | null,
   },
 } as const;
 

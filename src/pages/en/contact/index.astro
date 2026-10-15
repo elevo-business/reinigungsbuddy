@@ -9,25 +9,27 @@ const crumbs = [{ name: 'Home', href: '/en/' }, { name: 'Contact', href: '/en/co
 ---
 <BaseLayout
   title="Request a Fixed Cleaning Quote in Berlin | Reinigungsbuddy"
-  description="Request a fixed quote for office cleaning in Berlin: four short steps, reply on the same working day, fixed price within 24 h after a free site visit."
+  description="Request a fixed quote for office cleaning in Berlin: three short steps, reply on the same working day, fixed price within 24 h after a free site visit."
   image="/og/en.png"
   schema={[breadcrumbs(crumbs, Astro.site!)]}>
   <section class="wrap pb-20 pt-8 lg:pt-12">
     <Breadcrumbs items={crumbs} />
-    <div class="grid-12 mt-8 gap-y-10">
-      <div class="col-span-4 lg:col-span-4">
+    <div class="mt-8 grid gap-x-12 gap-y-8 lg:grid-cols-12">
+      <div class="lg:col-span-5 lg:row-start-1">
         <p class="eyebrow text-moss">Contact</p>
-        <h1 class="mt-5 text-[clamp(2.4rem,4vw+0.8rem,4.5rem)] leading-[1.02]">Get a fixed quote within 24 hours.</h1>
-        <p class="mt-6 text-lead">Four short steps, about two minutes. We reply on the same working day (enquiries after 4 pm: next working day) and arrange a free site visit, on site.</p>
-        <TrustLine lang="en" class="mt-8 flex-col !gap-3" />
-        <ol class="mt-10 space-y-4 border-t border-line pt-6">
+        <h1 class="mt-5 text-[clamp(2.2rem,3.6vw+0.8rem,4.2rem)] leading-[1.03]">Request a free site visit.</h1>
+        <p class="mt-5 text-lead text-stone">Three short steps, about one minute. We reply on the same working day and arrange an appointment.</p>
+      </div>
+      <div class="rounded-2xl border border-line bg-white p-5 shadow-[0_24px_60px_-30px_rgb(15_46_35/0.35)] sm:p-8 lg:col-span-7 lg:row-span-2 lg:row-start-1">
+        <MultiStepForm lang="en" id="anfrage" heading={false} />
+      </div>
+      <div class="lg:col-span-5 lg:row-start-2">
+        <TrustLine lang="en" class="flex-col !gap-3" />
+        <ol class="mt-8 space-y-4 border-t border-line pt-6">
           {offerEn.process.map((p, i) => (
-            <li class="flex gap-4"><span class="num font-display font-semibold text-moss">{String(i + 1).padStart(2, '0')}</span><span><strong class="font-medium">{p.title}:</strong> <span class="text-stone">{p.text}</span></span></li>
+            <li class="flex gap-4"><span class="num font-display font-semibold text-moss">{i + 1}.</span><span><strong class="font-medium">{p.title}:</strong> <span class="text-stone">{p.text}</span></span></li>
           ))}
         </ol>
-      </div>
-      <div class="col-span-4 rounded-2xl border border-line bg-white/60 p-5 sm:p-8 lg:col-span-7 lg:col-start-6">
-        <MultiStepForm lang="en" id="anfrage" heading={false} />
       </div>
     </div>
   </section>

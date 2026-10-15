@@ -2,11 +2,11 @@
 import Icon from './ui/Icon.astro';
 import { phoneLink, whatsappLink } from '~/lib/contact';
 import { langOf } from '~/lib/i18n';
-interface Props { whatsappText?: string }
+interface Props { whatsappText?: string; href?: string }
 const lang = langOf(Astro.url.pathname);
 const tel = phoneLink();
 const wa = whatsappLink(Astro.props.whatsappText ?? (lang === 'en' ? 'Hello, I am interested in office cleaning in Berlin.' : 'Hallo, ich interessiere mich für eine Reinigung in Berlin.'));
-const quote = lang === 'en' ? { href: '/en/contact/', label: 'Request a free site visit' } : { href: '/angebot/', label: 'Kostenlose Objektbegehung anfragen' };
+const quote = lang === 'en' ? { href: '/en/contact/', label: 'Request a free site visit' } : { href: Astro.props.href ?? '/angebot/', label: 'Kostenlos anfragen' };
 const hide = ['/angebot/', '/en/contact/'].some((p) => Astro.url.pathname.startsWith(p));
 ---
 {!hide && (
@@ -29,3 +29,18 @@ const hide = ['/angebot/', '/en/contact/'].some((p) => Astro.url.pathname.starts
     </div>
   </div>
 )}
+
+<script>
+  // Leiste ausblenden, solange ein Anfrageformular sichtbar ist (verdeckt sonst die Buttons)
+  const bar = document.querySelector<HTMLElement>('[data-sticky-bar]');
+  const forms = document.querySelectorAll('[data-msf]');
+  if (bar && forms.length && 'IntersectionObserver' in window) {
+    const visible = new Set<Element>();
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => (e.isIntersecting ? visible.add(e.target) : visible.delete(e.target)));
+      bar.classList.toggle('translate-y-full', visible.size > 0);
+    });
+    bar.classList.add('transition-transform', 'duration-300');
+    forms.forEach((f) => io.observe(f));
+  }
+</script>

@@ -7,7 +7,7 @@ import tailwindcss from '@tailwindcss/vite';
 // Domain wird später gesetzt (SITE_URL in .env bzw. beim Hoster).
 const SITE = process.env.SITE_URL || 'https://reinigungs-buddy.de';
 
-// Seiten, die nicht in die Sitemap gehören (noindex).
+// Seiten, die nicht in die Sitemap gehören (noindex). Dazu alle Google-Ads-Landingpages unter /lp/.
 const NOINDEX = ['/angebot/danke/', '/en/contact/thanks/', '/leistungsverzeichnis/vorlage/', '/404/'];
 
 export default defineConfig({
@@ -18,7 +18,7 @@ export default defineConfig({
   integrations: [
     mdx(),
     sitemap({
-      filter: (page) => !NOINDEX.some((p) => page.endsWith(p)),
+      filter: (page) => !NOINDEX.some((p) => page.endsWith(p)) && !page.includes('/lp/'),
     }),
   ],
   image: { responsiveStyles: false },

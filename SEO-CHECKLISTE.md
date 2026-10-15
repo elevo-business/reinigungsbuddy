@@ -11,7 +11,7 @@ Die Website ist technisch vorbereitet. Für Top-Platzierungen bei „Gebäuderei
 - [ ] Kontaktdaten, Adresse und Inhaberdaten in `src/config/site.ts` eintragen
 - [ ] Impressum, Datenschutz und AGB rechtlich prüfen lassen
 - [ ] `SITE_URL` beim Hoster auf die endgültige Domain setzen
-- [ ] Formular auf Webhook umstellen (README, Abschnitt 5) oder mailto bewusst beibehalten
+- [ ] SMTP-Zugangsdaten und Persistent Storage in Coolify einrichten (README, Abschnitt 5), Testanfrage schicken
 - [ ] Beispielbilder ersetzen oder Galerie ausblenden
 - [ ] `npm run build`: alle QA-Checks grün
 

@@ -35,6 +35,8 @@ src/
   assets/images/        Fotos (werden beim Build automatisch optimiert)
   components/           Bausteine (Hero, Formular, Konfigurator, FAQ …)
   pages/                Seiten (URL = Dateipfad)
+  pages/lp/             Google-Ads-Landingpages (noindex, ohne Navigation)
+server/server.mjs       Anfrage-Server: speichert Anfragen und verschickt E-Mails
 public/                 Schriften, Favicons, Logo, OG-Bilder, PDF-Vorlage
 scripts/qa.mjs          QA-Checks nach dem Build
 scripts/generate-assets.mjs  OG-Bilder + PDF neu erzeugen
@@ -103,86 +105,87 @@ Alle Stockbilder sind im HTML mit `<!-- STOCK: später durch eigenes Foto ersetz
 
 ## 5. Anfrageformular
 
-Standard: Beim Absenden öffnet sich das E-Mail-Programm der Besucherin oder des Besuchers mit einer fertig ausgefüllten Anfrage an **`site.leadEmail`** (derzeit `mert@reinigungs-buddy.de`). Ohne JavaScript funktioniert das Formular als einfaches mailto-Formular.
+Das Formular schickt die Anfrage an einen kleinen Server im selben Container (`server/server.mjs`, nginx leitet `/api/` dorthin weiter). Der Server
 
-*Einschränkung von mailto:* Wer kein E-Mail-Programm eingerichtet hat (häufig am Firmen-PC mit Webmail), muss die Anfrage kopieren. Das Formular bietet dafür einen Button „Anfrage kopieren". Für den Livebetrieb empfehlen wir einen echten Versand:
+1. prüft die Angaben (Pflichtfelder, Honeypot, Mindest-Ausfüllzeit, höchstens 5 Anfragen pro 10 Minuten und IP),
+2. **speichert jede Anfrage zuerst** in `/data/anfragen.jsonl` (so geht keine Anfrage verloren, auch wenn der E-Mail-Versand hakt),
+3. schickt sie per E-Mail an `LEAD_TO` (Antworten gehen direkt an die Kundin bzw. den Kunden) und eine Eingangsbestätigung an die Kundin bzw. den Kunden,
+4. leitet auf `/angebot/danke/?id=<Anfrage-Nr.>` weiter.
 
-**Umstellung auf Webhook (Make, Zapier, n8n) oder Formspree:**
-1. In Make/Zapier/n8n einen Webhook anlegen (bzw. bei Formspree ein Formular) und die URL kopieren.
-2. Beim Hoster die Umgebungsvariable `PUBLIC_FORM_ENDPOINT=<URL>` setzen (lokal: `.env`, siehe `.env.example`).
-3. Neu bauen. Das Formular sendet dann JSON per POST und leitet auf `/angebot/danke/` weiter.
+Ohne JavaScript funktioniert das Formular als normales HTML-Formular mit derselben Weiterleitung.
 
-Payload-Beispiel:
-```json
-{ "objektart": "Büro", "leistungen": ["Büroflächen", "Fenster & Glas"], "flaeche": "100–250 m²",
-  "haeufigkeit": "2× pro Woche", "bezirk": "Mitte", "start": "so bald wie möglich",
-  "name": "…", "firma": "…", "email": "…", "telefon": "…", "rueckruf": "vormittags",
-  "nachricht": "…", "quelle": "/bueroreinigung-berlin/", "sprache": "de" }
-```
+### Umgebungsvariablen (Coolify → *Environment Variables*, **ohne** Haken „Build Variable")
 
-*Hinweis:* Die Webhook-URL steht dann im JavaScript der Seite. Bei Missbrauch die URL im Tool neu erzeugen. Für eine geschützte Variante mit Meta Conversions API (Server-Token) wäre eine kleine Serverless-Funktion beim Hoster der nächste Schritt.
+| Variable | Pflicht | Beispiel / Bedeutung |
+|---|---|---|
+| `SMTP_HOST` | ja | `smtp.office365.com` |
+| `SMTP_PORT` | | `587` (Standard) |
+| `SMTP_USER` | ja | `mert@reinigungs-buddy.de` |
+| `SMTP_PASS` | ja | Passwort bzw. App-Passwort des Postfachs |
+| `SMTP_FROM` | | Absender, Standard = `SMTP_USER` |
+| `LEAD_TO` | | Empfänger der Anfragen, Standard `mert@reinigungs-buddy.de` |
+| `AUTO_REPLY` | | `0` schaltet die Eingangsbestätigung an Kunden ab |
+| `ADMIN_PASSWORD` | empfohlen | schaltet die Übersicht `https://reinigungs-buddy.de/api/anfragen` frei (Benutzername beliebig, CSV-Export) |
+| `LEAD_WEBHOOK_URL` | | optional zusätzlich an n8n/Make/Zapier senden (JSON) |
 
-Spam-Schutz: Honeypot-Feld und Mindest-Ausfüllzeit, kein CAPTCHA. Formulardaten werden nicht im Browser gespeichert.
+**Persistent Storage:** In Coolify unter *Persistent Storage* ein Volume auf **`/data`** anlegen. Sonst ist die Anfragen-Datei nach jedem Deployment leer (die E-Mails kommen trotzdem an).
+
+**Microsoft 365 (Exchange Online) als SMTP:** Im Microsoft 365 Admin Center → *Benutzer* → `mert@…` → *E-Mail* → *E-Mail-Apps verwalten* → **„Authentifiziertes SMTP"** aktivieren. Ist in der Organisation „Sicherheitsstandards" (Security Defaults) aktiv, blockiert Microsoft SMTP mit Passwort. Dann entweder Security Defaults ausschalten und MFA per Richtlinie regeln, oder einen SMTP-Dienst wie **Brevo** (EU, kostenloser Tarif) nutzen: `SMTP_HOST=smtp-relay.brevo.com`, `SMTP_PORT=587`, Zugangsdaten aus Brevo, Absender-Domain dort bestätigen. Bei einem anderen Dienst als Microsoft 365 die Datenschutzerklärung (Abschnitt 7) anpassen.
+
+**Prüfen nach dem Deployment:**
+- `https://reinigungs-buddy.de/api/health` zeigt `"mail":true,"store":true`.
+- Im Coolify-Log steht „SMTP-Verbindung ok". Steht dort „WARNUNG SMTP", stimmen Zugangsdaten oder SMTP-Freigabe nicht.
+- Eine Testanfrage abschicken: E-Mail an `LEAD_TO`, Bestätigung an die eingegebene Adresse, Eintrag unter `/api/anfragen`.
+
+Gespeicherte Felder: Objektart, Fläche, Häufigkeit, Bezirk, Name, Firma, E-Mail, Telefon, Nachricht, Seite, Leistung (bei Landingpages), Sprache sowie bei Anzeigen-Klicks `gclid`/`gbraid`/`wbraid` und `utm_*`. Die IP-Adresse wird nicht gespeichert. Anfragen, aus denen kein Auftrag wird, nach spätestens 6 Monaten aus `/data/anfragen.jsonl` löschen (siehe Datenschutzerklärung).
 
 ---
 
-## 6. Tracking & Einwilligung
+## 6. Tracking, Google Ads & Einwilligung
 
 In `site.ts` → `analytics`:
 
 | Feld | Wirkung |
 |---|---|
 | `plausibleDomain` | Plausible (cookielos, ohne Banner) wird geladen |
+| `googleAdsId`, `googleAdsLabel` | Google Ads Conversion-Tracking. Consent-Banner erscheint, gtag lädt **erst nach Zustimmung** |
 | `metaPixelId`, `ga4Id` | Consent-Banner erscheint. Pixel bzw. GA4 laden **erst nach Zustimmung** (Google Consent Mode v2 voreingestellt auf „denied") |
 
-Ohne Werte wird nichts geladen und kein Banner gezeigt.
+Ohne Werte wird nichts geladen und kein Banner gezeigt. Die Einrichtung in Google Ads steht Schritt für Schritt in **[GOOGLE-ADS.md](GOOGLE-ADS.md)**.
 
-Conversion-Events (an Plausible immer, an Pixel/GA4 nur nach Einwilligung):
+Conversion-Events (an Plausible immer, an Google/Meta nur nach Einwilligung):
 
-| Event | Auslöser | Meta-Standard-Event |
+| Event | Auslöser | Google Ads / Meta |
 |---|---|---|
-| `lead_form_submit` | Anfrageformular abgeschickt (mailto geöffnet bzw. Webhook erfolgreich) | Lead |
-| `phone_click` | Klick auf Telefonnummer | Contact |
-| `whatsapp_click` | Klick auf WhatsApp-Link | Contact |
-| `configurator_complete` | Konfigurator bis zur Zusammenfassung | (custom) |
-| `lead_magnet_optin` | Leistungsverzeichnis angefordert (Formular derzeit nicht eingebunden) | CompleteRegistration |
+| `lead_form_submit` | Anfrage vom Server **bestätigt** (nicht beim Klick) | Conversion mit Anfrage-Nr. als `transaction_id` + erweiterte Conversions · Meta „Lead" |
+| `form_start` | erste Eingabe im Formular | |
+| `form_step` | Schritt 2 bzw. 3 erreicht | |
+| `form_error` | Versand fehlgeschlagen | |
+| `phone_click` | Klick auf Telefonnummer | Meta „Contact" |
+| `whatsapp_click` | Klick auf WhatsApp-Link | Meta „Contact" |
 
 **Debug:** `?debug=1` an eine URL hängen. Alle Events erscheinen dann in der Browser-Konsole (gilt für die ganze Sitzung).
-
-Wichtig bei mailto: `lead_form_submit` wird beim Öffnen des E-Mail-Programms gezählt, nicht beim tatsächlichen Absenden. Mit Webhook ist die Messung exakt.
 
 ---
 
 ## 7. Deployment
 
-Die Domain wird über die Umgebungsvariable `SITE_URL` gesetzt (Canonicals, Sitemap, hreflang). Ohne Wert gilt `https://reinigungs-buddy.de`.
+Die Domain wird über die Build-Variable `SITE_URL` gesetzt (Canonicals, Sitemap, hreflang). Ohne Wert gilt `https://reinigungs-buddy.de`.
 
-### Coolify (empfohlen, eigener Server)
-Das Repo enthält ein `Dockerfile` (Node 22 → Build, nginx → Auslieferung) und `nginx.conf`.
+### Coolify (eigener Server)
+Das Repo enthält ein `Dockerfile`: Node 22 baut die Seite, im fertigen Container laufen nginx (Website) und der Anfrage-Server (`/api/`).
 
-1. In Coolify die Anwendung auf **Build Pack: Dockerfile** stellen, Port **80**.
-2. Unter *Environment Variables* mit Haken **„Build Variable"**: `SITE_URL=https://ihre-domain.de`, optional `PUBLIC_FORM_ENDPOINT`.
-3. Unter *Domains* `https://ihre-domain.de,https://www.ihre-domain.de` eintragen, *Direction* auf „Redirect to non-www".
-4. Deploy. `npm run build` inkl. QA-Checks läuft im Container. Schlägt ein Check fehl, bricht das Deployment mit Hinweis im Log ab.
+1. In Coolify die Anwendung auf **Build Pack: Dockerfile** stellen, *Ports Exposes* **80**.
+2. *Environment Variables*: `SITE_URL=https://reinigungs-buddy.de` mit Haken **„Build Variable"**, dazu die SMTP-Variablen aus Abschnitt 5 (ohne Haken).
+3. *Persistent Storage*: Volume auf `/data`.
+4. Unter *Domains* `https://reinigungs-buddy.de,https://www.reinigungs-buddy.de` eintragen, *Direction* auf „Redirect to non-www".
+5. Deploy. `npm run build` inkl. QA-Checks läuft im Container. Schlägt ein Check fehl, bricht das Deployment mit Hinweis im Log ab.
 
 Nixpacks funktioniert **nicht** zuverlässig: Es installiert Node 22.11, Astro 7 braucht ≥ 22.12.
 
-nginx liefert die eigene 404-Seite aus, leitet `/pfad` per 301 auf `/pfad/` um, cached `/_astro/` und `/fonts/` ein Jahr (Dateinamen enthalten Hashes) und setzt Basis-Sicherheitsheader.
+nginx liefert die eigene 404-Seite aus, leitet `/pfad` per 301 auf `/pfad/` um, cached `/_astro/` und `/fonts/` ein Jahr (Dateinamen enthalten Hashes) und setzt Basis-Sicherheitsheader. Der Health-Check des Containers prüft `/api/health`.
 
-### Cloudflare Pages
-1. Repository in Cloudflare Pages verbinden.
-2. Build command: `npm run build` · Output directory: `dist` · Umgebungsvariable `NODE_VERSION=22`, `SITE_URL=https://ihre-domain.de`, optional `PUBLIC_FORM_ENDPOINT`.
-3. Eigene Domain unter *Custom domains* verbinden.
-
-### Netlify
-1. Repository in Netlify importieren.
-2. Build command: `npm run build` · Publish directory: `dist` · Environment: `NODE_VERSION=22`, `SITE_URL`, optional `PUBLIC_FORM_ENDPOINT`.
-3. Domain unter *Domain management* verbinden.
-
-### Eigener Server (z. B. die vorhandene Domain)
-`npm run build` lokal ausführen und den Inhalt von `dist/` per SFTP in das Webroot hochladen. Für saubere URLs muss der Server Verzeichnis-Indizes (`/leistungen/` → `/leistungen/index.html`) ausliefern, was Apache und nginx standardmäßig tun. Die 404-Seite ist `dist/404.html` (Apache: `ErrorDocument 404 /404.html`).
-
-Trailing Slash: Alle URLs enden auf `/`. Falls der Server Aufrufe ohne Slash nicht automatisch umleitet, eine 301-Regel ergänzen.
+Rein statische Hoster (Cloudflare Pages, Netlify, Webspace) funktionieren nur noch ohne Formular-Versand. Für das Formular wird der Container gebraucht.
 
 ---
 
@@ -203,6 +206,7 @@ Benötigt Chromium für Playwright (`npx playwright install chromium` oder `CHRO
 
 - [PLAN.md](PLAN.md): Konzept, Sitemap, Keyword-Mapping, Designsystem
 - [QA.md](QA.md): Prüfergebnisse und offene Platzhalter
+- [GOOGLE-ADS.md](GOOGLE-ADS.md): Landingpages, Conversion-Tracking und Kampagnen-Start
 - [SEO-CHECKLISTE.md](SEO-CHECKLISTE.md): alles außerhalb der Website (Google-Profil, Verzeichnisse, Bewertungen)
 - [FOTO-ANLEITUNG.md](FOTO-ANLEITUNG.md): eigene Vorher-Nachher-Fotos
 - [CREDITS.md](CREDITS.md): Bildnachweise und Lizenzen

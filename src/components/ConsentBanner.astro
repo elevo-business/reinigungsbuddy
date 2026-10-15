@@ -6,8 +6,9 @@
  */
 import { site } from '~/config/site';
 import { langOf } from '~/lib/i18n';
-const { metaPixelId, ga4Id } = site.analytics;
-const active = Boolean(metaPixelId || ga4Id);
+const { metaPixelId, ga4Id, googleAdsId } = site.analytics;
+const active = Boolean(metaPixelId || ga4Id || googleAdsId);
+const tools = [googleAdsId && 'Google Ads', ga4Id && 'Google Analytics', metaPixelId && 'Meta Pixel'].filter(Boolean).join(', ');
 const en = langOf(Astro.url.pathname) === 'en';
 ---
 {active && (
@@ -15,8 +16,8 @@ const en = langOf(Astro.url.pathname) === 'en';
     <h2 id="consent-title" class="text-lg">{en ? 'Your choice' : 'Ihre Wahl'}</h2>
     <p class="mt-2 text-[0.95rem] text-stone">
       {en
-        ? 'With your consent we use marketing tools (Meta Pixel, Google Analytics) to measure which ads lead to enquiries. Without consent, nothing is loaded.'
-        : 'Mit Ihrer Einwilligung nutzen wir Marketing-Tools (Meta Pixel, Google Analytics), um zu messen, welche Anzeigen zu Anfragen führen. Ohne Einwilligung wird nichts geladen.'}
+        ? `With your consent we use ${tools} to measure which ads lead to enquiries. Without consent, nothing is loaded.`
+        : `Mit Ihrer Einwilligung nutzen wir ${tools}, um zu messen, welche Anzeigen zu Anfragen führen. Ohne Einwilligung wird nichts geladen.`}
       {' '}<a href="/datenschutz/" class="link-moss">{en ? 'Privacy' : 'Datenschutz'}</a>
     </p>
     <div class="mt-4 flex flex-wrap gap-2">
@@ -26,7 +27,7 @@ const en = langOf(Astro.url.pathname) === 'en';
   </div>
 )}
 {active && (
-  <script is:inline define:vars={{ metaPixelId, ga4Id }}>
+  <script is:inline define:vars={{ metaPixelId, ga4Id, googleAdsId }}>
     (function () {
       var KEY = 'rb-consent';
       var box = document.getElementById('consent');
@@ -34,11 +35,21 @@ const en = langOf(Astro.url.pathname) === 'en';
       window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
       window.gtag('consent', 'default', { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', analytics_storage: 'denied' });
       function load() {
+        if (window.rbConsent) return;
         window.gtag('consent', 'update', { ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted', analytics_storage: 'granted' });
-        if (ga4Id) {
-          var s = document.createElement('script'); s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=' + ga4Id; document.head.appendChild(s);
-          window.gtag('js', new Date()); window.gtag('config', ga4Id);
+        var gid = googleAdsId || ga4Id;
+        if (gid) {
+          var s = document.createElement('script'); s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=' + gid; document.head.appendChild(s);
+          window.gtag('js', new Date());
+          if (googleAdsId) window.gtag('config', googleAdsId, { allow_enhanced_conversions: true });
+          if (ga4Id) window.gtag('config', ga4Id);
         }
+        // Kampagnen-Herkunft (gclid, utm_*) für diese Sitzung merken – nur mit Einwilligung
+        try {
+          var q = new URLSearchParams(location.search), a = {};
+          ['gclid', 'gbraid', 'wbraid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(function (k) { if (q.get(k)) a[k] = q.get(k); });
+          if (Object.keys(a).length) sessionStorage.setItem('rb-attr', JSON.stringify(a));
+        } catch (e) {}
         if (metaPixelId) {
           !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
           window.fbq('init', metaPixelId); window.fbq('track', 'PageView');

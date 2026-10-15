@@ -1,87 +1,82 @@
 ---
 /**
- * Mehrstufiges Anfrageformular (4 Schritte, 6 Pflichtfelder).
+ * Anfrageformular in 3 Schritten (Objekt → Umfang & Ort → Kontakt).
  *
- * Versand:
- *  - Standard: mailto an site.leadEmail (öffnet das E-Mail-Programm mit fertig ausgefüllter Nachricht)
- *  - Optional: PUBLIC_FORM_ENDPOINT in .env setzen → JSON-POST an Webhook (Make, Zapier, n8n, Formspree …)
- * Ohne JavaScript funktioniert das Formular als klassisches mailto-Formular (alle Schritte sichtbar).
- * Spam-Schutz: Honeypot + Mindest-Ausfüllzeit, kein CAPTCHA.
- * Es wird nichts im Browser gespeichert.
+ * Versand: POST an /api/anfrage (Anfrage-Server im selben Container, siehe server/server.mjs).
+ * Der Server speichert jede Anfrage und schickt sie per E-Mail weiter. Danach geht es zur Danke-Seite.
+ * Ohne JavaScript funktioniert das Formular als normales HTML-Formular (alle Schritte sichtbar, siehe .no-js in global.css).
+ * Das Markup ist bereits im Zustand „Schritt 1" gerendert, damit beim Laden nichts springt.
+ * Spam-Schutz: Honeypot + Mindest-Ausfüllzeit + Rate-Limit auf dem Server, kein CAPTCHA.
+ * Conversion: Google Ads (mit Anfrage-Nr. als transaction_id) und GA4, nur nach Einwilligung.
  */
 import Icon from '../ui/Icon.astro';
 import { offer } from '~/config/offer';
 import { site } from '~/config/site';
 
-interface Props { lang?: 'de' | 'en'; id?: string; source?: string; heading?: boolean }
-const { lang = 'de', id = 'anfrage', source = Astro.url.pathname, heading = true } = Astro.props;
+interface Props {
+  lang?: 'de' | 'en';
+  id?: string;
+  source?: string;
+  heading?: boolean;
+  /** Leistung, über die die Anfrage kommt (z. B. Landingpage „Praxisreinigung") */
+  leistung?: string;
+  /** Vorauswahl Objektart (Wert aus offer.configurator.objectTypes) */
+  objekt?: string;
+  /** schmale Variante für die Formular-Karte im Hero */
+  compact?: boolean;
+}
+const { lang = 'de', id = 'anfrage', source = Astro.url.pathname, heading = true, leistung = '', objekt = '', compact = false } = Astro.props;
 const c = offer.configurator;
-const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT || '';
 const de = lang === 'de';
+const { googleAdsId, googleAdsLabel } = site.analytics;
 
 const objectTypesEn = ['Office', 'Medical practice / law firm', 'Stairwell / residential building', 'Shop / studio', 'Coworking', 'Other'];
 const areasEn = ['up to 100 m²', '100–250 m²', '250–500 m²', '500–1,000 m²', 'over 1,000 m²', 'not sure'];
 const freqEn = ['daily', '3× a week', '2× a week', 'weekly', 'every 2 weeks', 'one-off'];
-const servicesEn: Record<string, string> = { buero: 'Office areas', sanitaer: 'Washrooms & kitchen', glas: 'Windows & glass', teppich: 'Carpet & upholstery', grund: 'Deep clean', desinfektion: 'Disinfection', praxis: 'Practice / law firm', treppenhaus: 'Stairwell & entrance', umzug: 'Move-out clean', material: 'Supplies' };
-const starts = de ? ['so bald wie möglich', 'in 2–4 Wochen', 'in 1–3 Monaten', 'noch offen'] : ['as soon as possible', 'in 2–4 weeks', 'in 1–3 months', 'not decided yet'];
-const callback = de ? ['egal', 'vormittags', 'mittags', 'nachmittags'] : ['any time', 'morning', 'midday', 'afternoon'];
 
 const t = de
   ? {
-      title: 'Festpreis in 24 Stunden anfragen',
-      intro: `Vier kurze Schritte, etwa zwei Minuten. Sie bekommen eine Rückmeldung ${offer.response.promise}.`,
-      steps: ['Objekt', 'Umfang', 'Ort & Start', 'Kontakt'],
-      s1: 'Was sollen wir reinigen?', s1b: 'Welche Leistungen interessieren Sie? (optional)',
-      s2a: 'Wie groß ist die Fläche ungefähr?', s2b: 'Wie oft soll gereinigt werden?',
-      s3a: 'In welchem Bezirk?', s3b: 'Ab wann?', outside: 'außerhalb Berlins',
-      name: 'Ihr Name', company: 'Firma / Praxis (optional)', phone: 'Telefon (optional, für den Rückruf)', email: 'E-Mail',
-      cb: 'Rückruf am besten (optional)', msg: 'Noch etwas, das wir wissen sollten? (optional)',
-      next: 'Weiter', back: 'Zurück', submit: 'Anfrage senden',
+      title: 'Kostenlose Objektbegehung anfragen',
+      intro: `Drei kurze Schritte, etwa eine Minute. Wir melden uns ${offer.response.promise}.`,
+      steps: ['Objekt', 'Umfang', 'Kontakt'],
+      s1: 'Was sollen wir reinigen?',
+      s2a: 'Wie groß ist die Fläche ungefähr?', s2b: 'Wie oft soll gereinigt werden?', s2c: 'In welchem Bezirk?', outside: 'außerhalb Berlins',
+      name: 'Ihr Name', company: 'Firma / Praxis (optional)', phone: 'Telefon (optional, für einen schnellen Rückruf)', email: 'E-Mail',
+      msg: 'Noch etwas, das wir wissen sollten? (optional)',
+      next: 'Weiter', back: 'Zurück', submit: 'Kostenlose Objektbegehung anfragen',
       required: 'Bitte auswählen.', reqText: 'Bitte ausfüllen.', badEmail: 'Bitte eine gültige E-Mail-Adresse eingeben.',
       privacy: 'Ihre Angaben verwenden wir nur, um Ihre Anfrage zu beantworten.', privacyLink: 'Datenschutz',
       stepOf: 'Schritt', of: 'von', choose: 'Bitte wählen',
-      pkg: 'Aus dem Konfigurator übernommen:',
-      okTitle: 'Fast geschafft: Bitte E-Mail absenden.',
-      okText: 'Ihr E-Mail-Programm hat sich mit der fertigen Anfrage geöffnet. Senden Sie die E-Mail einfach ab.',
-      okNoMail: 'Hat sich kein E-Mail-Programm geöffnet? Kopieren Sie die Anfrage und schicken Sie sie an',
-      copy: 'Anfrage kopieren', copied: 'Kopiert',
-      next1: `Rückmeldung ${offer.response.promise} (Anfragen nach ${offer.response.cutoff}: nächster Werktag)`,
-      next2: 'Termin für die kostenlose Objektbegehung, vor Ort',
-      next3: 'Ihr Festpreis-Angebot innerhalb von 24 Stunden danach',
-      subject: 'Anfrage Festpreis',
+      reassure: 'Kostenlos und unverbindlich',
       thanks: '/angebot/danke/',
-      sending: 'Wird gesendet …', fail: 'Das hat nicht geklappt. Bitte versuchen Sie es erneut oder schreiben Sie an',
+      sending: 'Wird gesendet …',
+      fail: 'Das hat leider nicht geklappt. Bitte versuchen Sie es noch einmal oder schreiben Sie uns an',
+      tooMany: 'Es wurden gerade sehr viele Anfragen gesendet. Bitte versuchen Sie es in ein paar Minuten noch einmal oder schreiben Sie uns an',
     }
   : {
-      title: 'Get a fixed quote within 24 hours',
-      intro: 'Four short steps, about two minutes. We reply on the same working day.',
-      steps: ['Premises', 'Scope', 'Location', 'Contact'],
-      s1: 'What should we clean?', s1b: 'Which services are you interested in? (optional)',
-      s2a: 'Roughly how large is the area?', s2b: 'How often?',
-      s3a: 'Which district?', s3b: 'Start date', outside: 'outside Berlin',
-      name: 'Your name', company: 'Company (optional)', phone: 'Phone (optional, for a call back)', email: 'Email',
-      cb: 'Best time to call (optional)', msg: 'Anything else we should know? (optional)',
-      next: 'Next', back: 'Back', submit: 'Request fixed quote',
+      title: 'Request a free site visit',
+      intro: 'Three short steps, about one minute. We reply on the same working day.',
+      steps: ['Premises', 'Scope', 'Contact'],
+      s1: 'What should we clean?',
+      s2a: 'Roughly how large is the area?', s2b: 'How often?', s2c: 'Which district?', outside: 'outside Berlin',
+      name: 'Your name', company: 'Company (optional)', phone: 'Phone (optional, for a quick call back)', email: 'Email',
+      msg: 'Anything else we should know? (optional)',
+      next: 'Next', back: 'Back', submit: 'Request a free site visit',
       required: 'Please choose one.', reqText: 'Please fill in.', badEmail: 'Please enter a valid email address.',
       privacy: 'We only use your details to answer your enquiry.', privacyLink: 'Privacy policy',
       stepOf: 'Step', of: 'of', choose: 'Please choose',
-      pkg: 'Taken from the configurator:',
-      okTitle: 'Almost done: please send the email.',
-      okText: 'Your email app has opened with the enquiry filled in. Just hit send.',
-      okNoMail: 'No email app opened? Copy the enquiry and send it to',
-      copy: 'Copy enquiry', copied: 'Copied',
-      next1: 'Reply on the same working day (enquiries after 4 pm: next working day)',
-      next2: 'A free site visit, on site',
-      next3: 'Your fixed quote within 24 hours after that',
-      subject: 'Enquiry fixed quote',
+      reassure: 'Free and without obligation',
       thanks: '/en/contact/thanks/',
-      sending: 'Sending …', fail: 'That did not work. Please try again or email',
+      sending: 'Sending …',
+      fail: 'Sorry, that did not work. Please try again or email us at',
+      tooMany: 'A lot of enquiries were just sent. Please try again in a few minutes or email us at',
     };
 const objectTypes = de ? c.objectTypes : objectTypesEn;
 const areas = de ? c.areas : areasEn;
 const freqs = de ? c.frequencies : freqEn;
+const grid3 = compact ? 'grid-cols-2' : 'grid-cols-2 sm:grid-cols-3';
 ---
-<div class="msf" data-msf data-endpoint={endpoint} data-mail={site.leadEmail} data-subject={t.subject} data-thanks={t.thanks} data-lang={lang} data-source={source} id={id}>
+<div class="msf" data-msf data-thanks={t.thanks} data-lang={lang} data-ads-id={googleAdsId ?? ''} data-ads-label={googleAdsLabel ?? ''} data-sending={t.sending} id={id}>
   {heading && (
     <div class="mb-6">
       <h2 class="text-3xl sm:text-4xl">{t.title}</h2>
@@ -89,74 +84,57 @@ const freqs = de ? c.frequencies : freqEn;
     </div>
   )}
 
-  <div class="msf-progress mb-6 hidden" data-progress aria-hidden="true">
+  <div class="msf-progress mb-6" data-progress aria-hidden="true">
     <div class="flex justify-between text-sm">
-      {t.steps.map((s, i) => <span class="num" data-progress-label={i + 1}>{String(i + 1).padStart(2, '0')} {s}</span>)}
+      <span class="font-medium" data-progress-text>{t.stepOf} 1 {t.of} 3</span>
+      <span class="text-stone" data-progress-name>{t.steps[0]}</span>
     </div>
-    <div class="mt-2 h-1 overflow-hidden rounded-full bg-line"><div class="h-full w-1/4 rounded-full bg-moss transition-[width] duration-500" data-bar></div></div>
+    <div class="mt-2 h-1.5 overflow-hidden rounded-full bg-line"><div class="h-full w-1/3 rounded-full bg-moss transition-[width] duration-500" data-bar></div></div>
   </div>
   <p class="sr-only" aria-live="polite" data-step-announce></p>
 
-  <div class="mb-5 hidden rounded-lg bg-mint-soft px-4 py-3 text-[0.95rem]" data-prefill>
-    <span class="font-medium">{t.pkg}</span> <span data-prefill-text></span>
-  </div>
-
-  <form action={`mailto:${site.leadEmail}?subject=${encodeURIComponent(t.subject)}`} method="post" enctype="text/plain" novalidate data-form>
+  <form action="/api/anfrage" method="post" novalidate data-form data-steps={JSON.stringify(t.steps)}>
     <input type="hidden" name="quelle" value={source} />
+    <input type="hidden" name="leistung" value={leistung} />
+    <input type="hidden" name="sprache" value={lang} />
     <input type="hidden" name="t" value="" data-started />
     <div class="absolute -left-[9999px]" aria-hidden="true">
       <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
     </div>
 
     <!-- Schritt 1 -->
-    <fieldset class="msf-step space-y-6" data-step="1">
+    <fieldset class="msf-step" data-step="1">
       <legend class="sr-only">{t.steps[0]}</legend>
       <div role="radiogroup" aria-labelledby={`${id}-s1`} data-required-group="objektart">
         <p id={`${id}-s1`} class="field-label text-lg">{t.s1} <span aria-hidden="true">*</span></p>
-        <div class="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
+        <div class:list={['grid gap-2.5', grid3]}>
           {objectTypes.map((o, i) => (
-            <label class="tile is-radio"><input type="radio" name="objektart" value={o} data-key={c.objectTypes[i]} required /><span class="tile-title">{o}</span></label>
+            <label class="tile is-radio"><input type="radio" name="objektart" value={o} data-key={c.objectTypes[i]} checked={objekt === c.objectTypes[i]} required data-autonext /><span class="tile-title">{o.replace(' / ', '\u00a0/ ')}</span></label>
           ))}
         </div>
         <p class="field-error hidden" data-error-for="objektart">{t.required}</p>
       </div>
-      <div>
-        <p class="field-label">{t.s1b}</p>
-        <div class="flex flex-wrap gap-2">
-          {c.services.map((s) => (
-            <label class="tile !py-2 !pl-9 !pr-3 text-[0.95rem] before:!left-3 before:!top-2.5 before:!h-4 before:!w-4">
-              <input type="checkbox" name="leistungen" value={de ? s.label : servicesEn[s.key]} data-key={s.key} />
-              <span>{de ? s.label : servicesEn[s.key]}</span>
-            </label>
-          ))}
-        </div>
-      </div>
     </fieldset>
 
     <!-- Schritt 2 -->
-    <fieldset class="msf-step mt-8 space-y-6" data-step="2">
+    <fieldset class="msf-step mt-8 hidden space-y-6" data-step="2">
       <legend class="sr-only">{t.steps[1]}</legend>
       <div role="radiogroup" aria-labelledby={`${id}-s2a`} data-required-group="flaeche">
         <p id={`${id}-s2a`} class="field-label text-lg">{t.s2a} <span aria-hidden="true">*</span></p>
-        <div class="grid gap-2.5 sm:grid-cols-3">
-          {areas.map((a, i) => <label class="tile is-radio"><input type="radio" name="flaeche" value={a} data-key={c.areas[i]} required /><span class="tile-title">{a}</span></label>)}
+        <div class:list={['grid gap-2.5', grid3]}>
+          {areas.map((a) => <label class="tile is-radio"><input type="radio" name="flaeche" value={a} required /><span class="tile-title">{a}</span></label>)}
         </div>
         <p class="field-error hidden" data-error-for="flaeche">{t.required}</p>
       </div>
       <div role="radiogroup" aria-labelledby={`${id}-s2b`} data-required-group="haeufigkeit">
         <p id={`${id}-s2b`} class="field-label text-lg">{t.s2b} <span aria-hidden="true">*</span></p>
-        <div class="grid gap-2.5 sm:grid-cols-3">
-          {freqs.map((f, i) => <label class="tile is-radio"><input type="radio" name="haeufigkeit" value={f} data-key={c.frequencies[i]} required /><span class="tile-title">{f}</span></label>)}
+        <div class:list={['grid gap-2.5', grid3]}>
+          {freqs.map((f) => <label class="tile is-radio"><input type="radio" name="haeufigkeit" value={f} required /><span class="tile-title">{f}</span></label>)}
         </div>
         <p class="field-error hidden" data-error-for="haeufigkeit">{t.required}</p>
       </div>
-    </fieldset>
-
-    <!-- Schritt 3 -->
-    <fieldset class="msf-step mt-8 grid gap-5 sm:grid-cols-2" data-step="3">
-      <legend class="sr-only">{t.steps[2]}</legend>
       <div>
-        <label class="field-label" for={`${id}-bezirk`}>{t.s3a} <span aria-hidden="true">*</span></label>
+        <label class="field-label text-lg" for={`${id}-bezirk`}>{t.s2c} <span aria-hidden="true">*</span></label>
         <select id={`${id}-bezirk`} name="bezirk" class="field" required aria-describedby={`${id}-bezirk-err`}>
           <option value="">{t.choose}</option>
           {site.districts.map((d) => <option value={d.name}>{d.name}</option>)}
@@ -164,25 +142,15 @@ const freqs = de ? c.frequencies : freqEn;
         </select>
         <p id={`${id}-bezirk-err`} class="field-error hidden" data-error-for="bezirk">{t.required}</p>
       </div>
-      <div>
-        <label class="field-label" for={`${id}-start`}>{t.s3b}</label>
-        <select id={`${id}-start`} name="start" class="field">
-          {starts.map((s) => <option value={s}>{s}</option>)}
-        </select>
-      </div>
     </fieldset>
 
-    <!-- Schritt 4 -->
-    <fieldset class="msf-step mt-8 grid gap-5 sm:grid-cols-2" data-step="4">
-      <legend class="sr-only">{t.steps[3]}</legend>
+    <!-- Schritt 3 -->
+    <fieldset class:list={['msf-step mt-8 hidden grid gap-5', !compact && 'sm:grid-cols-2']} data-step="3">
+      <legend class="sr-only">{t.steps[2]}</legend>
       <div>
         <label class="field-label" for={`${id}-name`}>{t.name} <span aria-hidden="true">*</span></label>
         <input id={`${id}-name`} name="name" class="field" autocomplete="name" required aria-describedby={`${id}-name-err`} />
         <p id={`${id}-name-err`} class="field-error hidden" data-error-for="name">{t.reqText}</p>
-      </div>
-      <div>
-        <label class="field-label" for={`${id}-firma`}>{t.company}</label>
-        <input id={`${id}-firma`} name="firma" class="field" autocomplete="organization" />
       </div>
       <div>
         <label class="field-label" for={`${id}-email`}>{t.email} <span aria-hidden="true">*</span></label>
@@ -194,45 +162,33 @@ const freqs = de ? c.frequencies : freqEn;
         <input id={`${id}-tel`} name="telefon" type="tel" class="field" autocomplete="tel" inputmode="tel" />
       </div>
       <div>
-        <label class="field-label" for={`${id}-cb`}>{t.cb}</label>
-        <select id={`${id}-cb`} name="rueckruf" class="field">{callback.map((s) => <option value={s}>{s}</option>)}</select>
+        <label class="field-label" for={`${id}-firma`}>{t.company}</label>
+        <input id={`${id}-firma`} name="firma" class="field" autocomplete="organization" />
       </div>
-      <div class="sm:col-span-2">
+      <div class:list={[!compact && 'sm:col-span-2']}>
         <label class="field-label" for={`${id}-msg`}>{t.msg}</label>
-        <textarea id={`${id}-msg`} name="nachricht" rows="3" class="field"></textarea>
+        <textarea id={`${id}-msg`} name="nachricht" rows="2" class="field"></textarea>
       </div>
-      <p class="text-sm text-stone sm:col-span-2">
+      <p class:list={['text-sm text-stone', !compact && 'sm:col-span-2']}>
         {t.privacy} <a href="/datenschutz/" class="link-moss">{t.privacyLink}</a>
       </p>
     </fieldset>
 
     <div class="mt-8 flex flex-wrap items-center gap-3" data-nav>
       <button type="button" class="btn btn-ghost hidden" data-back>{t.back}</button>
-      <button type="button" class="btn btn-ink hidden" data-next>{t.next}<Icon name="arrow" size={18} class="arrow" /></button>
-      <button type="submit" class="btn btn-primary" data-submit>{t.submit}<Icon name="arrow" size={18} class="arrow" /></button>
-      <p class="field-error hidden w-full" role="alert" data-fail>{t.fail} {site.leadEmail}.</p>
+      <button type="button" class="btn btn-ink" data-next>{t.next}<Icon name="arrow" size={18} class="arrow" /></button>
+      <button type="submit" class:list={['btn btn-primary hidden', compact && 'w-full']} data-submit><span data-submit-label>{t.submit}</span><Icon name="arrow" size={18} class="arrow" /></button>
+      <p class="flex w-full items-center gap-2 text-sm text-stone"><Icon name="check" size={16} class="text-moss" />{t.reassure} · {de ? `Rückmeldung ${offer.response.promise}` : 'Reply on the same working day'}</p>
+      <p class="field-error hidden w-full" role="alert" data-fail>{t.fail} <a class="underline" href={`mailto:${site.leadEmail}`}>{site.leadEmail}</a>.</p>
+      <p class="field-error hidden w-full" role="alert" data-toomany>{t.tooMany} <a class="underline" href={`mailto:${site.leadEmail}`}>{site.leadEmail}</a>.</p>
     </div>
   </form>
-
-  <div class="hidden" data-done tabindex="-1">
-    <div class="rounded-2xl bg-ink p-6 text-paper sm:p-8">
-      <h3 class="text-2xl sm:text-3xl">{t.okTitle}</h3>
-      <p class="mt-3 text-fog">{t.okText}</p>
-      <ol class="mt-6 space-y-3">
-        {[t.next1, t.next2, t.next3].map((s, i) => (
-          <li class="flex gap-3"><span class="num font-display text-mint">{String(i + 1).padStart(2, '0')}</span><span>{s}</span></li>
-        ))}
-      </ol>
-    </div>
-    <p class="mt-5 text-[0.95rem] text-stone">
-      {t.okNoMail} <a class="link-moss" href={`mailto:${site.leadEmail}`}>{site.leadEmail}</a>.
-    </p>
-    <button type="button" class="btn btn-ghost mt-3" data-copy data-copied={t.copied}>{t.copy}</button>
-  </div>
 </div>
 
 <script>
-  import { track } from '~/lib/track';
+  import { track, trackLead, attribution } from '~/lib/track';
+
+  const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
   document.querySelectorAll<HTMLElement>('[data-msf]').forEach((root) => {
     const form = root.querySelector<HTMLFormElement>('[data-form]')!;
@@ -240,14 +196,16 @@ const freqs = de ? c.frequencies : freqEn;
     const back = root.querySelector<HTMLButtonElement>('[data-back]')!;
     const next = root.querySelector<HTMLButtonElement>('[data-next]')!;
     const submit = root.querySelector<HTMLButtonElement>('[data-submit]')!;
+    const submitLabel = root.querySelector<HTMLElement>('[data-submit-label]')!;
     const bar = root.querySelector<HTMLElement>('[data-bar]')!;
     const announce = root.querySelector<HTMLElement>('[data-step-announce]')!;
-    const lang = root.dataset.lang;
-    const labels = [...root.querySelectorAll<HTMLElement>('[data-progress-label]')];
+    const progressText = root.querySelector<HTMLElement>('[data-progress-text]')!;
+    const progressName = root.querySelector<HTMLElement>('[data-progress-name]')!;
+    const names: string[] = JSON.parse(form.dataset.steps || '[]');
+    const en = root.dataset.lang === 'en';
     let current = 0;
-    let lastBody = '';
+    let started = false;
 
-    root.querySelector('[data-progress]')!.classList.remove('hidden');
     form.querySelector<HTMLInputElement>('[data-started]')!.value = String(Date.now());
 
     const show = (i: number, focus = true) => {
@@ -257,11 +215,15 @@ const freqs = de ? c.frequencies : freqEn;
       next.classList.toggle('hidden', i === steps.length - 1);
       submit.classList.toggle('hidden', i !== steps.length - 1);
       bar.style.width = `${((i + 1) / steps.length) * 100}%`;
-      labels.forEach((l, k) => l.classList.toggle('font-medium', k === i));
-      labels.forEach((l, k) => l.classList.toggle('text-stone', k !== i));
-      announce.textContent = `${lang === 'en' ? 'Step' : 'Schritt'} ${i + 1} ${lang === 'en' ? 'of' : 'von'} ${steps.length}`;
-      if (focus) steps[i].querySelector<HTMLElement>('input:not([type=hidden]), select, textarea')?.focus({ preventScroll: true });
-      if (focus) root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const label = `${en ? 'Step' : 'Schritt'} ${i + 1} ${en ? 'of' : 'von'} ${steps.length}`;
+      progressText.textContent = label;
+      progressName.textContent = names[i] || '';
+      announce.textContent = label;
+      if (focus) {
+        const r = root.getBoundingClientRect();
+        if (r.top < 0 || r.top > window.innerHeight * 0.4) root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        steps[i].querySelector<HTMLElement>('input:not([type=hidden]):not([type=radio]), select, textarea')?.focus({ preventScroll: true });
+      }
     };
 
     const setErr = (name: string, on: boolean) => {
@@ -269,7 +231,12 @@ const freqs = de ? c.frequencies : freqEn;
       form.querySelectorAll<HTMLInputElement>(`[name="${name}"]`).forEach((el) => el.setAttribute('aria-invalid', String(on)));
     };
 
-    const validateStep = (i: number) => {
+    const fieldValid = (el: HTMLInputElement | HTMLSelectElement) => {
+      const v = el.value.trim();
+      return v !== '' && (el.type !== 'email' || EMAIL.test(v));
+    };
+
+    const validateStep = (i: number, focus = true) => {
       let ok = true;
       let first: HTMLElement | null = null;
       steps[i].querySelectorAll<HTMLElement>('[data-required-group]').forEach((g) => {
@@ -279,157 +246,86 @@ const freqs = de ? c.frequencies : freqEn;
         if (!has) { ok = false; first ??= g.querySelector<HTMLElement>('input'); }
       });
       steps[i].querySelectorAll<HTMLInputElement | HTMLSelectElement>('input[required]:not([type=radio]), select[required]').forEach((el) => {
-        let valid = el.value.trim() !== '';
-        if (valid && el.type === 'email') valid = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(el.value.trim());
+        const valid = fieldValid(el);
         setErr(el.name, !valid);
         if (!valid) { ok = false; first ??= el; }
       });
-      first?.focus();
+      if (focus) first?.focus();
       return ok;
     };
 
-    // Inline-Validierung beim Verlassen eines Feldes
+    const go = (i: number) => {
+      show(i);
+      track('form_step', { step: i + 1 });
+    };
+
+    // Fehler beim Verlassen eines Feldes anzeigen, beim Korrigieren sofort ausblenden
+    // (nicht erst beim Verlassen – sonst verschiebt sich das Layout zwischen mousedown und mouseup)
     form.addEventListener('focusout', (e) => {
       const el = e.target as HTMLInputElement;
       if (!el.required || el.type === 'radio') return;
-      let valid = el.value.trim() !== '';
-      if (valid && el.type === 'email') valid = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(el.value.trim());
-      if (!valid && el.value !== '') setErr(el.name, true);
+      if (el.value !== '' && !fieldValid(el)) setErr(el.name, true);
     });
-    // Fehler sofort beim Korrigieren ausblenden (nicht erst beim Verlassen des Feldes –
-    // sonst verschiebt sich das Layout zwischen mousedown und mouseup auf „Weiter")
-    const clearIfValid = (e: Event) => {
+    const onEdit = (e: Event) => {
       const el = e.target as HTMLInputElement;
+      if (!started) { started = true; track('form_start', {}); }
       if (el.type === 'radio') return setErr(el.name, false);
-      if (!el.required || el.getAttribute('aria-invalid') !== 'true') return;
-      let valid = el.value.trim() !== '';
-      if (valid && el.type === 'email') valid = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(el.value.trim());
-      if (valid) setErr(el.name, false);
+      if (el.required && el.getAttribute('aria-invalid') === 'true' && fieldValid(el)) setErr(el.name, false);
     };
-    form.addEventListener('change', clearIfValid);
-    form.addEventListener('input', clearIfValid);
+    form.addEventListener('change', onEdit);
+    form.addEventListener('input', onEdit);
 
-    next.addEventListener('click', () => { if (validateStep(current)) show(current + 1); });
+    // Schritt 1: Auswahl genügt, es geht automatisch weiter
+    form.addEventListener('change', (e) => {
+      const el = e.target as HTMLInputElement;
+      if (el.matches('[data-autonext]') && current === 0) setTimeout(() => go(1), 220);
+    });
+
+    next.addEventListener('click', () => { if (validateStep(current)) go(current + 1); });
     back.addEventListener('click', () => show(current - 1));
 
-    // Vorbelegung aus dem Konfigurator (?l=buero,glas&f=…&h=…)
-    const params = new URLSearchParams(location.search);
-    let start = 0;
-    if (params.get('l')) {
-      const keys = params.get('l')!.split(',');
-      const names: string[] = [];
-      keys.forEach((k) => {
-        const cb = form.querySelector<HTMLInputElement>(`input[name="leistungen"][data-key="${CSS.escape(k)}"]`);
-        if (cb) { cb.checked = true; names.push(cb.value); }
-      });
-      const pick = (name: string, key: string | null) => {
-        if (!key) return false;
-        const r = form.querySelector<HTMLInputElement>(`input[name="${name}"][data-key="${CSS.escape(key)}"]`);
-        if (r) r.checked = true;
-        return !!r;
-      };
-      const hasArea = pick('flaeche', params.get('f'));
-      const hasFreq = pick('haeufigkeit', params.get('h'));
-      const obj = keys.includes('praxis') ? 'Praxis / Kanzlei' : keys.includes('treppenhaus') ? 'Treppenhaus / Wohnhaus' : 'Büro';
-      pick('objektart', obj);
-      if (hasArea && hasFreq) start = 2;
-      const area = form.querySelector<HTMLInputElement>('input[name="flaeche"]:checked')?.value;
-      const freq = form.querySelector<HTMLInputElement>('input[name="haeufigkeit"]:checked')?.value;
-      const box = root.querySelector<HTMLElement>('[data-prefill]')!;
-      box.querySelector('[data-prefill-text]')!.textContent = [names.join(', '), area, freq].filter(Boolean).join(' · ');
-      box.classList.remove('hidden');
-    }
-    show(start, false);
-
-    const collect = () => {
-      const fd = new FormData(form);
-      const get = (k: string) => String(fd.get(k) ?? '').trim();
-      return {
-        objektart: get('objektart'),
-        leistungen: fd.getAll('leistungen').map(String),
-        flaeche: get('flaeche'),
-        haeufigkeit: get('haeufigkeit'),
-        bezirk: get('bezirk'),
-        start: get('start'),
-        name: get('name'),
-        firma: get('firma'),
-        email: get('email'),
-        telefon: get('telefon'),
-        rueckruf: get('rueckruf'),
-        nachricht: get('nachricht'),
-        quelle: get('quelle'),
-        sprache: lang,
-      };
-    };
-
-    const bodyText = (d: ReturnType<typeof collect>) => {
-      const de = lang !== 'en';
-      const rows: [string, string][] = [
-        [de ? 'Objekt' : 'Premises', d.objektart],
-        [de ? 'Leistungen' : 'Services', d.leistungen.join(', ') || '–'],
-        [de ? 'Fläche' : 'Area', d.flaeche],
-        [de ? 'Häufigkeit' : 'Frequency', d.haeufigkeit],
-        [de ? 'Bezirk' : 'District', d.bezirk],
-        [de ? 'Start' : 'Start', d.start],
-        ['Name', d.name],
-        [de ? 'Firma' : 'Company', d.firma || '–'],
-        ['E-Mail', d.email],
-        [de ? 'Telefon' : 'Phone', d.telefon || '–'],
-        [de ? 'Rückruf' : 'Call back', d.rueckruf],
-        [de ? 'Nachricht' : 'Message', d.nachricht || '–'],
-        [de ? 'Seite' : 'Page', d.quelle],
-      ];
-      return rows.map(([k, v]) => `${k}: ${v}`).join('\n');
-    };
+    show(0, false);
+    if (new URLSearchParams(location.search).has('fehler')) root.querySelector('[data-fail]')!.classList.remove('hidden');
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       // Alle Schritte prüfen – bei Fehler zum betroffenen Schritt springen
       for (let i = 0; i < steps.length; i++) {
-        if (!validateStep(i)) { show(i); validateStep(i); return; }
+        if (!validateStep(i, false)) { show(i); validateStep(i); return; }
       }
-      // Spam-Schutz: Honeypot + mindestens 3 Sekunden Ausfüllzeit
-      const hp = (form.querySelector('[name="website"]') as HTMLInputElement).value;
-      const started = Number((form.querySelector('[data-started]') as HTMLInputElement).value);
-      if (hp || Date.now() - started < 3000) return;
+      const fd = new FormData(form);
+      const data: Record<string, string> = {};
+      fd.forEach((v, k) => { data[k] = String(v).trim(); });
+      Object.assign(data, attribution());
 
-      const data = collect();
-      const endpoint = root.dataset.endpoint;
-      if (endpoint) {
-        submit.disabled = true;
-        try {
-          const res = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(data) });
-          if (!res.ok) throw new Error(String(res.status));
-          track('lead_form_submit', { method: 'endpoint', objektart: data.objektart, bezirk: data.bezirk });
-          form.reset();
-          location.href = root.dataset.thanks!;
-        } catch {
-          submit.disabled = false;
-          root.querySelector('[data-fail]')!.classList.remove('hidden');
-        }
-        return;
-      }
-      // mailto
-      lastBody = bodyText(data);
-      const subject = `${root.dataset.subject}: ${data.objektart}, ${data.bezirk}${data.firma ? ' – ' + data.firma : ''}`;
-      const href = `mailto:${root.dataset.mail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lastBody)}`;
-      track('lead_form_submit', { method: 'mailto', objektart: data.objektart, bezirk: data.bezirk });
-      window.location.href = href;
-      form.reset();
-      form.classList.add('hidden');
-      root.querySelector('[data-progress]')!.classList.add('hidden');
-      root.querySelector('[data-prefill]')!.classList.add('hidden');
-      const done = root.querySelector<HTMLElement>('[data-done]')!;
-      done.classList.remove('hidden');
-      done.focus();
-    });
-
-    root.querySelector<HTMLButtonElement>('[data-copy]')!.addEventListener('click', async (e) => {
-      const btn = e.currentTarget as HTMLButtonElement;
+      const fail = root.querySelector<HTMLElement>('[data-fail]')!;
+      const tooMany = root.querySelector<HTMLElement>('[data-toomany]')!;
+      fail.classList.add('hidden');
+      tooMany.classList.add('hidden');
+      submit.disabled = true;
+      const label = submitLabel.textContent;
+      submitLabel.textContent = root.dataset.sending || '…';
       try {
-        await navigator.clipboard.writeText(lastBody);
-        btn.textContent = btn.dataset.copied || 'OK';
-      } catch { /* Clipboard nicht verfügbar */ }
+        const res = await fetch('/api/anfrage', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(data),
+        });
+        if (res.status === 429) { tooMany.classList.remove('hidden'); throw new Error('429'); }
+        const json = await res.json().catch(() => ({}));
+        if (!res.ok || !json.ok) throw new Error(String(res.status));
+        // id 'x' = vom Server als Spam erkannt → keine Conversion zählen
+        if (json.id !== 'x') await trackLead(
+          { id: json.id, email: data.email, phone: data.telefon, objektart: data.objektart, bezirk: data.bezirk },
+          { adsId: root.dataset.adsId, adsLabel: root.dataset.adsLabel },
+        );
+        location.href = `${root.dataset.thanks}?id=${encodeURIComponent(json.id)}`;
+      } catch (err) {
+        submit.disabled = false;
+        submitLabel.textContent = label;
+        if ((err as Error).message !== '429') fail.classList.remove('hidden');
+        track('form_error', { status: (err as Error).message });
+      }
     });
   });
 </script>

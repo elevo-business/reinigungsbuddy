@@ -61,7 +61,7 @@ export const offer = {
 
   /** Ablauf in 3 Schritten */
   process: [
-    { title: 'Anfrage stellen', text: 'Das Formular dauert etwa zwei Minuten. Wir melden uns am selben Werktag bei Ihnen.' },
+    { title: 'Anfrage stellen', text: 'Drei kurze Fragen, etwa eine Minute. Wir melden uns am selben Werktag bei Ihnen.' },
     { title: 'Objekt ansehen', text: 'Wir kommen kostenlos vorbei und nehmen Räume, Zeiten und Wünsche auf. Innerhalb von 24 Stunden danach haben Sie Ihr Festpreis-Angebot.' },
     { title: 'Loslegen', text: 'Sie sagen zu, wir übernehmen den Schlüssel gegen Protokoll und starten zum Wunschtermin.' },
   ],

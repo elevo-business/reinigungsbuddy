@@ -7,6 +7,9 @@ import Footer from '~/components/Footer.astro';
 import StickyMobileBar from '~/components/StickyMobileBar.astro';
 import ConsentBanner from '~/components/ConsentBanner.astro';
 import ExitIntent from '~/components/islands/ExitIntent.astro';
+import Logo from '~/components/ui/Logo.astro';
+import Icon from '~/components/ui/Icon.astro';
+import { phoneLink } from '~/lib/contact';
 import { site } from '~/config/site';
 import { langOf } from '~/lib/i18n';
 import { localBusiness, website } from '~/lib/schema';
@@ -19,8 +22,12 @@ interface Props {
   type?: 'website' | 'article';
   schema?: Record<string, unknown>[];
   whatsappText?: string;
+  /** 'landing' = Google-Ads-Landingpage: ohne Navigation, schlanker Footer, Sticky-Button springt zum Formular */
+  variant?: 'default' | 'landing';
 }
-const { title, description, image, noindex, type, schema = [], whatsappText } = Astro.props;
+const { title, description, image, noindex, type, schema = [], whatsappText, variant = 'default' } = Astro.props;
+const landing = variant === 'landing';
+const needsConsent = Boolean(site.analytics.metaPixelId || site.analytics.ga4Id || site.analytics.googleAdsId);
 const lang = langOf(Astro.url.pathname);
 const base = Astro.site!;
 const graph = [localBusiness(base), website(base), ...schema];
@@ -46,14 +53,38 @@ const plausible = site.analytics.plausibleDomain;
     <slot name="head" />
   </head>
   <body class="min-h-dvh">
-    <Header />
+    {landing ? (
+      <header class="border-b border-line bg-paper">
+        <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 focus:rounded focus:bg-ink focus:px-4 focus:py-2 focus:text-paper">Zum Inhalt springen</a>
+        <div class="wrap flex h-16 items-center justify-between gap-4">
+          <Logo href="#main" />
+          {phoneLink() ? (
+            <a href={phoneLink()!} class="btn btn-ghost min-h-11 px-4 text-[0.95rem]" data-track="phone_click"><Icon name="phone" size={18} />{site.contact.phone}</a>
+          ) : (
+            <p class="hidden items-center gap-2 text-[0.95rem] text-stone sm:flex"><Icon name="check" size={18} class="text-moss" />Kostenlos und unverbindlich</p>
+          )}
+        </div>
+      </header>
+    ) : <Header />}
     <main id="main">
       <slot />
     </main>
-    <Footer />
-    <StickyMobileBar whatsappText={whatsappText} />
+    {landing ? (
+      <footer class="border-t border-line pb-28 pt-8 lg:pb-10">
+        <div class="wrap flex flex-col gap-3 text-sm text-stone sm:flex-row sm:items-center sm:justify-between">
+          <p>© {new Date().getFullYear()} {site.name} · Gebäudereinigung in Berlin</p>
+          <ul class="flex flex-wrap gap-x-5 gap-y-2">
+            <li><a class="link-grow" href="/impressum/">Impressum</a></li>
+            <li><a class="link-grow" href="/datenschutz/">Datenschutz</a></li>
+            <li><a class="link-grow" href="/agb/">AGB</a></li>
+            {needsConsent && <li><button type="button" class="link-grow" data-consent-open>Cookie-Einstellungen</button></li>}
+          </ul>
+        </div>
+      </footer>
+    ) : <Footer />}
+    <StickyMobileBar whatsappText={whatsappText} href={landing ? '#anfrage-karte' : undefined} />
     <ConsentBanner />
-    <ExitIntent />
+    {!landing && <ExitIntent />}
 
     <script>
       import { initTracking } from '~/lib/track';

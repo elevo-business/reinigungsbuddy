@@ -9,7 +9,7 @@ const wa = whatsappLink('Hallo, ich habe gerade eine Anfrage über die Website g
   <section class="wrap py-20 lg:py-28">
     <p class="eyebrow text-moss">Anfrage erhalten</p>
     <h1 class="mt-5 max-w-4xl text-mega">Danke! Wir melden uns {offer.response.promise}.</h1>
-    <p class="mt-6 max-w-2xl text-lead">Anfragen, die nach {offer.response.cutoff} oder am Wochenende eingehen, beantworten wir am nächsten Werktag. So geht es weiter:</p>
+    <p class="mt-6 max-w-2xl text-lead">Ihre Anfrage ist bei uns angekommen<span data-lead-id class="hidden"></span>. Anfragen, die nach {offer.response.cutoff} oder am Wochenende eingehen, beantworten wir am nächsten Werktag. So geht es weiter:</p>
     <ol class="mt-10 grid gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-3">
       {[
         ['Rückmeldung', `${offer.response.promise}, per Telefon oder E-Mail, wie Sie es angegeben haben`],
@@ -24,4 +24,9 @@ const wa = whatsappLink('Hallo, ich habe gerade eine Anfrage über die Website g
       <a href="/ratgeber/" class="btn btn-ghost">In der Zwischenzeit: Ratgeber lesen</a>
     </div>
   </section>
+  <script>
+    const id = new URLSearchParams(location.search).get('id');
+    const el = document.querySelector<HTMLElement>('[data-lead-id]');
+    if (el && id && /^[\w-]{6,40}$/.test(id) && id !== 'x') { el.textContent = ` (Anfrage-Nr. ${id})`; el.classList.remove('hidden'); }
+  </script>
 </BaseLayout>

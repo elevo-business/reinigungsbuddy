@@ -26,7 +26,7 @@ const crumbs = [{ name: 'Start', href: '/' }, { name: 'Ratgeber', href: '/ratgeb
 const ogImg = await getImage({ src: d.image, width: 1200, format: 'jpg' });
 const fmt = (dt: Date) => dt.toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' });
 const toc = headings.filter((h) => h.depth === 2);
-const ctaHref = target ? `/angebot/?l=${target.data.preset.join(',')}` : '/angebot/';
+const ctaHref = '/angebot/';
 const schema = [
   article({ title: d.title, description: d.metaDescription, url, image: new URL(ogImg.src, Astro.site).toString(), published: d.published, updated: d.updated, base: Astro.site! }),
   breadcrumbs(crumbs, Astro.site!),

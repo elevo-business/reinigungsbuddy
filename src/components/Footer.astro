@@ -9,7 +9,7 @@ import { phoneLink, whatsappLink } from '~/lib/contact';
 
 const lang = langOf(Astro.url.pathname);
 const services = (await getCollection('leistungen')).sort((a, b) => a.data.order - b.data.order);
-const needsConsent = Boolean(site.analytics.metaPixelId || site.analytics.ga4Id);
+const needsConsent = Boolean(site.analytics.metaPixelId || site.analytics.ga4Id || site.analytics.googleAdsId);
 const tel = phoneLink();
 const wa = whatsappLink(lang === 'en' ? 'Hello, I have a question about office cleaning.' : 'Hallo, ich habe eine Frage zur Reinigung.');
 const year = new Date().getFullYear();

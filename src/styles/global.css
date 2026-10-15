@@ -205,6 +205,10 @@
     cursor: pointer;
     white-space: nowrap;
   }
+  /* Schmale Handys: lange Button-Texte umbrechen statt über den Rand zu laufen */
+  @media (max-width: 30rem) {
+    .btn { white-space: normal; text-align: center; }
+  }
   .btn:active { transform: translateY(1px); }
   .btn-primary { background: var(--color-mint); color: var(--color-ink); }
   .btn-primary:hover { background: #6ad4ad; }
@@ -309,6 +313,11 @@
   .tile:has(input:checked)::before { background: var(--color-ink); box-shadow: inset 0 0 0 3px #fff; }
   .tile:has(input:focus-visible) { outline: 3px solid var(--color-moss); outline-offset: 2px; }
   .tile-title { font-weight: 500; }
+
+  /* Anfrageformular ohne JavaScript: alle Schritte und der Absenden-Button sichtbar */
+  .no-js .msf-progress, .no-js .msf [data-next] { display: none !important; }
+  .no-js .msf-step.hidden { display: grid !important; }
+  .no-js .msf [data-submit] { display: inline-flex !important; }
   .tile-hint { font-size: 0.85rem; color: var(--color-stone); }
 
   .chip {

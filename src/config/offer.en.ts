@@ -15,7 +15,7 @@ export const offerEn = {
     { title: 'Checking costs your time.', text: 'Office managers walk through the rooms in the evening, write lists and chase the cleaning company. That’s not their job.' },
   ],
   process: [
-    { title: 'Send an enquiry', text: 'The form takes about two minutes. We get back to you on the same working day.' },
+    { title: 'Send an enquiry', text: 'Three short questions, about one minute. We get back to you on the same working day.' },
     { title: 'Site visit', text: 'We visit for free and note rooms, times and requirements. Within 24 hours you have your fixed-price quote.' },
     { title: 'Get started', text: 'You confirm, we take over the keys against a signed record and start on your preferred date.' },
   ],

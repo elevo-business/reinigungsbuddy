@@ -20,7 +20,7 @@ Stand: 14.10.2026 · Build: Astro 7.3.8 · geprüft auf dem lokalen Produktions-
 | Preis-Check (€, Euro, EUR, pro m², /m², Stundensatz, priceRange) | ✓ 0 Treffer in Text, Meta und JSON-LD |
 | Sperrliste (kündbar, Mindestlaufzeit, Foto-Protokoll, Besichtigung, Video-Call, „Ich bin Mert", Leistungsverzeichnis gratis) | ✓ 0 Treffer, Prüfung läuft bei jedem Build |
 | Floskel-Check (Anti-Generik-Liste) | ✓ 0 Treffer |
-| Formular (mailto) | ✓ Validierung, Konfigurator-Vorbelegung, Honeypot/Zeitprüfung, Bestätigung, Event |
+| Formular (Server-Versand) | ✓ 3 Schritte, Validierung, Honeypot/Zeitprüfung/Rate-Limit, Speicherung, E-Mail + Eingangsbestätigung, Conversion mit transaction_id, ohne JavaScript nutzbar |
 | Formular (Webhook-Modus) | ✓ JSON-Payload vollständig, Weiterleitung auf `/angebot/danke/`, Event |
 | Mobil 360 px und 390 px | ✓ kein horizontales Scrollen (16 Seiten geprüft) |
 | Tastatur | ✓ Skip-Link als erster Tab-Stopp, Menü mit Enter/Esc inkl. Fokus-Rückgabe, FAQ per Enter, Slider per Pfeiltasten |
@@ -54,7 +54,7 @@ Kein `Review`- oder `AggregateRating`-Markup (keine echten Bewertungen vorhanden
 
 ## Bekannte Einschränkungen des Entwurfs
 
-1. **Formular per mailto:** Ohne eingerichtetes E-Mail-Programm muss die Anfrage kopiert werden (Button vorhanden). `lead_form_submit` zählt das Öffnen des E-Mail-Programms, nicht das Absenden. Empfehlung vor Livegang: `PUBLIC_FORM_ENDPOINT` setzen (README, Abschnitt 5).
+1. **Formular-Versand:** Funktioniert erst, wenn in Coolify die SMTP-Variablen gesetzt sind und `/data` als Persistent Storage eingerichtet ist (README, Abschnitt 5). Ohne SMTP werden Anfragen nur gespeichert (Übersicht unter `/api/anfragen`).
 2. **Vorher-Nachher-Galerie** ist derzeit ausgeblendet (`showGallery: false` in `offer.ts`). Wieder einschalten, sobald eigene Fotos vorliegen (FOTO-ANLEITUNG.md).
 3. **Kein Telefon und kein WhatsApp** hinterlegt: Die Sticky-Leiste zeigt nur „Festpreis anfragen". Telefon- und WhatsApp-Buttons erscheinen automatisch, sobald die Nummern in `site.ts` stehen.
 4. **Silbentrennung:** Lange Komposita in Headlines bekommen automatisch weiche Trennstellen (`shy()` in `src/lib/text.ts`). Neue lange Wörter ggf. dort ergänzen.
