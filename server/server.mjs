@@ -20,7 +20,8 @@ import crypto from 'node:crypto';
 import nodemailer from 'nodemailer';
 
 const env = process.env;
-const PORT = Number(env.PORT || 3000);
+// Fest auf 3000 (nginx leitet /api/ hierher). NICHT env.PORT nutzen: Coolify setzt PORT=80, das ist nginx.
+const PORT = Number(env.ANFRAGE_PORT || 3000);
 const DATA_DIR = env.DATA_DIR || '/data';
 const FILE = path.join(DATA_DIR, 'anfragen.jsonl');
 const LEAD_TO = env.LEAD_TO || 'mert@reinigungs-buddy.de';
